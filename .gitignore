@@ -1,0 +1,6 @@
+# only the site itself goes online; working files stay on the PC
+assets/raw/
+tools/
+*.zip
+*.mp4
+__pycache__/
