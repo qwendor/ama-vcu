@@ -191,24 +191,24 @@
       <div class="wrap">
         <div class="hero-grid">
           <div class="hero-copy">
-            <span class="tag-pill sm">${esc(D.org.name)}</span>
-            <h1 class="h-xl">Define your <span class="underline-wrap"><em class="serif">brand.</em><svg aria-hidden="true"><use href="#underline"/></svg></span></h1>
-            <p class="lede">${esc(D.org.blurb)}</p>
-            <div class="btn-row">
+            <span class="tag-pill sm" style="--i:0">${esc(D.org.name)}</span>
+            <h1 class="h-xl" style="--i:1">Define your <span class="underline-wrap"><em class="serif">brand.</em><svg aria-hidden="true"><use href="#underline"/></svg></span></h1>
+            <p class="lede" style="--i:2">${esc(D.org.blurb)}</p>
+            <div class="btn-row" style="--i:3">
               <a class="btn btn-gold btn-lg" href="#/involved">Become a member ${ico('i-arrow')}</a>
               <a class="btn btn-ghost btn-lg" href="#/events">What's coming up</a>
             </div>
-            <div class="hero-stats">
+            <div class="hero-stats" style="--i:4">
               <span class="stat-pill">${ico('i-star')} Founded <b>${D.org.founded}</b></span>
               <span class="stat-pill">${ico('i-bolt')} The <b>only</b> marketing org at VCU</span>
-              <span class="stat-pill">${ico('i-trophy')} <b>${wins26}</b> ICC 2026 placements</span>
-              <span class="stat-pill">${ico('i-cal')} ICC in <b>${daysUntil(icc.start.slice(0, 10))}</b> days</span>
+              <span class="stat-pill">${ico('i-trophy')} <b data-count="${wins26}">${wins26}</b> ICC 2026 placements</span>
+              <span class="stat-pill">${ico('i-cal')} ICC in <b data-count="${daysUntil(icc.start.slice(0, 10))}">${daysUntil(icc.start.slice(0, 10))}</b> days</span>
             </div>
           </div>
           <div class="hero-art">
             <div class="ring">
               <div class="ring-logo"><div data-logo></div></div>
-              ${D.board.map(m => `<a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`).join('')}
+              ${D.board.map(m => `<span class="pin"><a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a></span>`).join('')}
               ${sticker('star', '--x:28%;--y:-5%;--r:-14deg;--s:40px', 'st-float')}
               ${sticker('sparkle', '--x:64%;--y:3%;--r:12deg;--s:30px', 'st-float')}
               ${sticker('bang', '--x:-9%;--y:-17%;--r:8deg;--s:42px', 'right bottom st-float')}
@@ -343,9 +343,9 @@
         </div>
         <div class="reveal d2 numbers" style="grid-template-columns:repeat(2,1fr)">
           <div class="num" style="background:var(--navy-700)"><b>${D.org.founded}</b><span>Founded (reinstated ${D.org.reinstated})</span></div>
-          <div class="num" style="background:var(--navy-700)"><b>${m.activePoints}</b><span>Points to Active Member</span></div>
-          <div class="num" style="background:var(--navy-700)"><b>$${m.dues}</b><span>Dues for the whole year</span></div>
-          <div class="num" style="background:var(--navy-700)"><b>${D.icc.results[0].wins.length}</b><span>ICC 2026 placements</span></div>
+          <div class="num" style="background:var(--navy-700)"><b data-count="${m.activePoints}">${m.activePoints}</b><span>Points to Active Member</span></div>
+          <div class="num" style="background:var(--navy-700)"><b data-count="${m.dues}" data-prefix="$">$${m.dues}</b><span>Dues for the whole year</span></div>
+          <div class="num" style="background:var(--navy-700)"><b data-count="${D.icc.results[0].wins.length}">${D.icc.results[0].wins.length}</b><span>ICC 2026 placements</span></div>
         </div>
       </div>
     </section>
@@ -514,7 +514,7 @@
         </div>
         <div class="split" style="align-items:start">
           <div class="lb reveal">
-            ${rows.map((m, i) => `<div class="lb-row"><span class="n">${i + 1}</span><span class="av">${avatar(m.seed)}</span><div><b>${esc(m.name)}</b>${m.pts >= goal ? `<span class="badge-active">${ico('i-check')} Active</span>` : ''}<div class="bar"><i style="--w:${Math.min(100, m.pts / goal * 100)}%"></i></div></div><span class="pts">${m.pts}<small>${Math.max(0, goal - m.pts)} to go</small></span></div>`).join('')}
+            ${rows.map((m, i) => `<div class="lb-row"><span class="n">${i + 1}</span><span class="av">${avatar(m.seed)}</span><div><b>${esc(m.name)}</b>${m.pts >= goal ? `<span class="badge-active">${ico('i-check')} Active</span>` : ''}<div class="bar"><i data-w="${Math.min(100, m.pts / goal * 100)}%" style="--w:0%"></i></div></div><span class="pts">${m.pts}<small>${Math.max(0, goal - m.pts)} to go</small></span></div>`).join('')}
           </div>
           <div style="display:grid;gap:18px">
             <div class="card reveal d2"><span class="chip navy">How points work</span><h3 class="h-md" style="margin-top:8px">Show up, level up</h3><div class="pt-list" style="margin:12px 0">${D.membership.knownPoints.map(p => `<div><span>${esc(p.what)}</span><b>${p.isGoal ? '' : '+'}${p.pts}</b></div>`).join('')}</div><p class="small muted" style="margin:0">${esc(D.membership.pointsNote)}</p><div class="btn-row" style="margin-top:12px">${ext(D.links.memberResources, 'Point system doc', 'btn btn-navy btn-sm')}</div></div>
@@ -688,7 +688,7 @@
      AFTER RENDER: behaviors
      =================================================================== */
   function afterRender() {
-    initReveal(); initMarquee(); initLogo(); initPillars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
+    initReveal(); initMarquee(); initLogo(); initPillars(); initParallax(); initCounts(); initBars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
   }
 
   function initReveal() {
@@ -700,6 +700,35 @@
   function initMarquee() {
     const items = ['Define your brand', '#oneama', 'Coffee chats every other Sunday', 'ICC 2027 · New Orleans', 'The only marketing org at VCU', 'Marketers of Tomorrow', 'Since 1983', '#amavcu'];
     $$('[data-marquee]').forEach(t => t.innerHTML = items.map(i => `<span>${esc(i)}</span>`).join(''));
+  }
+  function initParallax() {
+    const hero = $('.hero'), ring = $('.ring');
+    if (!hero || !ring || reduce || matchMedia('(hover: none)').matches) return;
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      ring.style.setProperty('--mx', (((e.clientX - r.left) / r.width - .5) * 2).toFixed(3));
+      ring.style.setProperty('--my', (((e.clientY - r.top) / r.height - .5) * 2).toFixed(3));
+    });
+    hero.addEventListener('pointerleave', () => { ring.style.setProperty('--mx', 0); ring.style.setProperty('--my', 0); });
+  }
+  function countUp(el) {
+    const end = parseInt(el.dataset.count, 10), prefix = el.dataset.prefix || '';
+    if (reduce || !(end > 0)) { el.textContent = prefix + end; return; }
+    const t0 = performance.now(), dur = 1100 + Math.min(end, 200) * 2;
+    const step = now => { const p = Math.min(1, (now - t0) / dur); const v = Math.round(end * (1 - Math.pow(1 - p, 3))); el.textContent = prefix + v; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  function initCounts() {
+    const els = $$('[data-count]:not([data-counted])');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) { els.forEach(countUp); return; }
+    const io = new IntersectionObserver(en => en.forEach(x => { if (x.isIntersecting) { x.target.dataset.counted = 1; countUp(x.target); io.unobserve(x.target); } }), { threshold: .4 });
+    els.forEach(e => io.observe(e));
+  }
+  function initBars() {
+    const bars = $$('.lb-row .bar i[data-w]');
+    if (!bars.length) return;
+    setTimeout(() => bars.forEach(b => b.style.setProperty('--w', b.dataset.w)), reduce ? 0 : 120);
   }
   function initLogo() {
     $$('[data-logo]').forEach(el => {
@@ -831,7 +860,7 @@
       const mi = Math.floor(diff / 6e4); diff -= mi * 6e4;
       const s = Math.floor(diff / 1e3);
       const b = el.querySelectorAll('b');
-      [d, h, mi, s].forEach((v, i) => { const txt = String(v).padStart(2, '0'); if (b[i].textContent !== txt) b[i].textContent = txt; });
+      [d, h, mi, s].forEach((v, i) => { const txt = String(v).padStart(2, '0'); if (b[i].textContent !== txt) { b[i].textContent = txt; if (!reduce) { b[i].classList.remove('roll'); void b[i].offsetWidth; b[i].classList.add('roll'); } } });
     });
   }
   setInterval(tick, 1000);
@@ -839,7 +868,11 @@
   /* ---------- chrome: header, menu, modal, footer, toast ---------- */
   let toastT;
   function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 4200); }
-  addEventListener('scroll', () => $('#siteHead').classList.toggle('scrolled', scrollY > 10), { passive: true });
+  const progress = document.createElement('div'); progress.className = 'progress'; $('#siteHead').appendChild(progress);
+  let scrollTick = false;
+  const onScroll = () => { $('#siteHead').classList.toggle('scrolled', scrollY > 10); const max = document.documentElement.scrollHeight - innerHeight; progress.style.setProperty('--p', max > 0 ? Math.min(1, scrollY / max).toFixed(4) : 0); scrollTick = false; };
+  addEventListener('scroll', () => { if (!scrollTick) { scrollTick = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
   const mm = $('#mobileMenu');
   function openMenu() { mm.hidden = false; document.body.style.overflow = 'hidden'; $('#menuBtn').setAttribute('aria-expanded', 'true'); }
   function closeMenu() { if (mm.hidden) return; mm.hidden = true; document.body.style.overflow = ''; $('#menuBtn').setAttribute('aria-expanded', 'false'); }
