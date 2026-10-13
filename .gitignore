@@ -4,3 +4,4 @@ tools/
 *.zip
 *.mp4
 __pycache__/
+shots/
