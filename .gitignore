@@ -1,7 +1,8 @@
 # only the site itself goes online; working files stay on the PC
 assets/raw/
 tools/
+shots/
 *.zip
 *.mp4
+!assets/logo/*.mp4
 __pycache__/
-shots/
