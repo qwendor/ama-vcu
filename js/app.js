@@ -205,21 +205,16 @@
               <span class="stat-pill">${ico('i-cal')} ICC in <b>${daysUntil(icc.start.slice(0, 10))}</b> days</span>
             </div>
           </div>
-          <div class="hero-logo">
-            <div data-logo></div>
-            ${sticker('sparkle', '--x:-6px;--y:-6px;--r:12deg;--s:42px', 'st-float')}
+          <div class="hero-art">
+            <div class="ring">
+              <div class="ring-logo"><div data-logo></div></div>
+              ${D.board.map(m => `<a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`).join('')}
+              ${sticker('star', '--x:28%;--y:-5%;--r:-14deg;--s:40px', 'st-float')}
+              ${sticker('sparkle', '--x:64%;--y:3%;--r:12deg;--s:30px', 'st-float')}
+              ${sticker('bang', '--x:-9%;--y:-17%;--r:8deg;--s:42px', 'right bottom st-float')}
+            </div>
+            <div class="ring-foot"><span class="tag-pill sm">The ${D.org.year} executive board</span><a class="textlink" href="#/board">Full bios ${ico('i-arrow')}</a></div>
           </div>
-        </div>
-        <div class="board-strip">
-          <div class="strip-head">
-            ${sticker('star', '--x:-18px;--y:-18px;--r:-14deg;--s:44px', 'hi st-float')}
-            <span class="tag-pill sm">Meet the ${D.org.year} board</span>
-            <a class="textlink" href="#/board">Full bios ${ico('i-arrow')}</a>
-          </div>
-          <div class="strip">
-            ${D.board.map(m => `<a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`).join('')}
-          </div>
-          ${sticker('bang', '--x:-36px;--y:-34px;--r:8deg;--s:46px', 'right bottom st-float')}
         </div>
       </div>
     </section>
