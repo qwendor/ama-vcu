@@ -137,12 +137,8 @@ em.serif{font-style:italic}
 .site-head.scrolled{box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .head-row{display:flex;align-items:center;gap:20px;height:var(--head-h)}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;margin-right:auto}
-.brand-coin{width:42px;height:42px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .5s var(--spring)}
-.brand-coin svg{width:100%;height:100%;display:block}
-.brand:hover .brand-coin{transform:rotate(20deg) scale(1.08)}
-.brand-text{display:flex;align-items:baseline;gap:8px}
-.brand-mark{width:54px;height:30px;color:#fff}
-.brand-vcu{font-weight:900;letter-spacing:.12em;font-size:1rem}
+.brand-logo{height:42px;width:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));transition:transform .4s var(--spring)}
+.brand:hover .brand-logo{transform:scale(1.05)}
 .nav{display:flex;align-items:center;gap:4px}
 .nav>a,.nav-group>button{display:inline-flex;align-items:center;gap:4px;padding:10px 14px;border-radius:999px;text-decoration:none;font-weight:800;font-size:.95rem;background:transparent;border:0;color:rgba(255,255,255,.88);transition:background .2s,color .2s}
 .nav>a:hover,.nav-group>button:hover,.nav-group.open>button{background:rgba(255,255,255,.12);color:#fff}
@@ -161,7 +157,7 @@ em.serif{font-style:italic}
 .menu-btn{display:none;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;align-items:center;justify-content:center}
 .menu-btn .ic{width:1.5em;height:1.5em}
 @media (max-width:1060px){.nav{display:none}.menu-btn{display:inline-flex}}
-@media (max-width:480px){.brand-text{display:none}.head-actions .btn{padding:10px 14px}.modal-card{padding:26px 20px}.modal-card h3{font-size:1.6rem}}
+@media (max-width:480px){.brand-logo{height:36px}.head-actions .btn{padding:10px 14px}.modal-card{padding:26px 20px}.modal-card h3{font-size:1.6rem}}
 
 /* mobile menu */
 .mobile-menu{position:fixed;inset:0;z-index:80;background:var(--navy-700);color:#fff;overflow:auto}
@@ -174,18 +170,15 @@ em.serif{font-style:italic}
 .mm-social{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap}
 @media (max-width:520px){.mm-groups{grid-template-columns:1fr}}
 
-/* ---------- 3D sticker coin ---------- */
-.coin{display:block;width:var(--coin,220px);height:var(--coin,220px);perspective:1200px}
-.coin-inner{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;animation:coinSpin 16s linear infinite;transform:rotateY(var(--spin,0deg))}
-.coin.paused .coin-inner,.coin.drag .coin-inner{animation-play-state:paused}
-.coin .face{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;backface-visibility:hidden;-webkit-backface-visibility:hidden;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}
-.coin .face.front{transform:translateZ(7px)}
-.coin .face.back{transform:rotateY(180deg) translateZ(7px)}
-.coin .edge{position:absolute;inset:0;border-radius:50%;background:var(--gold-deep);transform:translateZ(calc(var(--z) * 1px))}
-@keyframes coinSpin{from{transform:rotateY(var(--spin,0deg))}to{transform:rotateY(calc(var(--spin,0deg) + 360deg))}}
-.coin-sm{--coin:72px}
-.coin.grab{cursor:grab}
-.coin.drag{cursor:grabbing}
+/* ---------- 3D logo (video + WebGL matte, see js/logo.js) ---------- */
+.logo3d{position:relative;width:100%;aspect-ratio:8/5;filter:drop-shadow(0 26px 40px rgba(0,0,0,.4))}
+.logo3d-still,.logo3d-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .5s}
+.logo3d-canvas{opacity:0}
+.logo3d.live .logo3d-canvas{opacity:1}
+.logo3d.live .logo3d-still{opacity:0}
+.logo3d-src{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.foot-logo{width:150px;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+.nc-logo{width:104px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
 
 /* ---------- gingham marquee ---------- */
 .gingham{background-color:#F7C544;background-image:linear-gradient(90deg,rgba(255,255,255,.38) 50%,transparent 50%),linear-gradient(rgba(255,255,255,.38) 50%,transparent 50%);background-size:26px 26px;color:var(--navy-800);overflow:hidden;border-top:3px solid rgba(255,255,255,.8);border-bottom:3px solid rgba(255,255,255,.8)}
@@ -205,23 +198,23 @@ em.serif{font-style:italic}
 .hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
 .stat-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);font-weight:800;font-size:.9rem}
 .stat-pill b{color:var(--gold)}
-.hero-art{position:relative;padding-top:8px}
-.hero-art .coin{position:absolute;right:-6px;top:-34px;z-index:4;--coin:150px}
-.fan{position:relative;display:flex;align-items:flex-start;justify-content:center;padding:70px 6px 46px}
-.polaroid{position:relative;flex:0 0 31%;max-width:188px;margin:0;background:#fff;padding:8px 8px 0;border-radius:14px;box-shadow:var(--shadow);color:var(--navy-700);transform:rotate(var(--r,0deg));transition:transform .5s var(--spring)}
-.polaroid img{border-radius:8px;aspect-ratio:4/5;object-fit:cover;object-position:50% 18%;width:100%}
-.polaroid figcaption{height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:.95rem;line-height:1.15;padding:0 4px}
-.polaroid figcaption small{display:block;max-width:100%;margin-top:3px;font-weight:700;color:var(--muted);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fan .polaroid:nth-of-type(1){--r:-7deg;z-index:1}
-.fan .polaroid:nth-of-type(2){--r:2deg;z-index:3;margin-top:44px}
-.fan .polaroid:nth-of-type(3){--r:7deg;z-index:2;margin-top:104px}
-.fan:hover .polaroid:nth-of-type(1){transform:rotate(-10deg) translate(-8px,-6px)}
-.fan:hover .polaroid:nth-of-type(2){transform:rotate(0deg) translateY(-10px)}
-.fan:hover .polaroid:nth-of-type(3){transform:rotate(10deg) translate(8px,-6px)}
-.fan .tag-pill{position:absolute;left:4px;top:16px;transform:rotate(-3deg);z-index:5}
-.sticker.hi{z-index:6}
-@media (max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-art{max-width:560px;width:100%;margin:12px auto 0}}
-@media (max-width:560px){.hero-art .coin{--coin:120px;top:-18px;right:-4px}.fan{padding:62px 0 30px}.polaroid{flex-basis:46%;max-width:180px}.fan .polaroid:nth-of-type(2){margin-top:54px}.fan .polaroid:nth-of-type(3){display:none}.hero-art .sticker{--s:36px}.page-head .sticker.bottom{display:none}}
+.hero-logo{position:relative;padding:10px 0 0 10px}
+.board-strip{margin-top:clamp(30px,4vw,52px);position:relative}
+.strip-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:22px;position:relative;padding-left:22px}
+.strip-head .textlink{color:#fff}
+.strip{display:flex;flex-wrap:wrap;justify-content:center;gap:16px 12px;padding:6px 4px 10px}
+.polaroid{position:relative;flex:0 0 calc((100% - 8 * 12px) / 9);max-width:126px;margin:0;background:#fff;padding:6px 6px 0;border-radius:12px;box-shadow:var(--shadow);color:var(--navy-700);transform:rotate(var(--r,0deg)) translateY(var(--dy,0px));transition:transform .45s var(--spring),box-shadow .3s;text-decoration:none}
+.polaroid img{border-radius:7px;aspect-ratio:4/5;object-fit:cover;object-position:50% 18%;width:100%}
+.polaroid figcaption{height:48px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:.82rem;line-height:1.1;padding:0 3px}
+.polaroid figcaption small{display:block;max-width:100%;margin-top:3px;font-weight:700;color:var(--muted);font-size:.56rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.strip .polaroid:nth-of-type(3n+1){--r:-3deg;--dy:0px}
+.strip .polaroid:nth-of-type(3n+2){--r:2.5deg;--dy:10px}
+.strip .polaroid:nth-of-type(3n){--r:-1.5deg;--dy:4px}
+.strip .polaroid:nth-of-type(5){--r:3deg;--dy:12px}
+.strip .polaroid:nth-of-type(8){--r:-2.5deg;--dy:2px}
+.strip .polaroid:hover{transform:rotate(0deg) translateY(calc(var(--dy,0px) - 8px)) scale(1.05);z-index:2;box-shadow:0 20px 36px rgba(10,16,35,.3)}
+@media (max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-logo{width:100%;max-width:520px;margin:0 auto;padding:0}.strip{gap:22px 16px}.polaroid{flex-basis:calc((100% - 4 * 16px) / 5);max-width:150px}.strip .polaroid:nth-of-type(3n+2){--dy:6px}.strip .polaroid:nth-of-type(3n){--dy:3px}.strip .polaroid:nth-of-type(5){--dy:8px}.strip .polaroid:nth-of-type(8){--dy:2px}}
+@media (max-width:560px){.hero-logo{max-width:360px}.polaroid{flex-basis:calc((100% - 2 * 12px) / 3);max-width:none}.strip{gap:20px 12px}.polaroid figcaption{height:44px;font-size:.78rem}.strip .polaroid:nth-of-type(3n+2){--dy:5px}.strip .polaroid:nth-of-type(3n){--dy:2px}.strip .polaroid:nth-of-type(5){--dy:6px}.strip .polaroid:nth-of-type(8){--dy:1px}.page-head .sticker.bottom{display:none}}
 
 /* ---------- bento (home) ---------- */
 .bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
@@ -533,7 +526,7 @@ em.serif{font-style:italic}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:34px}
 @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.foot-grid{grid-template-columns:1fr}}
-.foot-brand{display:flex;gap:20px;align-items:flex-start}
+.foot-brand{display:flex;gap:24px;align-items:flex-start}
 .foot-brand h3{font-size:1.6rem;margin-bottom:8px}
 .foot-brand p{color:rgba(255,255,255,.75);max-width:44ch}
 .foot-col h4{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}

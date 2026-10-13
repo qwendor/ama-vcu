@@ -29,11 +29,8 @@
   /* ---------- tiny view helpers ---------- */
   const ico = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
   const sticker = (kind, style, extra = '') => `<span class="sticker ${extra}" style="${style}" aria-hidden="true"><svg><use href="#st-${kind}"/></svg></span>`;
-  const coin = (size, cls = '') => {
-    const edges = Array.from({ length: 9 }, (_, i) => `<span class="edge" style="--z:${((i - 4) * 1.4).toFixed(1)}"></span>`).join('');
-    return `<span class="coin grab ${cls}"${size ? ` style="--coin:${size}px"` : ''} aria-label="AMA at VCU logo, drag to spin"><span class="coin-inner">${edges}<svg class="face front"><use href="#coin-face"/></svg><svg class="face back"><use href="#coin-face"/></svg></span></span>`;
-  };
-  const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '');
+  const logoStill = (cls = '', w = 150) => `<img class="${cls}" src="assets/logo/ama-logo-still.webp" srcset="assets/logo/ama-logo-still@2x.webp 2x" width="${w}" alt="AMA at VCU" decoding="async">`;
+  const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '').replace(/^Community Outreach$/, 'Outreach');
   const swash = () => `<div class="swash-line" aria-hidden="true"><svg><use href="#swash"/></svg></div>`;
   const ext = (href, label, cls = 'btn btn-gold') => `<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ${ico('i-ext')}</a>`;
   const route = (href, label, cls = 'btn btn-navy') => `<a class="${cls}" href="${href}">${label} ${ico('i-arrow')}</a>`;
@@ -187,36 +184,42 @@
   pages.home = () => {
     const next = upcoming().filter(e => e.id !== 'icc27')[0] || upcoming()[0];
     const nl = D.newsletter.current;
-    const fan = [D.board[0], D.board[1], D.board[3]];
     const icc = D.icc;
     const wins26 = D.icc.results[0].wins.length;
     return `
     <section class="hero s-navy">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
-          <span class="tag-pill sm">${esc(D.org.name)}</span>
-          <h1 class="h-xl">Define your <span class="underline-wrap"><em class="serif">brand.</em><svg aria-hidden="true"><use href="#underline"/></svg></span></h1>
-          <p class="lede">${esc(D.org.blurb)}</p>
-          <div class="btn-row">
-            <a class="btn btn-gold btn-lg" href="#/involved">Become a member ${ico('i-arrow')}</a>
-            <a class="btn btn-ghost btn-lg" href="#/events">What's coming up</a>
+      <div class="wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="tag-pill sm">${esc(D.org.name)}</span>
+            <h1 class="h-xl">Define your <span class="underline-wrap"><em class="serif">brand.</em><svg aria-hidden="true"><use href="#underline"/></svg></span></h1>
+            <p class="lede">${esc(D.org.blurb)}</p>
+            <div class="btn-row">
+              <a class="btn btn-gold btn-lg" href="#/involved">Become a member ${ico('i-arrow')}</a>
+              <a class="btn btn-ghost btn-lg" href="#/events">What's coming up</a>
+            </div>
+            <div class="hero-stats">
+              <span class="stat-pill">${ico('i-star')} Founded <b>${D.org.founded}</b></span>
+              <span class="stat-pill">${ico('i-bolt')} The <b>only</b> marketing org at VCU</span>
+              <span class="stat-pill">${ico('i-trophy')} <b>${wins26}</b> ICC 2026 placements</span>
+              <span class="stat-pill">${ico('i-cal')} ICC in <b>${daysUntil(icc.start.slice(0, 10))}</b> days</span>
+            </div>
           </div>
-          <div class="hero-stats">
-            <span class="stat-pill">${ico('i-star')} Founded <b>${D.org.founded}</b></span>
-            <span class="stat-pill">${ico('i-bolt')} The <b>only</b> marketing org at VCU</span>
-            <span class="stat-pill">${ico('i-trophy')} <b>${wins26}</b> ICC 2026 placements</span>
-            <span class="stat-pill">${ico('i-cal')} ICC in <b>${daysUntil(icc.start.slice(0, 10))}</b> days</span>
+          <div class="hero-logo">
+            <div data-logo></div>
+            ${sticker('sparkle', '--x:-6px;--y:-6px;--r:12deg;--s:42px', 'st-float')}
           </div>
         </div>
-        <div class="hero-art">
-          ${coin(0, 'hero-coin')}
-          ${sticker('star', '--x:-16px;--y:-14px;--r:-14deg;--s:46px', 'hi st-float')}
-          ${sticker('sparkle', '--x:-8px;--y:56px;--r:12deg;--s:40px', 'bottom st-float')}
-          ${sticker('bang', '--x:-24px;--y:-10px;--r:8deg;--s:48px', 'right bottom st-float')}
-          <div class="fan">
+        <div class="board-strip">
+          <div class="strip-head">
+            ${sticker('star', '--x:-18px;--y:-18px;--r:-14deg;--s:44px', 'hi st-float')}
             <span class="tag-pill sm">Meet the ${D.org.year} board</span>
-            ${fan.map(m => `<figure class="polaroid"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></figure>`).join('')}
+            <a class="textlink" href="#/board">Full bios ${ico('i-arrow')}</a>
           </div>
+          <div class="strip">
+            ${D.board.map(m => `<a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`).join('')}
+          </div>
+          ${sticker('bang', '--x:-36px;--y:-34px;--r:8deg;--s:46px', 'right bottom st-float')}
         </div>
       </div>
     </section>
@@ -551,7 +554,7 @@
     <section class="section s-cream">
       <div class="wrap split" style="align-items:start;grid-template-columns:1.4fr .8fr">
         <div class="news-card reveal">
-          <div class="nc-head"><div><span class="chip">${esc(c.issue)}</span><h3>${esc(c.month)}</h3></div>${coin(72, 'coin-sm')}</div>
+          <div class="nc-head"><div><span class="chip">${esc(c.issue)}</span><h3>${esc(c.month)}</h3></div>${logoStill('nc-logo', 104)}</div>
           <div class="nc-body">
             <p class="lede" style="margin:0">${esc(c.intro)}</p>
             ${c.sections.map(s => `<div><h4>${esc(s.h)}</h4><ul>${s.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul></div>`).join('')}
@@ -690,7 +693,7 @@
      AFTER RENDER: behaviors
      =================================================================== */
   function afterRender() {
-    initReveal(); initMarquee(); initCoins(); initPillars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
+    initReveal(); initMarquee(); initLogo(); initPillars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
   }
 
   function initReveal() {
@@ -703,19 +706,10 @@
     const items = ['Define your brand', '#oneama', 'Coffee chats every other Sunday', 'ICC 2027 · New Orleans', 'The only marketing org at VCU', 'Marketers of Tomorrow', 'Since 1983', '#amavcu'];
     $$('[data-marquee]').forEach(t => t.innerHTML = items.map(i => `<span>${esc(i)}</span>`).join(''));
   }
-  function initCoins() {
-    $$('.coin.grab').forEach(c => {
-      if (c.dataset.ready) return; c.dataset.ready = 1;
-      const inner = c.querySelector('.coin-inner');
-      let x0 = 0, base = 0, dragging = false;
-      const angle = () => { const m = new DOMMatrix(getComputedStyle(inner).transform); return Math.atan2(m.m31, m.m11) * 180 / Math.PI; };
-      c.addEventListener('pointerdown', e => {
-        dragging = true; x0 = e.clientX; base = angle();
-        inner.style.animation = 'none'; inner.style.setProperty('--spin', base + 'deg'); c.classList.add('drag'); c.setPointerCapture(e.pointerId); e.preventDefault();
-      });
-      c.addEventListener('pointermove', e => { if (!dragging) return; inner.style.setProperty('--spin', (base + (e.clientX - x0) * 0.7) + 'deg'); });
-      const up = () => { if (!dragging) return; dragging = false; c.classList.remove('drag'); if (!reduce) { inner.style.animation = ''; } };
-      c.addEventListener('pointerup', up); c.addEventListener('pointercancel', up);
+  function initLogo() {
+    $$('[data-logo]').forEach(el => {
+      if (el.dataset.ready || !window.AMALogo) return; el.dataset.ready = 1;
+      AMALogo.mount(el, { src: 'assets/logo/ama-logo-stacked.mp4', poster: 'assets/logo/ama-logo-poster.webp', still: reduce });
     });
   }
   function initPillars() {
@@ -872,7 +866,6 @@
   $('#footSocial').innerHTML = socialRow(); $('#mmSocial').innerHTML = socialRow();
   $('#footRams').href = D.links.ramsconnect; $('#footLinktree').href = D.links.linktree; $('#footMail').href = `mailto:${D.org.email}`;
   $('#year').textContent = new Date().getFullYear();
-  initCoins();
 
   render();
   window.AMA_TEST = { NOW, TODAY, upcoming, past, render };
