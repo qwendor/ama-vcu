@@ -49,6 +49,18 @@ Rules baked into the site:
 Drop web-sized images in `assets/img/gallery/` (and a smaller copy in `assets/img/gallery/t/`), then add a line to `gallery` in `data.js`.
 `tools/build_assets.py` resizes everything in `assets/raw/ig/events/` for you if Python and Pillow are installed.
 
+## The 3D logo
+
+The spinning logo in the hero is `assets/logo/ama-logo-stacked.mp4`: colour on the top half, alpha matte on the bottom half, recomposited by `js/logo.js` with WebGL so it works in Safari too (Safari cannot play transparent WebM).
+
+The source is the transparent PNG sequence in `assets/raw/logo-png/frames/` (480 RGBA frames, 60 fps, 8 s, loops 0479 back to 0000). To rebuild after a new export, unzip the new sequence over that folder and run:
+
+```
+python tools/build_logo.py
+```
+
+It checks the frames against `manifest.json`, packs colour and alpha, encodes the MP4 and writes the transparent stills used in the header, footer and newsletter card. If only a black-background video is available, extract its frames to `assets/raw/logo/frames/` with `ffmpeg -i logo.webm -fps_mode passthrough assets/raw/logo/frames/f_%04d.png` and the script estimates the alpha instead.
+
 ## Folders
 
 - `assets/img/board/` portraits cropped from the September 2026 board intro post
