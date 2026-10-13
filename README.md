@@ -59,4 +59,11 @@ Drop web-sized images in `assets/img/gallery/` (and a smaller copy in `assets/im
 
 ## Deploy
 
-Any static host works (GitHub Pages, Cloudflare Pages, Netlify). Upload the folder as is. Hash routing (`#/events`) means no server configuration is needed.
+The site is live in two places:
+
+- https://amavcu.pages.dev (Cloudflare Pages, the link to share)
+- https://qwendor.github.io/ama-vcu/ (GitHub Pages, repo `qwendor/ama-vcu`)
+
+To publish a change: commit it, then run `python tools/publish.py`. That pushes to GitHub (Pages rebuilds in about a minute) and deploys the committed files to Cloudflare Pages. Only files tracked by git go online; `assets/raw/` and `tools/` stay on the PC.
+
+While the site is a concept preview it carries a `noindex` meta tag, a `robots.txt` that blocks crawlers, and a footer line saying it is not yet official. Remove those three when AMA makes it official.
