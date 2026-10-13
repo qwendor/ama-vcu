@@ -33,6 +33,7 @@
     const edges = Array.from({ length: 9 }, (_, i) => `<span class="edge" style="--z:${((i - 4) * 1.4).toFixed(1)}"></span>`).join('');
     return `<span class="coin grab ${cls}"${size ? ` style="--coin:${size}px"` : ''} aria-label="AMA at VCU logo, drag to spin"><span class="coin-inner">${edges}<svg class="face front"><use href="#coin-face"/></svg><svg class="face back"><use href="#coin-face"/></svg></span></span>`;
   };
+  const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '');
   const swash = () => `<div class="swash-line" aria-hidden="true"><svg><use href="#swash"/></svg></div>`;
   const ext = (href, label, cls = 'btn btn-gold') => `<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ${ico('i-ext')}</a>`;
   const route = (href, label, cls = 'btn btn-navy') => `<a class="${cls}" href="${href}">${label} ${ico('i-arrow')}</a>`;
@@ -209,12 +210,12 @@
         </div>
         <div class="hero-art">
           ${coin(0, 'hero-coin')}
-          ${sticker('sparkle', '--x:12%;--y:160px;--r:12deg;--s:44px', 'right st-float')}
-          ${sticker('star', '--x:-6px;--y:40px;--r:-16deg;--s:58px', 'st-float')}
-          ${sticker('bang', '--x:4%;--y:10px;--r:8deg;--s:52px', 'right bottom st-float')}
+          ${sticker('star', '--x:-16px;--y:-14px;--r:-14deg;--s:46px', 'hi st-float')}
+          ${sticker('sparkle', '--x:-8px;--y:56px;--r:12deg;--s:40px', 'bottom st-float')}
+          ${sticker('bang', '--x:-24px;--y:-10px;--r:8deg;--s:48px', 'right bottom st-float')}
           <div class="fan">
             <span class="tag-pill sm">Meet the ${D.org.year} board</span>
-            ${fan.map(m => `<figure class="polaroid"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(m.role.replace(' of Events & Operations', ''))}</small></figcaption></figure>`).join('')}
+            ${fan.map(m => `<figure class="polaroid"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></figure>`).join('')}
           </div>
         </div>
       </div>
