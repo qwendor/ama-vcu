@@ -137,7 +137,7 @@ em.serif{font-style:italic}
 .site-head.scrolled{box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .head-row{display:flex;align-items:center;gap:20px;height:var(--head-h)}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;margin-right:auto}
-.brand-logo{height:42px;width:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));transition:transform .4s var(--spring)}
+.brand-logo{height:42px;width:auto;aspect-ratio:766/400;display:block;overflow:visible;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));transition:transform .4s var(--spring)}
 .brand:hover .brand-logo{transform:scale(1.05)}
 .nav{display:flex;align-items:center;gap:4px}
 .nav>a,.nav-group>button{display:inline-flex;align-items:center;gap:4px;padding:10px 14px;border-radius:999px;text-decoration:none;font-weight:800;font-size:.95rem;background:transparent;border:0;color:rgba(255,255,255,.88);transition:background .2s,color .2s}
@@ -177,8 +177,8 @@ em.serif{font-style:italic}
 .logo3d.live .logo3d-canvas{opacity:1}
 .logo3d.live .logo3d-still{opacity:0}
 .logo3d-src{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.foot-logo{width:150px;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
-.nc-logo{width:104px;height:auto;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.foot-logo{width:150px;height:auto;aspect-ratio:766/400;overflow:visible;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+.nc-logo{width:104px;height:auto;aspect-ratio:766/400;overflow:visible;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
 
 /* ---------- gingham marquee ---------- */
 .gingham{background-color:#F7C544;background-image:linear-gradient(90deg,rgba(255,255,255,.38) 50%,transparent 50%),linear-gradient(rgba(255,255,255,.38) 50%,transparent 50%);background-size:26px 26px;color:var(--navy-800);overflow:hidden;border-top:3px solid rgba(255,255,255,.8);border-bottom:3px solid rgba(255,255,255,.8)}

@@ -29,7 +29,7 @@
   /* ---------- tiny view helpers ---------- */
   const ico = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
   const sticker = (kind, style, extra = '') => `<span class="sticker ${extra}" style="${style}" aria-hidden="true"><svg><use href="#st-${kind}"/></svg></span>`;
-  const logoStill = (cls = '', w = 150) => `<img class="${cls}" src="assets/logo/ama-logo-still.webp" srcset="assets/logo/ama-logo-still@2x.webp 2x" width="${w}" alt="AMA at VCU" decoding="async">`;
+  const logoStill = (cls = '', w = 150) => `<svg class="${cls}" viewBox="0 0 766 400" width="${w}" role="img" aria-label="AMA at VCU"><use href="#mark3d"/></svg>`;
   const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '').replace(/^Community Outreach$/, 'Outreach');
   const swash = () => `<div class="swash-line" aria-hidden="true"><svg><use href="#swash"/></svg></div>`;
   const ext = (href, label, cls = 'btn btn-gold') => `<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ${ico('i-ext')}</a>`;

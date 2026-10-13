@@ -21,6 +21,14 @@
 <!-- ===== SVG library: logo, stickers, icons ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <!-- flat, straight version of the 3D mark for small sizes (header, footer) -->
+    <symbol id="mark3d" viewBox="0 0 766 400">
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g transform="translate(3 6)" stroke="#9A6A10"><path d="M44 236 L154 26 L264 236 M304 236 V26 L392 176 L480 26 V236 M546 44 L706 131 L546 218" stroke-width="50"/><path d="M44 338 H214 M258 304 L292 372 L326 304 M422 316 A34 34 0 1 0 422 358 M450 304 V340 A30 30 0 0 0 510 340 V304 M552 338 H722" stroke-width="34"/></g>
+        <g stroke="#E6B239"><path d="M44 236 L154 26 L264 236 M304 236 V26 L392 176 L480 26 V236 M546 44 L706 131 L546 218" stroke-width="50"/><path d="M44 338 H214 M258 304 L292 372 L326 304 M422 316 A34 34 0 1 0 422 358 M450 304 V340 A30 30 0 0 0 510 340 V304 M552 338 H722" stroke-width="34"/></g>
+        <g stroke="#FFFDF6"><path d="M44 236 L154 26 L264 236 M304 236 V26 L392 176 L480 26 V236 M546 44 L706 131 L546 218" stroke-width="34"/><path d="M44 338 H214 M258 304 L292 372 L326 304 M422 316 A34 34 0 1 0 422 358 M450 304 V340 A30 30 0 0 0 510 340 V304 M552 338 H722" stroke-width="20"/></g>
+      </g>
+    </symbol>
     <!-- the ΛM> wordmark -->
     <symbol id="mark" viewBox="0 0 200 110">
       <path d="M12 94 L48 16 L84 94 M100 94 V16 L126 60 L152 16 V94 M170 26 L196 55 L170 84" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
@@ -120,7 +128,7 @@
 <header class="site-head" id="siteHead">
   <div class="wrap head-row">
     <a href="#/" class="brand" aria-label="AMA at VCU home">
-      <img class="brand-logo" src="assets/logo/ama-logo-still.webp" srcset="assets/logo/ama-logo-still@2x.webp 2x" width="78" height="42" alt="AMA at VCU">
+      <svg class="brand-logo" viewBox="0 0 766 400" role="img" aria-label="AMA at VCU"><use href="#mark3d"/></svg>
     </a>
     <nav class="nav" aria-label="Main">
       <a href="#/" data-nav="">Home</a>
@@ -175,7 +183,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <img class="foot-logo" src="assets/logo/ama-logo-still.webp" srcset="assets/logo/ama-logo-still@2x.webp 2x" width="150" alt="" aria-hidden="true">
+        <svg class="foot-logo" viewBox="0 0 766 400" aria-hidden="true"><use href="#mark3d"/></svg>
         <div>
           <h3>Define your brand.</h3>
           <p>American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.</p>
