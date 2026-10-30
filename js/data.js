@@ -45,6 +45,19 @@ window.AMA = {
     icc2026Results: "https://www.ama.org/press-releases/2026-international-collegiate-conference-award-winners-announced-by-the-american-marketing-association/"
   },
 
+  /* Home page background. Set `video` to a campus b-roll mp4 to use it instead of
+     the photos. Photos come from Wikimedia Commons; keep the credits with them. */
+  hero: {
+    video: "",
+    secondsPerSlide: 9,
+    slides: [
+      { src: "assets/img/campus/compass.webp", alt: "The Compass and Cabell Library", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Cabell_Library_by_Jeff_Auth.jpg" },
+      { src: "assets/img/campus/vcu-letters.webp", alt: "The VCU letters at Shafer Court", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Shafer_Court_letters_by_Jeff_Auth.jpg" },
+      { src: "assets/img/campus/snead-hall.webp", alt: "Snead Hall, home of the School of Business", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Snead_Hall_by_Jeff_Auth.JPG" },
+      { src: "assets/img/campus/linden-walk.webp", alt: "Linden Street walkway into the Commons plaza", credit: "Will Weaver", license: "CC BY-SA 2.0", url: "https://commons.wikimedia.org/wiki/File:VirginiaCommonwealthUniversity.jpg" }
+    ]
+  },
+
   /* Recruitment video on the home page. Fill ONE of these: a YouTube id, an
      Instagram reel URL, or an mp4 path. Leave all empty to show the poster. */
   video: {

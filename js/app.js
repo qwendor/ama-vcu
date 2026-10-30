@@ -28,22 +28,20 @@
 
   /* ---------- tiny view helpers ---------- */
   const ico = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
-  const sticker = (kind, style, extra = '') => `<span class="sticker ${extra}" style="${style}" aria-hidden="true"><svg><use href="#st-${kind}"/></svg></span>`;
+  const sticker = () => '';   // v2: no doodle stickers
   const logoStill = (cls = '', w = 150) => `<svg class="${cls}" viewBox="0 0 766 400" width="${w}" role="img" aria-label="AMA at VCU"><use href="#mark3d"/></svg>`;
   const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '').replace(/^Community Outreach$/, 'Outreach');
-  const swash = () => `<div class="swash-line" aria-hidden="true"><svg><use href="#swash"/></svg></div>`;
+  const swash = () => '';
   const ext = (href, label, cls = 'btn btn-gold') => `<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ${ico('i-ext')}</a>`;
   const route = (href, label, cls = 'btn btn-navy') => `<a class="${cls}" href="${href}">${label} ${ico('i-arrow')}</a>`;
   const pageHead = (eyebrow, title, lede, extra = '') => `
-    <section class="page-head s-navy">
+    <section class="page-head">
       <div class="wrap">
-        <span class="tag-pill sm">${esc(eyebrow)}</span>
+        <p class="eyebrow">${esc(eyebrow)}</p>
         <h1 class="h-lg">${title}</h1>
         ${lede ? `<p class="lede">${lede}</p>` : ''}
         ${extra}
       </div>
-      ${sticker('star', '--x:6%;--y:18px;--r:-14deg;--s:46px', 'right st-float')}
-      ${sticker('sparkle', '--x:14%;--y:24px;--r:10deg;--s:34px', 'right bottom st-float')}
     </section>`;
 
   /* ---------- events ---------- */
@@ -115,16 +113,16 @@
   /* ---------- components ---------- */
   function boardCard(m, i) {
     const li = m.linkedin || `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(m.name + ' VCU')}`;
-    const st = { stars: ['star', '--x:-10px;--y:-14px;--r:-18deg;--s:44px'], bang: ['bang', '--x:-6px;--y:-10px;--r:8deg;--s:44px'], sun: ['sun', '--x:-14px;--y:-16px;--r:0deg;--s:52px'], sparkle: ['sparkle', '--x:-8px;--y:-12px;--r:14deg;--s:40px'] }[m.sticker] || ['star', '--x:-10px;--y:-14px;--r:-18deg;--s:44px'];
     return `<article class="member reveal d${(i % 3) + 1}">
-      <span class="tag-pill">${esc(m.name)}</span>
-      ${sticker(st[0], st[1], 'right st-float')}
       <div class="frame"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"></div>
-      <div class="member-role"><span class="role">${esc(m.role)}</span><a class="li-btn" href="${li}" target="_blank" rel="noopener">${ico('i-in')} LinkedIn</a></div>
-      <div class="member-info">
-        <div><b>Year & major:</b> ${esc(m.year)}, ${esc(m.major)}</div>
-        <div><b>Career goal:</b> ${esc(m.goal)}</div>
-        <div><b>Fun fact:</b> ${esc(m.fun)}</div>
+      <div class="member-body">
+        <h3>${esc(m.name)}</h3>
+        <div class="member-role"><span class="role">${esc(m.role)}</span><a class="li-btn" href="${li}" target="_blank" rel="noopener">${ico('i-in')} LinkedIn</a></div>
+        <div class="member-info">
+          <div><b>Year and major</b> ${esc(m.year)}, ${esc(m.major)}</div>
+          <div><b>Career goal</b> ${esc(m.goal)}</div>
+          <div><b>Fun fact</b> ${esc(m.fun)}</div>
+        </div>
       </div>
     </article>`;
   }
@@ -181,80 +179,90 @@
      =================================================================== */
   const pages = {};
 
+  function heroBackground() {
+    const H = D.hero || {};
+    if (H.video) return `<div class="hero-bg"><video autoplay muted loop playsinline preload="auto" poster="${(H.slides && H.slides[0] && H.slides[0].src) || ''}" src="${H.video}" aria-hidden="true"></video></div>`;
+    const slides = (H.slides || []).filter(s => s.src);
+    const n = Math.max(1, slides.length), step = H.secondsPerSlide || 9, dur = n * step;
+    return `<div class="hero-bg ${n === 1 ? 'single' : ''}" aria-hidden="true">${slides.map((s, i) => `<div class="slide" style="background-image:url('${s.src}');--dur:${dur}s;--delay:${i * step}s"></div>`).join('')}</div>`;
+  }
+  function heroCredit() {
+    const slides = ((D.hero || {}).slides || []).filter(s => s.credit);
+    if (!slides.length) return '';
+    const seen = new Map(); slides.forEach(s => { if (!seen.has(s.credit)) seen.set(s.credit, s); });
+    return `<div class="hero-credit">Campus photos: ${[...seen.values()].map(s => s.url ? `<a href="${s.url}" target="_blank" rel="noopener">${esc(s.credit)}</a>` : esc(s.credit)).join(', ')} (${[...new Set(slides.map(s => s.license))].join(', ')})</div>`;
+  }
+
   pages.home = () => {
-    const next = upcoming().filter(e => e.id !== 'icc27')[0] || upcoming()[0];
-    const nl = D.newsletter.current;
+    const ups = upcoming().slice(0, 3);
     const icc = D.icc;
     const wins26 = D.icc.results[0].wins.length;
+    const days = daysUntil(icc.start.slice(0, 10));
+    const feats = [
+      { h: 'Compete', p: 'Perfect Pitch, the Sales Competition, case and strategy rounds against 150+ chapters.', img: 'assets/img/gallery/mw-04.webp' },
+      { h: 'Learn', p: 'Keynotes and workshops from marketers at the top of the industry.', img: 'assets/img/gallery/mw-13.webp' },
+      { h: 'Network', p: 'A recruiter hall and 1,600 students who do what you do.', img: 'assets/img/gallery/mw-14.webp' },
+      { h: 'Travel', p: 'Three days in New Orleans with the chapter, fundraised together.', img: 'assets/img/gallery/mw-02.webp' }
+    ];
     return `
-    <section class="hero s-navy">
-      <div class="wrap">
-        <div class="hero-grid">
-          <div class="hero-copy">
-            <span class="tag-pill sm" style="--i:0">${esc(D.org.name)}</span>
-            <h1 class="h-xl" style="--i:1">Define your <span class="underline-wrap"><em class="serif">brand.</em><svg aria-hidden="true"><use href="#underline"/></svg></span></h1>
-            <p class="lede" style="--i:2">${esc(D.org.blurb)}</p>
-            <div class="btn-row" style="--i:3">
-              <a class="btn btn-gold btn-lg" href="#/involved">Become a member ${ico('i-arrow')}</a>
-              <a class="btn btn-ghost btn-lg" href="#/events">What's coming up</a>
-            </div>
-            <div class="hero-stats" style="--i:4">
-              <span class="stat-pill">${ico('i-star')} Founded <b>${D.org.founded}</b></span>
-              <span class="stat-pill">${ico('i-bolt')} The <b>only</b> marketing org at VCU</span>
-              <span class="stat-pill">${ico('i-trophy')} <b data-count="${wins26}">${wins26}</b> ICC 2026 placements</span>
-              <span class="stat-pill">${ico('i-cal')} ICC in <b data-count="${daysUntil(icc.start.slice(0, 10))}">${daysUntil(icc.start.slice(0, 10))}</b> days</span>
-            </div>
+    <section class="hero" id="top">
+      ${heroBackground()}
+      <div class="hero-inner">
+        <div class="hero-logo"><div data-logo></div></div>
+        <span class="hero-school">Virginia Commonwealth University</span>
+        <h1>American Marketing Association</h1>
+        <p class="tagline">Define your brand. The only marketing organization at VCU: speakers, competitions, coffee chats and a chapter that travels to ICC together.</p>
+        <div class="btn-row">
+          <a class="btn btn-gold btn-lg" href="#/involved">Become a member</a>
+          <a class="btn btn-ghost btn-lg" href="#/events">Upcoming events</a>
+        </div>
+      </div>
+      ${heroCredit()}
+      <div class="hero-strip"><div class="wrap">
+        <div class="stat"><b>${D.org.founded}</b><span>Founded</span></div>
+        <div class="stat"><b data-count="${wins26}">${wins26}</b><span>ICC 2026 placements</span></div>
+        <div class="stat"><b data-count="${days}">${days}</b><span>Days to ICC 2027</span></div>
+        <div class="stat"><b>$${D.membership.dues}</b><span>Annual dues</span></div>
+      </div></div>
+    </section>
+
+    <section class="section">
+      <div class="wrap intro">
+        <div class="reveal">
+          <p class="eyebrow">What is AMA at VCU</p>
+          <h2 class="h-lg">Real-world marketing experience, on campus.</h2>
+          <p class="lede" style="margin-top:14px">${esc(D.org.blurb)} Open to every major, since ${D.org.founded}, and connected to AMA Richmond, the professional chapter a few blocks away.</p>
+          <div class="quick-links">
+            <a href="#/events">Events and calendar <span>Coffee chats, speakers, competitions</span></a>
+            <a href="#/board">Executive board <span>Meet the ${D.org.year} team</span></a>
+            <a href="#/icc">ICC 2027 <span>${esc(icc.dates)}, ${esc(icc.city)}</span></a>
+            <a href="#/agency">Marketers of Tomorrow <span>Our student-run agency</span></a>
           </div>
-          <div class="hero-art">
-            <div class="ring">
-              <div class="ring-logo"><div data-logo></div></div>
-              ${D.board.map(m => `<span class="pin"><a class="polaroid" href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a></span>`).join('')}
-              ${sticker('star', '--x:28%;--y:-5%;--r:-14deg;--s:40px', 'st-float')}
-              ${sticker('sparkle', '--x:64%;--y:3%;--r:12deg;--s:30px', 'st-float')}
-              ${sticker('bang', '--x:-9%;--y:-17%;--r:8deg;--s:42px', 'right bottom st-float')}
-            </div>
-            <div class="ring-foot"><span class="tag-pill sm">The ${D.org.year} executive board</span><a class="textlink" href="#/board">Full bios ${ico('i-arrow')}</a></div>
+        </div>
+        <div class="reveal d2">
+          <div class="video-box" data-video>
+            <img src="${D.video.poster}" alt="">
+            <button type="button" class="video-play" data-play><span class="play">${ico('i-play')}</span>${esc(D.video.title)}</button>
+            ${!(D.video.youtube || D.video.instagram || D.video.mp4) ? `<span class="tag-pill sm video-note">Video coming soon</span>` : ''}
           </div>
         </div>
       </div>
     </section>
 
-    <div class="gingham" aria-hidden="true"><div class="marquee"><div class="track" data-marquee></div><div class="track" data-marquee></div></div></div>
-
     <section class="section s-cream" id="upnext">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div><p class="eyebrow">Up next</p><h2 class="h-lg">This <em class="serif navy">month</em> at AMA</h2></div>
+          <div><p class="eyebrow">Upcoming</p><h2 class="h-lg">Events this month</h2></div>
           <a class="textlink more" href="#/events">Full calendar ${ico('i-arrow')}</a>
         </div>
         <div class="bento">
-          ${next ? `<article class="card event-card span7 reveal">
-            ${next.img ? `<img class="ev-img" src="${next.img}" alt="">` : ''}
-            <div class="ev-row">${dateTile(next)}<div><span class="chip navy">Next event</span><h3 class="h-md" style="margin-top:6px">${esc(next.title)}</h3>${evMeta(next)}</div></div>
-            <p style="margin:0">${esc(next.blurb || '')}</p>
-            ${evCTA(next)}
-          </article>` : ''}
+          <div class="span7 reveal"><div class="ev-list">${ups.map(evItem).join('')}${tba().slice(0, 1).map(evItem).join('')}${ups.length < 2 ? `<div class="card flat"><b>New events post on RamsConnect and Instagram first.</b><p class="small muted" style="margin:6px 0 12px">Coffee chats, speakers and competitions are added through the semester.</p><div class="btn-row">${ext(D.links.ramsconnectEvents, 'RamsConnect', 'btn btn-navy btn-sm')}${route('#/events', 'Past events', 'btn btn-ghost btn-sm')}</div></div>` : ''}</div></div>
           <article class="card navy span5 reveal d1">
-            ${sticker('star', '--x:-14px;--y:-16px;--r:-14deg;--s:48px', 'st-float')}
             <span class="chip">${esc(icc.city)}</span>
-            <h3 class="h-md" style="margin-top:8px">${esc(icc.short)} countdown</h3>
+            <h3 class="h-md" style="margin-top:10px">${esc(icc.short)} countdown</h3>
             <p class="small" style="opacity:.85">${esc(icc.dates)}. Applications are open.</p>
             ${countdown(icc.start)}
             <div class="btn-row">${ext(D.links.iccApplication, 'Apply', 'btn btn-gold btn-sm')}${route('#/icc', 'Our ICC record', 'btn btn-ghost btn-sm')}</div>
-          </article>
-          <article class="card span7 reveal d2">
-            <span class="chip">Newsletter · ${esc(nl.month)}</span>
-            <h3 class="h-md" style="margin-top:8px">This month's issue</h3>
-            <p>${esc(nl.intro)}</p>
-            <ul style="margin:0 0 16px;padding-left:20px;display:grid;gap:6px">${nl.sections[1].items.slice(0, 2).map(i => `<li>${esc(i)}</li>`).join('')}</ul>
-            ${route('#/newsletter', 'Read the full issue', 'btn btn-navy btn-sm')}
-          </article>
-          <article class="card gold span5 reveal d3">
-            ${sticker('sun', '--x:-16px;--y:-18px;--r:0deg;--s:56px', 'right st-float')}
-            <span class="chip navy">${ico('i-coffee')} Coffee chats</span>
-            <h3 class="h-md" style="margin-top:8px">Every other Sunday, <em class="serif">12 to 2.</em></h3>
-            <p style="margin-bottom:14px">No agenda, no commitment. A different Richmond cafe each time, announced on Instagram and RamsConnect. The easiest way to meet us.</p>
-            ${ext(D.links.instagram, 'See the next cafe', 'btn btn-navy btn-sm')}
           </article>
         </div>
       </div>
@@ -263,68 +271,57 @@
     <section class="section s-navy">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div><p class="eyebrow">Why AMA</p><h2 class="h-lg">The recruitment <em class="serif gold">video.</em></h2></div>
-          <p>Sixty seconds on what the chapter is, from the people in it.</p>
-        </div>
-        <div class="video-box reveal" data-video>
-          <img src="${D.video.poster}" alt="">
-          <button type="button" class="video-play" data-play><span class="play">${ico('i-play')}</span>${esc(D.video.title)}</button>
-          ${!(D.video.youtube || D.video.instagram || D.video.mp4) ? `<span class="tag-pill sm video-note">Video coming soon</span>` : ''}
-        </div>
-      </div>
-    </section>
-
-    <section class="section s-cream">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div><p class="eyebrow">What we actually do</p><h2 class="h-lg">Five <em class="serif navy">pillars,</em> one chapter</h2></div>
-          <p>Every AMA chapter is built on the same five pillars. Tap one to see what it looks like at VCU.</p>
+          <div><p class="eyebrow">What we do</p><h2 class="h-lg">Five pillars, one chapter</h2></div>
+          <p>Every AMA chapter is built on the same five pillars. Select one to see what it looks like at VCU.</p>
         </div>
         <div class="reveal">${pillarsBlock()}</div>
       </div>
     </section>
 
-    <section class="section s-navy deep">
+    <section class="section s-gold">
       <div class="wrap">
         <div class="sec-head reveal">
-          <div><p class="eyebrow">ICYMI</p><h2 class="h-lg">In case you <em class="serif gold">missed it</em></h2></div>
-          <a class="textlink more" href="#/blog">All posts ${ico('i-arrow')}</a>
+          <div><p class="eyebrow">International Collegiate Conference</p><h2 class="h-lg">ICC 2027: ${esc(icc.city)}, ${esc(icc.dates)}</h2></div>
+          <div class="btn-row">${route('#/icc', 'Learn more', 'btn btn-navy')}${ext(D.links.iccApplication, 'Apply to go', 'btn btn-ghost')}</div>
         </div>
-        <div class="grid g3">${D.posts.slice(0, 3).map(p => postCard(p)).join('')}</div>
+        <div class="feature-cards reveal">${feats.map(f => `<div class="feature"><img src="${f.img}" alt="" loading="lazy"><div><h4>${f.h}</h4><p>${f.p}</p></div></div>`).join('')}</div>
       </div>
     </section>
 
-    <section class="section s-gold">
-      <div class="wrap split">
-        <div class="reveal">
-          <p class="eyebrow">The ${D.org.year} executive board</p>
-          <h2 class="h-lg">Nine people who <em class="serif">show up.</em></h2>
-          <p class="lede" style="margin:12px 0 20px">A president who loves pickleball, a VP into bonsai trees, a finance director who cuts hair. Click a face.</p>
-          <div class="avatar-row" style="margin-bottom:22px">${D.board.map(m => `<a href="#/board" title="${esc(m.name)}"><img src="assets/img/board/${m.slug}-sq.webp" alt="${esc(m.name)}" loading="lazy"></a>`).join('')}</div>
-          ${route('#/board', 'Meet the board')}
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div><p class="eyebrow">${D.org.year} executive board</p><h2 class="h-lg">The people behind the chapter</h2></div>
+          <a class="textlink more" href="#/board">Full bios ${ico('i-arrow')}</a>
         </div>
-        <div class="card reveal d2">
-          ${sticker('bang', '--x:-12px;--y:-18px;--r:10deg;--s:50px', 'right st-float')}
-          <span class="chip navy">${ico('i-trophy')} Latest wins</span>
-          <h3 class="h-md" style="margin:10px 0 14px">ICC 2026, Chicago</h3>
-          <div class="results">${D.icc.results[0].wins.slice(0, 4).map(w => `<div class="res-row">${medal(w.place)}<div><b>${esc(w.who)}</b><div class="comp">${esc(w.comp)}</div></div></div>`).join('')}</div>
-          <div class="btn-row" style="margin-top:16px">${route('#/accomplishments', 'All accomplishments', 'btn btn-navy btn-sm')}</div>
-        </div>
+        <div class="board-row reveal">${D.board.map(m => `<a href="#/board" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`).join('')}</div>
       </div>
     </section>
 
     <section class="section s-cream">
       <div class="wrap">
-        <div class="split" style="margin-bottom:40px">
-          <div class="reveal">
-            <p class="eyebrow">Join</p>
-            <h2 class="h-lg">Ready to define <em class="serif navy">your</em> brand?</h2>
-            <p class="lede" style="margin:12px 0 20px">Any major, any year. Dues are $55 for the whole year and the first coffee chat is free.</p>
-            <div class="btn-row">${ext(D.links.ramsconnectJoin, 'Join on RamsConnect')}${ext(D.links.becomeMember, 'Membership form', 'btn btn-navy')}${route('#/involved', 'How it works', 'btn btn-ghost')}</div>
-          </div>
-          <div class="reveal d2"><div class="frame"><img src="assets/img/board-group.webp" alt="The 2026-27 executive board"></div></div>
+        <div class="sec-head reveal">
+          <div><p class="eyebrow">News</p><h2 class="h-lg">In case you missed it</h2></div>
+          <div class="btn-row"><a class="textlink" href="#/newsletter">${esc(D.newsletter.current.month)} newsletter ${ico('i-arrow')}</a><a class="textlink more" href="#/blog">All posts ${ico('i-arrow')}</a></div>
         </div>
-        <div class="reveal">${socialBig()}</div>
+        <div class="grid g3">${D.posts.slice(0, 3).map(p => postCard(p)).join('')}</div>
+      </div>
+    </section>
+
+    <section class="section s-navy deep">
+      <div class="wrap split">
+        <div class="reveal">
+          <p class="eyebrow">Join today</p>
+          <h2 class="h-lg">Open to every major. $${D.membership.dues} for the year.</h2>
+          <p class="lede" style="margin:14px 0 22px">Member-only events, competition travel, a points system that rewards showing up, and a network that starts at the next coffee chat.</p>
+          <div class="btn-row">${ext(D.links.ramsconnectJoin, 'Join on RamsConnect')}${route('#/involved', 'How it works', 'btn btn-ghost')}</div>
+          <div class="social-row" style="margin-top:26px">${socialRow()}</div>
+        </div>
+        <div class="reveal d2 photo-grid">
+          <img src="assets/img/board-group.webp" alt="The ${D.org.year} executive board" loading="lazy">
+          <img src="assets/img/gallery/t/mw-11.webp" alt="Members at Marketing Week" loading="lazy">
+          <img src="assets/img/gallery/t/mw-06.webp" alt="Mocktails and Marketing Trivia" loading="lazy">
+        </div>
       </div>
     </section>`;
   };
@@ -342,10 +339,10 @@
           <p>Membership is open to every major. Our ICC winners include psychology, philosophy and information systems students.</p>
         </div>
         <div class="reveal d2 numbers" style="grid-template-columns:repeat(2,1fr)">
-          <div class="num" style="background:var(--navy-700)"><b>${D.org.founded}</b><span>Founded (reinstated ${D.org.reinstated})</span></div>
-          <div class="num" style="background:var(--navy-700)"><b data-count="${m.activePoints}">${m.activePoints}</b><span>Points to Active Member</span></div>
-          <div class="num" style="background:var(--navy-700)"><b data-count="${m.dues}" data-prefix="$">$${m.dues}</b><span>Dues for the whole year</span></div>
-          <div class="num" style="background:var(--navy-700)"><b data-count="${D.icc.results[0].wins.length}">${D.icc.results[0].wins.length}</b><span>ICC 2026 placements</span></div>
+          <div class="num"><b>${D.org.founded}</b><span>Founded (reinstated ${D.org.reinstated})</span></div>
+          <div class="num"><b data-count="${m.activePoints}">${m.activePoints}</b><span>Points to Active Member</span></div>
+          <div class="num"><b data-count="${m.dues}" data-prefix="$">$${m.dues}</b><span>Dues for the whole year</span></div>
+          <div class="num"><b data-count="${D.icc.results[0].wins.length}">${D.icc.results[0].wins.length}</b><span>ICC 2026 placements</span></div>
         </div>
       </div>
     </section>
@@ -688,7 +685,7 @@
      AFTER RENDER: behaviors
      =================================================================== */
   function afterRender() {
-    initReveal(); initMarquee(); initLogo(); initPillars(); initParallax(); initCounts(); initBars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
+    initReveal(); initLogo(); initPillars(); initCounts(); initBars(); initVideo(); initCalendar(); initFilters(); initLightbox(); initForms(); tick();
   }
 
   function initReveal() {
@@ -892,6 +889,7 @@
   ].map(([t, d, h, c, l]) => `<a href="${h}" ${h.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}><span class="ico" style="background:${c}">${l}</span><div>${t}<span>${d}</span></div></a>`).join('');
   $('#donateMail').href = `mailto:${D.org.email}`;
   $('#footSocial').innerHTML = socialRow(); $('#mmSocial').innerHTML = socialRow();
+  $('#headSocial').innerHTML = [['i-ig', 'Instagram', D.links.instagram], ['i-in', 'LinkedIn', D.links.linkedin], ['i-fb', 'Facebook', D.links.facebook], ['i-mail', 'Email', `mailto:${D.org.email}`]].map(([i, t, h]) => `<a href="${h}" ${h.startsWith('http') ? 'target="_blank" rel="noopener"' : ''} aria-label="${t}" title="${t}">${ico(i)}</a>`).join('');
   $('#footRams').href = D.links.ramsconnect; $('#footLinktree').href = D.links.linktree; $('#footMail').href = `mailto:${D.org.email}`;
   $('#year').textContent = new Date().getFullYear();
 
