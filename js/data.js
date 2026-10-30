@@ -2,7 +2,11 @@
    AMA at VCU  |  site content
    Everything the site shows lives in this one file so the board can edit
    it without touching the layout. Dates are ISO (YYYY-MM-DD). Times are
-   plain text. Anything marked DEMO is placeholder data to replace.
+   plain text. Anything marked PLACEHOLDER is waiting on the board.
+
+   Day-to-day updates (events, points, accomplishments, photos, alumni,
+   MoT consultants) do NOT need this file: connect the Google Sheet in
+   `integrations` below and edit the sheet instead. See docs/ADMIN-GUIDE.md.
    ===================================================================== */
 window.AMA = {
 
@@ -10,21 +14,35 @@ window.AMA = {
     name: "American Marketing Association at VCU",
     short: "AMA at VCU",
     handle: "@amavcu",
-    tagline: "Define your brand.",
-    blurb: "The only marketing organization at Virginia Commonwealth University. Workshops, speakers, coffee chats, competitions and a crew of marketers who show up for each other.",
+    tagline: "The home for marketers at VCU.",
+    /* Home page intro ("What is AMA at VCU"). Proposed copy, pending board approval. */
+    blurb: "AMA at VCU is the Virginia Commonwealth University chapter of the American Marketing Association, the largest professional marketing association in the world. Since 1983 we have connected students who want to do marketing with the people who already do it: guest speakers from the industry, workshops and study groups, a student-run agency, and a delegation that competes at the International Collegiate Conference every spring. Membership is open to every major.",
     founded: 1983,
     reinstated: 2008,
     email: "amavcuchapter@gmail.com",
     address: "907 Floyd Avenue, Richmond, VA 23284",
-    advisor: { name: "Katie Gilstrap", title: "Faculty Advisor, VCU School of Business" },
+    /* Faculty advisor. PLACEHOLDER: headshot (assets/img/board/advisor.webp) and bio from the board. */
+    advisor: { name: "Katie Gilstrap", title: "Faculty Advisor", role: "Associate Professor of Marketing, VCU School of Business", photo: "", bio: "", linkedin: "" },
     year: "2026-27"
+  },
+
+  /* ---- No-code editing. Fill these in once and the board edits a Google
+     Sheet, a Google Calendar and Google Drive folders instead of this file.
+     Leave empty to use the content in this file. docs/ADMIN-GUIDE.md walks
+     through each one. ---- */
+  integrations: {
+    sheetId: "",            // Google Sheet id (from its URL), shared as "Anyone with the link: Viewer"
+    googleApiKey: "",       // Google Cloud API key restricted to this site; enables Calendar sync and Drive albums
+    calendarId: "",         // the chapter Google Calendar id, e.g. "...@group.calendar.google.com" (calendar must be public)
+    formEndpoint: "",       // Google Apps Script web app URL that receives accomplishment, idea and feedback submissions
+    showLocations: false,   // true shows rooms/addresses on upcoming events (today people get them on RamsConnect)
+    cacheMinutes: 10
   },
 
   links: {
     instagram: "https://www.instagram.com/amavcu/",
-    facebook: "https://www.facebook.com/AMAVCU/",
     linkedin: "https://www.linkedin.com/company/amavcu",
-    tiktok: "https://linktr.ee/AMAVCUChapter",            // TikTok handle not public yet; Linktree lists it
+    tiktok: "https://linktr.ee/AMAVCUChapter",            // PLACEHOLDER: TikTok handle not public yet; the Linktree lists it
     linktree: "https://linktr.ee/AMAVCUChapter",
     groupme: "https://web.groupme.com/join_group/116731081/YzRrWt4Q",
     ramsconnect: "https://ramsconnect.vcu.edu/amavcu/",
@@ -35,10 +53,17 @@ window.AMA = {
     becomeMember: "https://forms.gle/NbaC8HRNUbNTxygN6",
     iccApplication: "https://forms.gle/GPcgMtEidWMMSVBe9",
     accomplishmentForm: "https://docs.google.com/forms/d/e/1FAIpQLSdTWdUe3E26Nu-ffnTGv-89E8BS9Kvpy1E__Non8R1-1hF81Q/viewform",
+    boardApplication: "",      // PLACEHOLDER: the real executive board application form
+    motApplication: "",        // PLACEHOLDER: the real Marketers of Tomorrow application form (falls back to the Linktree)
+    alumniLinkedIn: "",        // PLACEHOLDER: the AMA at VCU alumni LinkedIn group
+    donate: "",                // optional: one official giving link. Empty = the Venmo / Cash App panel
     googleCalendar: "https://calendar.google.com/calendar/u/0?cid=ZjQxYmRiNWZmYWFiYTZmNWNjZTRiOGVhZDhlZWRhZjFkYzZkMWUyODI4NzA0MDM3NThhM2U5NjE2MDdkOGFmY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t",
     amaRichmond: "https://amarichmond.org",
     amaNational: "https://www.ama.org",
     amaCollegiate: "https://www.ama.org/collegiate-events/",
+    amaJobs: "https://jobs.ama.org/",
+    vcuCareers: "https://careers.vcu.edu/",
+    handshake: "https://vcu.joinhandshake.com/",
     venmo: "https://venmo.com/u/kayla_joylee",
     cashapp: "https://cash.app/$candaceh13",
     vcuBlogCleanSweep: "https://blogs.vcu.edu/business/2024/07/23/clean-sweep-vcu-ama-chapter-students-make-history-take-top-three-at-international-conference/",
@@ -46,15 +71,18 @@ window.AMA = {
   },
 
   /* Home page background. Set `video` to a campus b-roll mp4 to use it instead of
-     the photos. Photos come from Wikimedia Commons; keep the credits with them. */
+     the photos (PLACEHOLDER: the board wants real footage, Engineering or campus).
+     Photos come from Wikimedia Commons; keep the credits with them. */
   hero: {
     video: "",
     secondsPerSlide: 9,
     slides: [
+      { src: "assets/img/campus/engineering-west.webp", alt: "VCU Engineering West Hall", credit: "VCU Engineering", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Engineering_West_Hall.jpg" },
+      { src: "assets/img/campus/engineering-glass.webp", alt: "The glass facade of the College of Engineering", credit: "Alan Levine", license: "CC BY 2.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Engineering_Building_Has_Their_Bicycles_On_(21576925462).jpg" },
       { src: "assets/img/campus/compass.webp", alt: "The Compass and Cabell Library", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Cabell_Library_by_Jeff_Auth.jpg" },
-      { src: "assets/img/campus/vcu-letters.webp", alt: "The VCU letters at Shafer Court", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Shafer_Court_letters_by_Jeff_Auth.jpg" },
       { src: "assets/img/campus/snead-hall.webp", alt: "Snead Hall, home of the School of Business", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Snead_Hall_by_Jeff_Auth.JPG" },
-      { src: "assets/img/campus/linden-walk.webp", alt: "Linden Street walkway into the Commons plaza", credit: "Will Weaver", license: "CC BY-SA 2.0", url: "https://commons.wikimedia.org/wiki/File:VirginiaCommonwealthUniversity.jpg" }
+      { src: "assets/img/campus/engineering-east.webp", alt: "Engineering East Hall", credit: "JuxtaposedJacob", license: "CC0", url: "https://commons.wikimedia.org/wiki/File:VCU-College-of-Engineering.png" },
+      { src: "assets/img/campus/vcu-letters.webp", alt: "The VCU letters at Shafer Court", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Shafer_Court_letters_by_Jeff_Auth.jpg" }
     ]
   },
 
@@ -68,87 +96,87 @@ window.AMA = {
     title: "Why AMA? Watch the recruitment video"
   },
 
-  /* Idea drop box + feedback. Paste a Google Form "embed" URL to show the real
-     form inline; otherwise the site opens a pre-filled email to the chapter. */
+  /* Forms. With `integrations.formEndpoint` set, the on-page forms post straight
+     to the board's Google Sheet. Otherwise paste a Google Form "embed" URL to show
+     the real form inline, or leave empty and the site opens a pre-filled email. */
   forms: {
+    accomplishmentEmbed: "",
     ideaBoxEmbed: "",
     feedbackEmbed: "",
     surveys: [
       { title: "Become an Official Member", note: "Membership form", url: "https://forms.gle/NbaC8HRNUbNTxygN6" },
       { title: "AMA ICC 2027 Application", note: "Apply to travel with the chapter", url: "https://forms.gle/GPcgMtEidWMMSVBe9" },
-      { title: "Student Accomplishment Form", note: "Tell us about your internship, offer or award", url: "https://docs.google.com/forms/d/e/1FAIpQLSdTWdUe3E26Nu-ffnTGv-89E8BS9Kvpy1E__Non8R1-1hF81Q/viewform" },
-      { title: "Marketing Mixer at Saxbys", note: "Attendance form", url: "https://docs.google.com/forms/d/e/1FAIpQLSeJL4yGFpPD2nKMmWcYvDqvdoO7zf4Ai-Ue29J2ZNihGEqlsA/viewform" },
-      { title: "Speaker Event #2, Nightingale", note: "Attendance form", url: "https://forms.gle/hmKXVkpMG3rx6NbE7" },
-      { title: "Marketing YOU Headshots", note: "Attendance form", url: "https://forms.gle/djtyhgtSQqQFdof17" },
-      { title: "Mocktails and Marketing Trivia", note: "Attendance form", url: "https://docs.google.com/forms/d/e/1FAIpQLSeoUV5HMFP0ezX6ONVOhuV9nbv52CcDdlC3N8e3Rf-yXtEOog/viewform" },
-      { title: "AMA x Ad Club Competition", note: "Attendance form", url: "https://docs.google.com/forms/d/e/1FAIpQLSfplMknyWlCHafwnn7AJjBUrp8qAQQoMcyC8XyltwZGEkFoZQ/viewform" }
+      { title: "Student Accomplishment Form", note: "Tell us about your internship, offer or award", url: "https://docs.google.com/forms/d/e/1FAIpQLSdTWdUe3E26Nu-ffnTGv-89E8BS9Kvpy1E__Non8R1-1hF81Q/viewform" }
     ]
   },
 
   membership: {
-    dues: 55, duesNational: 30, duesChapter: 25,
+    dues: 55, duesMax: 60,                       // PLACEHOLDER: board to confirm $55 or $60
+    duesNote: "The board confirms the final amount each fall. Dues cover AMA national membership plus chapter catering, supplies and events.",
     duesDeadline: "October 1 (rolling, join any time)",
     activePoints: 200,
-    pointsNote: "Point values for each event type live in the Membership Point System document under Member Resources on RamsConnect.",
+    pointsNote: "Every event earns points. Reach 200 and you are an Active Member with a say in the chapter.",
     knownPoints: [
       { what: "Community service (Richmond SPCA volunteer shift)", pts: 15 },
       { what: "Reach Active Member status", pts: 200, isGoal: true }
     ],
     steps: [
       { t: "Join on RamsConnect", d: "Every event registration runs through RamsConnect, so this comes first." },
-      { t: "Pay dues", d: "$55 for the year: $30 to AMA national, $25 to the chapter. Dues cover catering, supplies and event materials. Financial need? Email the board and we will work it out." },
+      { t: "Pay dues", d: "$55 to $60 for the year, confirmed by the board each fall. Financial need? Email the board and we will work it out." },
       { t: "Hop in the GroupMe", d: "Reminders, polls, last-minute rides to coffee chats." },
       { t: "Show up", d: "Every event earns points. Hit 200 and you are an Active Member with a say in the chapter." }
     ]
   },
 
+  /* The three pillars. Shown inside the home page intro, not as a section of their own. */
   pillars: [
-    { key: "pro", name: "Professional Development", emoji: "🎤",
-      img: "assets/img/gallery/mw-13.webp",
-      short: "Speakers, workshops, headshots and competition prep.",
-      body: "Guest speakers like former Four Seasons VP of Marketing David Crowl, study groups before exams, free professional headshots during Marketing YOU, and coaching for the Perfect Pitch and Sales competitions at ICC. This is the resume-building half of AMA." },
-    { key: "community", name: "Community & Social Impact", emoji: "🐾",
-      img: "assets/img/gallery/mw-14.webp",
-      short: "Volunteering and collabs that give back to Richmond.",
-      body: "Our first service event of the year is a volunteer shift at the Richmond SPCA. Expect more hands-on service days, partnerships with other VCU orgs like the Ad Club, and points for every hour you give." },
-    { key: "fund", name: "Fundraising", emoji: "💛",
-      img: "assets/img/gallery/mw-12.webp",
-      short: "Raffles, mocktail nights and merch that send us to ICC.",
-      body: "Raffles at interest meetings, merch drops and themed nights fund the trip to the International Collegiate Conference and keep events catered. Every dollar raised goes back into the chapter." },
-    { key: "member", name: "Membership", emoji: "☕",
-      img: "assets/img/gallery/mw-11.webp",
-      short: "Coffee chats, interest meetings and a points system that rewards showing up.",
-      body: "Biweekly coffee chats are the no-commitment way in. Interest meetings, GroupMe and the points leaderboard keep it going. 200 points makes you an Active Member." },
-    { key: "comms", name: "Communications", emoji: "📣",
-      img: "assets/img/gallery/mw-02.webp",
-      short: "Instagram, the monthly newsletter and this site.",
-      body: "Our Director of Social Media and Director of Communications run @amavcu, the monthly newsletter and chapter announcements. Want to build a content portfolio? This is where to volunteer." }
+    { key: "knowledge", name: "Knowledge", icon: "i-bulb",
+      short: "Speakers, workshops, study groups and competition prep that take marketing past the classroom." },
+    { key: "opportunity", name: "Opportunity", icon: "i-bolt",
+      short: "Client work with Marketers of Tomorrow, ICC competitions, internships and a network that includes AMA Richmond." },
+    { key: "community", name: "Community", icon: "i-users",
+      short: "Coffee chats, service days, socials and a group chat that actually answers." }
   ],
 
+  /* Executive board. `bio` is optional (PLACEHOLDER: updated bios from the board).
+     `linkedin` empty = the site links a LinkedIn search for the name. */
   board: [
     { slug: "kayla-lee", name: "Kayla Lee", role: "President", year: "Senior", major: "Marketing / Sales",
-      goal: "To use creativity and passion in marketing.", fun: "I love pickle ball!", sticker: "stars", linkedin: "" },
+      goal: "To use creativity and passion in marketing.", fun: "I love pickle ball!", linkedin: "", bio: "" },
     { slug: "bryce-langhorne", name: "Bryce Langhorne", role: "Vice President of Events & Operations", year: "Senior", major: "Marketing",
-      goal: "Product marketing.", fun: "I'm really into bonsai trees!", sticker: "bang", linkedin: "" },
+      goal: "Product marketing.", fun: "I'm really into bonsai trees!", linkedin: "", bio: "" },
     { slug: "candace-heath", name: "Candace Heath", role: "Director of Finance", year: "Junior", major: "Finance",
-      goal: "Financial analyst.", fun: "I am a self-taught hair stylist!", sticker: "sun", linkedin: "" },
+      goal: "Financial analyst.", fun: "I am a self-taught hair stylist!", linkedin: "", bio: "" },
     { slug: "heather-pham", name: "Heather Pham", role: "Director of Community Outreach", year: "Senior", major: "Marketing / Sales",
-      goal: "Work within the corporate beauty industry or own my own business.", fun: "I love to cook and bake!", sticker: "sparkle", linkedin: "" },
+      goal: "Work within the corporate beauty industry or own my own business.", fun: "I love to cook and bake!", linkedin: "", bio: "" },
     { slug: "ceddy-polk", name: "Ceddy Polk", role: "Director of Membership", year: "Junior", major: "Marketing / Management",
-      goal: "Working in media and PR for high-level clients.", fun: "Mozzarella sticks are my favorite food!", sticker: "stars", linkedin: "" },
+      goal: "Working in media and PR for high-level clients.", fun: "Mozzarella sticks are my favorite food!", linkedin: "", bio: "" },
     { slug: "elizabeth-mccormack", name: "Elizabeth McCormack", role: "Director of Communications", year: "Senior", major: "Marketing / Sales",
-      goal: "Entertainment or sports marketing.", fun: "My favorite hobby is skiing!", sticker: "bang", linkedin: "" },
+      goal: "Entertainment or sports marketing.", fun: "My favorite hobby is skiing!", linkedin: "", bio: "" },
     { slug: "grace-bradbury", name: "Grace Bradbury", role: "Director of Social Media", year: "Sophomore", major: "Marketing / Sales",
-      goal: "Creative director at a marketing or advertising firm.", fun: "I write my own music.", sticker: "sun", linkedin: "" },
+      goal: "Creative director at a marketing or advertising firm.", fun: "I write my own music.", linkedin: "", bio: "" },
     { slug: "anisa-chowdhury", name: "Anisa Chowdhury", role: "Director of Fundraising", year: "Junior", major: "Finance",
-      goal: "Financial underwriter.", fun: "I am trilingual!", sticker: "sparkle", linkedin: "" },
+      goal: "Financial underwriter.", fun: "I am trilingual!", linkedin: "", bio: "" },
     { slug: "giulia-da-rocha", name: "Giulia da Rocha", role: "Senior Advisor", year: "Senior", major: "Marketing / Management & Entrepreneurship",
-      goal: "Creative project manager.", fun: "I have a radio show on WVCW.org!", sticker: "stars", linkedin: "" }
+      goal: "Creative project manager.", fun: "I have a radio show on WVCW.org!", linkedin: "", bio: "" }
   ],
 
+  /* Chapter leadership page (Members > Leadership). */
+  leadership: {
+    intro: "Nine students run the chapter and a new board is chosen every spring. You do not need a title to lead here: Marketing Week, coffee chats, the agency and the ICC trip all run on members who raise a hand.",
+    season: "Board applications open each spring for the following academic year. The best preparation is simple: come to events, join Marketers of Tomorrow, and tell a board member you are interested.",
+    paths: [
+      { t: "Executive board", d: "Nine elected roles: president, vice president of events and operations, and directors of finance, membership, fundraising, community outreach, communications and social media, plus a senior advisor.", cta: "board" },
+      { t: "Marketers of Tomorrow", d: "Our student-run agency. Consultants work in small teams for real clients and present the finished work. Applications open each semester.", cta: "mot" },
+      { t: "ICC delegation", d: "Compete in Perfect Pitch, the Sales Competition and the case competitions at the International Collegiate Conference. Apply, keep up with dues and points, come to prep sessions.", cta: "icc" },
+      { t: "Event volunteers", d: "Marketing Week, speaker events and service days always need extra hands. Ask in the GroupMe or at the next coffee chat.", cta: "involved" }
+    ]
+  },
+
   /* Events. Future events deliberately carry NO location or registration link:
-     people register on RamsConnect to see where it is. Past events can keep
-     their location for the record. `points` is optional. `img` is optional art. */
+     people register on RamsConnect to see where it is (flip `integrations.showLocations`
+     to change that). Past events can keep their location. `points` and `img` are optional,
+     `rsvp` is an optional registration URL. */
   events: [
     { id: "icc27", date: "2027-04-08", end: "2027-04-10", title: "AMA International Collegiate Conference", time: "3 days", type: "conference",
       blurb: "The big one. 1,600+ marketing students, competitions, keynotes and a chapter trip to New Orleans. Applications are open now.", img: "", cta: { label: "Apply for ICC 2027", url: "https://forms.gle/GPcgMtEidWMMSVBe9" } },
@@ -195,7 +223,8 @@ window.AMA = {
     service: { label: "Service", color: "#C9B8FF" },
     gbm: { label: "Meeting", color: "#FFE9A8" },
     deadline: { label: "Deadline", color: "#FF8F7A" },
-    conference: { label: "Conference", color: "#F4B223" }
+    conference: { label: "Conference", color: "#F4B223" },
+    event: { label: "Event", color: "#D4DCEA" }
   },
 
   icc: {
@@ -207,6 +236,12 @@ window.AMA = {
     dates: "April 8 to 10, 2027",
     about: "Every spring, more than 1,600 students from 150+ AMA collegiate chapters meet for three days of competitions, keynotes, recruiters and a lot of networking. VCU sends a delegation every year, and lately we have been coming home with hardware.",
     competitions: ["Perfect Pitch", "Sales Competition", "Case Competition", "Marketing Strategy", "Digital Marketing", "Marketing Business Simulation", "Design Lab Marketing"],
+    /* Fundraising copy. PLACEHOLDER: the board is updating the fundraising details. */
+    fundraising: {
+      eyebrow: "Help us get there",
+      head: "Back to New Orleans in April.",
+      body: "Last spring the chapter traveled to Chicago and came home with eight placements. This year ICC is in New Orleans, and travel, hotel and registration add up fast. Donations and fundraiser nights make the difference between sending five people and sending fifteen."
+    },
     results: [
       { year: 2026, city: "Chicago, IL", dates: "March 12 to 14, 2026", source: "https://www.ama.org/press-releases/2026-international-collegiate-conference-award-winners-announced-by-the-american-marketing-association/",
         wins: [
@@ -231,7 +266,7 @@ window.AMA = {
     ]
   },
 
-  /* Member accomplishments. Real ones first; the form link lets members add theirs. */
+  /* Member accomplishments. Real ones first; the form on the page lets members add theirs. */
   accomplishments: [
     { cat: "award", who: "Madison Silcox", what: "1st place, Perfect Pitch", where: "AMA ICC 2026, Chicago", when: "March 2026" },
     { cat: "award", who: "Mohamed Turay", what: "2nd place, Perfect Pitch (two years running on the podium)", where: "AMA ICC 2026, Chicago", when: "March 2026" },
@@ -242,56 +277,87 @@ window.AMA = {
     { cat: "award", who: "Kaarthika Vinayak", what: "5th place, Perfect Pitch", where: "AMA ICC 2026, Chicago", when: "March 2026" },
     { cat: "award", who: "Russell Magpayo", what: "9th place, Perfect Pitch", where: "AMA ICC 2026, Chicago", when: "March 2026" },
     { cat: "award", who: "Jianna John", what: "4th of 300+ in the Sherwin-Williams Role Play", where: "AMA ICC 2024, New Orleans", when: "April 2024" },
-    { cat: "internship", who: "Your name here", what: "Landed an internship? Tell us where and we will feature it.", where: "Submit with the form", when: "", placeholder: true },
-    { cat: "job", who: "Your name here", what: "Signed an offer? Same deal. We love a brag.", where: "Submit with the form", when: "", placeholder: true }
+    { cat: "internship", who: "Your name here", what: "Landed an internship? Tell us where and we will feature it.", where: "Submit it below", when: "", placeholder: true },
+    { cat: "job", who: "Your name here", what: "Signed an offer? Same deal. We love a brag.", where: "Submit it below", when: "", placeholder: true }
   ],
   accomplishmentCats: { award: "Awards", internship: "Internships", job: "Job offers", other: "Other wins" },
 
+  /* Members > Opportunities & Alumni. Links are public resources; check them once a year. */
   opportunities: [
-    { title: "AMA Richmond", d: "Our professional chapter. Events, mentors and a job board a few blocks away.", url: "https://amarichmond.org" },
-    { title: "AMA Collegiate events and scholarships", d: "National competitions, scholarships and the ICC schedule.", url: "https://www.ama.org/collegiate-events/" },
-    { title: "VCU Career Services", d: "Resume reviews, Handshake postings and career fairs.", url: "https://careers.vcu.edu/" },
-    { title: "Marketers of Tomorrow", d: "Our in-house agency. Real clients, real portfolio pieces.", route: "#/agency" }
+    { cat: "internships", title: "Handshake (VCU)", d: "Internships and entry-level jobs posted for VCU students. Set alerts for marketing, sales and communications.", url: "https://vcu.joinhandshake.com/" },
+    { cat: "internships", title: "AMA Career Center", d: "The national AMA job board. Filter by internship and entry level.", url: "https://jobs.ama.org/" },
+    { cat: "career", title: "VCU Career Services", d: "Resume reviews, mock interviews, career fairs and employer events.", url: "https://careers.vcu.edu/" },
+    { cat: "career", title: "AMA Richmond", d: "Our professional chapter a few blocks away: events, mentors and a local job board.", url: "https://amarichmond.org" },
+    { cat: "development", title: "AMA collegiate competitions and scholarships", d: "National competitions, scholarships and the ICC schedule.", url: "https://www.ama.org/collegiate-events/" },
+    { cat: "development", title: "Marketers of Tomorrow", d: "Our in-house agency. Real clients, real portfolio pieces, a line on your resume.", route: "#/mot" },
+    { cat: "development", title: "ICC 2027", d: "Perfect Pitch, the Sales Competition and case competitions in front of recruiters.", route: "#/icc" }
   ],
+  opportunityCats: { internships: "Internships", career: "Careers", development: "Professional development" },
 
-  /* DEMO leaderboard. Replace with the real export from the points tracker.
-     `seed` just picks a face for the avatar. */
+  /* Alumni. PLACEHOLDER: stories and the LinkedIn group link come from the board (or the Alumni tab of the sheet). */
+  alumni: {
+    intro: "AMA at VCU alumni work in brand management, sales, agencies, media and startups across Richmond and beyond. The chapter wants to keep you close.",
+    stories: [],
+    waysToHelp: [
+      { t: "Speak at an event", d: "Thirty minutes on what your job is actually like beats any textbook chapter." },
+      { t: "Mentor a member", d: "A coffee chat or a resume review with a student who wants your path." },
+      { t: "Bring MoT a project", d: "Give Marketers of Tomorrow a real brief from your company or side business." },
+      { t: "Sponsor the ICC trip", d: "Help send the delegation to New Orleans in April." }
+    ],
+    forAlumniAndMembers: [
+      { t: "AMA Richmond membership", d: "The professional chapter runs mixers, speakers and a job board. Student members are welcome too.", url: "https://amarichmond.org" },
+      { t: "AMA national membership", d: "Collegiate dues include AMA national membership: the Career Center, webinars and the AMA community.", url: "https://www.ama.org" }
+    ]
+  },
+
+  /* Leaderboard. Sample data until the Leaderboard tab of the sheet (or a points export) is connected. */
   leaderboard: {
     demo: true,
     updated: "2026-10-12",
     members: [
-      { name: "Jordan R.", pts: 165, seed: 3 },
-      { name: "Priya S.", pts: 150, seed: 11 },
-      { name: "Marcus T.", pts: 135, seed: 7 },
-      { name: "Elena V.", pts: 120, seed: 5 },
-      { name: "Sam K.", pts: 110, seed: 9 },
-      { name: "Aaliyah M.", pts: 95, seed: 2 },
-      { name: "Noah P.", pts: 80, seed: 13 },
-      { name: "Chloe W.", pts: 75, seed: 6 },
-      { name: "Diego L.", pts: 60, seed: 4 },
-      { name: "Hana O.", pts: 45, seed: 12 }
+      { name: "Jordan R.", pts: 165 },
+      { name: "Priya S.", pts: 150 },
+      { name: "Marcus T.", pts: 135 },
+      { name: "Elena V.", pts: 120 },
+      { name: "Sam K.", pts: 110 },
+      { name: "Aaliyah M.", pts: 95 },
+      { name: "Noah P.", pts: 80 },
+      { name: "Chloe W.", pts: 75 },
+      { name: "Diego L.", pts: 60 },
+      { name: "Hana O.", pts: 45 }
     ]
   },
 
+  /* Marketers of Tomorrow. PLACEHOLDER: consultants, concentrations, clients and
+     partners come from MoT leadership (or the Consultants and Clients tabs of the sheet). */
   agency: {
     name: "Marketers of Tomorrow",
     tagline: "AMA at VCU's student-run agency.",
-    pitch: "Gain experience and work with real clients. Small teams, a real brief, a real deliverable, and a portfolio piece with your name on it.",
+    pitch: "Real clients, small teams, a finished deliverable with your name on it. Marketers of Tomorrow is where AMA members turn classroom marketing into portfolio work.",
     status: "Fall 2026 applications closed October 2. The spring cohort opens on Instagram and the Linktree.",
     applyUrl: "https://linktr.ee/AMAVCUChapter",
     how: [
       { t: "Apply", d: "A short application each semester. No portfolio required, just interest and follow-through." },
       { t: "Get matched", d: "Teams of 3 to 5 are paired with a local business, nonprofit or campus org." },
-      { t: "Do the work", d: "Research, strategy, content, design. Weekly check-ins with a board lead." },
+      { t: "Do the work", d: "Research, strategy, content, design. Weekly check-ins with a team lead." },
       { t: "Present", d: "Pitch the final deliverable to the client. Add it to your resume and LinkedIn." }
     ],
-    roles: ["Account lead", "Strategist", "Content creator", "Designer", "Analyst"]
+    roles: ["Account lead", "Strategist", "Content creator", "Designer", "Analyst"],
+    concentrations: [],
+    consultants: [],
+    leadership: [
+      { name: "Heather Pham", title: "CEO", photo: "assets/img/board/heather-pham.webp", bio: "", linktree: "" },
+      { name: "Debalu", title: "MoT leadership", photo: "", bio: "", linktree: "" }
+    ],
+    clients: [],
+    partners: []
   },
 
   newsletter: {
     current: {
       month: "October 2026",
       issue: "Issue 14",
+      url: "",                       // PLACEHOLDER: web view link for this issue
       intro: "Marketing Week is in the books, our first-ever service event is next week, and ICC 2027 applications are open. Here is everything you need this month.",
       sections: [
         { h: "What happened", items: [
@@ -305,28 +371,30 @@ window.AMA = {
           "ICC 2027 is April 8 to 10 in New Orleans. Applications are open now and the chapter travels together."
         ] },
         { h: "Reminders", items: [
-          "Dues are $55 for the year ($30 national, $25 chapter). The Oct 1 deadline is rolling, so you can still join.",
-          "Got an internship, offer or award? Submit it with the Student Accomplishment form and we will feature you.",
+          "Dues are $55 to $60 for the year. The Oct 1 deadline is rolling, so you can still join.",
+          "Got an internship, offer or award? Submit it on the Accomplishments page and we will feature you.",
           "Marketers of Tomorrow applications closed Oct 2. Spring round coming."
         ] }
       ],
       spotlight: { h: "Spotlight: ICC 2026", p: "Five VCU names in the Perfect Pitch top ten, two on the Sales Competition podium, and first place in the Design Lab Marketing Competition. Chicago was good to us." }
     },
+    /* PLACEHOLDER: per-issue links. Empty url = the RamsConnect archive. */
     archive: [
-      { month: "March 2026", date: "2026-03-02" },
-      { month: "February 2026", date: "2026-02-02" },
-      { month: "January 2026", date: "2026-01-21" },
-      { month: "December 2025", date: "2025-12-04" },
-      { month: "November 2025", date: "2025-11-05" },
-      { month: "October 2025", date: "2025-10-01" },
-      { month: "September 2025", date: "2025-09-01" }
+      { month: "March 2026", date: "2026-03-02", url: "" },
+      { month: "February 2026", date: "2026-02-02", url: "" },
+      { month: "January 2026", date: "2026-01-21", url: "" },
+      { month: "December 2025", date: "2025-12-04", url: "" },
+      { month: "November 2025", date: "2025-11-05", url: "" },
+      { month: "October 2025", date: "2025-10-01", url: "" },
+      { month: "September 2025", date: "2025-09-01", url: "" }
     ]
   },
 
+  /* Blog. `instagram` is an optional link to the matching post or photo dump. */
   posts: [
     { slug: "marketing-week-2026", date: "2026-10-12", tag: "ICYMI", title: "Marketing Week, recapped",
       dek: "Five days, six events, one very competitive trivia night.",
-      cover: "assets/img/gallery/mw-04.webp", thumb: "assets/img/gallery/t/mw-04.webp",
+      cover: "assets/img/gallery/mw-04.webp", thumb: "assets/img/gallery/t/mw-04.webp", instagram: "",
       body: [
         "Marketing Week kicked off Monday with the AMA x Ad Club Marketing Competition in Snead Hall. Teams got a brief, a clock and a room full of people who wanted to win. May the best brief win, and it did: certificates went home with the top team.",
         "Tuesday was Mocktails & Marketing Trivia. The mocktail bar was a hit, the trivia was harder than anyone expected, and a few tables are still disputing the final round.",
@@ -336,28 +404,28 @@ window.AMA = {
       ], gallery: ["mw-02", "mw-03", "mw-04", "mw-05", "mw-06", "mw-08", "mw-10", "mw-13", "mw-14"] },
     { slug: "david-crowl-golden-rule", date: "2026-09-29", tag: "Speakers", title: "Marketing the golden rule with David Crowl",
       dek: "A former VP of Marketing at Four Seasons came back to Snead Hall.",
-      cover: "assets/img/flyers/speaker-crowl.webp", thumb: "assets/img/flyers/speaker-crowl.webp",
+      cover: "assets/img/flyers/speaker-crowl.webp", thumb: "assets/img/flyers/speaker-crowl.webp", instagram: "",
       body: [
         "David Crowl, former VP of Marketing at Four Seasons and a VCU alumnus, joined us in Snead Hall for an evening on the significance of marketing the golden rule: treat the customer the way you would want to be treated, then build the brand around that.",
         "The room was full, the food was provided, and the Q&A ran long. If you missed it, the next speaker event is already in the works. Register on RamsConnect when it drops."
       ] },
     { slug: "interest-meeting-recap", date: "2026-09-09", tag: "ICYMI", title: "Interest meeting recap",
       dek: "So many new faces. Raffle winners went home with merch.",
-      cover: "assets/img/gallery/im-03.webp", thumb: "assets/img/gallery/t/im-03.webp",
+      cover: "assets/img/gallery/im-03.webp", thumb: "assets/img/gallery/t/im-03.webp", instagram: "",
       body: [
         "We had a blast getting to see so many new faces at our first interest meeting of the year. The board walked through what AMA is, what the semester looks like, how dues and points work, and why coffee chats are the easiest way in.",
         "Congrats to our raffle winners, who left with AMA shirts and totes. Missed it? A virtual meeting ran that Friday, and coffee chats happen every other Sunday."
       ], gallery: ["im-02", "im-03", "im-04"] },
     { slug: "donuts-with-the-dean", date: "2026-09-04", tag: "ICYMI", title: "Donuts with the Dean and Directors",
       dek: "The sweetest way to start a semester.",
-      cover: "assets/img/gallery/dn-04.webp", thumb: "assets/img/gallery/t/dn-04.webp",
+      cover: "assets/img/gallery/dn-04.webp", thumb: "assets/img/gallery/t/dn-04.webp", instagram: "",
       body: [
         "Donuts with the Dean and Directors was AMAzing. We loved getting to socialize with the School of Business leadership and meet students who had never heard of AMA before that morning.",
         "A few of them showed up to the interest meeting four days later, which is the whole point."
       ], gallery: ["dn-02", "dn-03", "dn-04"] },
     { slug: "icc-guide", date: "2026-09-20", tag: "Guide", title: "ICC 2027: what it is and how to get there",
       dek: "Three days in New Orleans with 1,600 marketing students. Here is how the trip works.",
-      cover: "assets/img/gallery/mw-14.webp", thumb: "assets/img/gallery/t/mw-14.webp",
+      cover: "assets/img/gallery/mw-14.webp", thumb: "assets/img/gallery/t/mw-14.webp", instagram: "",
       body: [
         "The AMA International Collegiate Conference is the biggest event on the chapter calendar. ICC 2027 runs April 8 to 10 in New Orleans. Students compete in Perfect Pitch, the Sales Competition, case and strategy competitions, and more, and the exhibit hall is full of recruiters.",
         "VCU has a reputation there. In 2024 our chapter swept the Perfect Pitch podium. In 2026 in Chicago, five VCU students placed in the Perfect Pitch top ten, two placed in the Sales Competition, and VCU won the Design Lab Marketing Competition outright.",
@@ -365,6 +433,13 @@ window.AMA = {
       ] }
   ],
 
+  /* Gallery: one album per event. `cover` is a photo key from `photos` (or any image URL).
+     Albums and photos can also come from the sheet (Albums and Photos tabs) or a Drive folder. */
+  albums: [
+    { slug: "marketing-week-2026", name: "Marketing Week", date: "2026-10-09", cover: "mw-04", blurb: "Five days in October: the Ad Club competition, trivia night, headshots, speakers and the Saxbys mixer." },
+    { slug: "interest-meeting-2026", name: "Interest Meeting", date: "2026-09-08", cover: "im-03", blurb: "First meeting of the year and the raffle that sent people home in AMA merch." },
+    { slug: "donuts-with-the-dean-2026", name: "Donuts with the Dean", date: "2026-09-03", cover: "dn-04", blurb: "Donuts with the Dean and Directors to open the semester." }
+  ],
   gallery: [
     { f: "mw-02", album: "Marketing Week", cap: "AMA x Ad Club night", w: 1600, h: 1067 },
     { f: "mw-04", album: "Marketing Week", cap: "May the best brief win: competition winners", w: 1600, h: 1067 },
@@ -390,10 +465,10 @@ window.AMA = {
 
   faq: [
     { q: "Do I have to be a marketing major?", a: "No. Membership is open to every major. Our ICC winners include psychology, philosophy and information systems majors." },
-    { q: "What does it cost?", a: "$55 a year: $30 goes to AMA national (you become a national member too) and $25 to the chapter for catering and supplies. Financial need is never a reason not to join, email us." },
+    { q: "What does it cost?", a: "$55 to $60 a year, confirmed by the board each fall. Part of it is your AMA national membership, the rest funds chapter catering and supplies. Financial need is never a reason not to join, email us." },
     { q: "Where are events?", a: "Mostly Snead Hall and Richmond cafes. Exact rooms and addresses are on RamsConnect, where you also register." },
     { q: "What is a coffee chat?", a: "A biweekly Sunday hangout at a local cafe, 12 to 2 PM. No agenda, no commitment, just marketers and caffeine." },
-    { q: "How do points work?", a: "Every event earns points. Reach 200 and you are an Active Member. The full point sheet is on RamsConnect under Member Resources." },
+    { q: "How do points work?", a: "Every event earns points. Reach 200 and you are an Active Member. The leaderboard on the Accomplishments page shows where everyone stands." },
     { q: "Can I go to ICC as a new member?", a: "Yes. Fill out the ICC application, keep up with dues and points, and come to the prep sessions." }
   ]
 };
