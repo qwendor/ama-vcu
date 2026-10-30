@@ -111,8 +111,8 @@ window.AMA = {
   },
 
   membership: {
-    dues: 55, duesMax: 60,                       // PLACEHOLDER: board to confirm $55 or $60
-    duesNote: "The board confirms the final amount each fall. Dues cover AMA national membership plus chapter catering, supplies and events.",
+    dues: 60, duesMax: 0,                        // confirmed by the board 2026-10-29
+    duesNote: "Dues cover AMA national membership plus chapter catering, supplies and events.",
     duesDeadline: "October 1 (rolling, join any time)",
     activePoints: 200,
     pointsNote: "Every event earns points. Reach 200 and you are an Active Member with a say in the chapter.",
@@ -122,7 +122,7 @@ window.AMA = {
     ],
     steps: [
       { t: "Join on RamsConnect", d: "Every event registration runs through RamsConnect, so this comes first." },
-      { t: "Pay dues", d: "$55 to $60 for the year, confirmed by the board each fall. Financial need? Email the board and we will work it out." },
+      { t: "Pay dues", d: "$60 for the year. Financial need? Email the board and we will work it out." },
       { t: "Hop in the GroupMe", d: "Reminders, polls, last-minute rides to coffee chats." },
       { t: "Show up", d: "Every event earns points. Hit 200 and you are an Active Member with a say in the chapter." }
     ]
@@ -371,7 +371,7 @@ window.AMA = {
           "ICC 2027 is April 8 to 10 in New Orleans. Applications are open now and the chapter travels together."
         ] },
         { h: "Reminders", items: [
-          "Dues are $55 to $60 for the year. The Oct 1 deadline is rolling, so you can still join.",
+          "Dues are $60 for the year. The Oct 1 deadline is rolling, so you can still join.",
           "Got an internship, offer or award? Submit it on the Accomplishments page and we will feature you.",
           "Marketers of Tomorrow applications closed Oct 2. Spring round coming."
         ] }
@@ -465,7 +465,7 @@ window.AMA = {
 
   faq: [
     { q: "Do I have to be a marketing major?", a: "No. Membership is open to every major. Our ICC winners include psychology, philosophy and information systems majors." },
-    { q: "What does it cost?", a: "$55 to $60 a year, confirmed by the board each fall. Part of it is your AMA national membership, the rest funds chapter catering and supplies. Financial need is never a reason not to join, email us." },
+    { q: "What does it cost?", a: "$60 a year. Part of it is your AMA national membership, the rest funds chapter catering and supplies. Financial need is never a reason not to join, email us." },
     { q: "Where are events?", a: "Mostly Snead Hall and Richmond cafes. Exact rooms and addresses are on RamsConnect, where you also register." },
     { q: "What is a coffee chat?", a: "A biweekly Sunday hangout at a local cafe, 12 to 2 PM. No agenda, no commitment, just marketers and caffeine." },
     { q: "How do points work?", a: "Every event earns points. Reach 200 and you are an Active Member. The leaderboard on the Accomplishments page shows where everyone stands." },

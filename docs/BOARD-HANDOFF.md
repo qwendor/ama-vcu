@@ -6,7 +6,7 @@ The revision checklist was worked through page by page. Below: what changed, the
 
 ## What changed, by page
 
-**Homepage.** Logo redrawn so all three letters are the same height (the last "A" was too small). New campus photos: Engineering West Hall, the Engineering glass facade, Engineering East Hall, the Compass, Snead Hall and the VCU letters, all licensed Wikimedia Commons photos at higher resolution; a real campus video drops into the `hero_video` setting whenever the board has one. New intro and "What is AMA at VCU" blurb written for approval. Three pillars (Knowledge, Opportunity, Community) now sit inside the intro; the separate five-pillar section is gone. Dues show as $55 to $60. Upcoming events, Events this month, the ICC countdown, the ICC 2027 promo with Apply to Go and Learn More, the executive board row (now with the faculty advisor) and In Case You Missed It all stay. The bottom membership section and the quick-link grid are gone. The FAQ moved to the homepage. Facebook is gone from every social list.
+**Homepage.** Logo redrawn so all three letters are the same height (the last "A" was too small). New campus photos: Engineering West Hall, the Engineering glass facade, Engineering East Hall, the Compass, Snead Hall and the VCU letters, all licensed Wikimedia Commons photos at higher resolution; a real campus video drops into the `hero_video` setting whenever the board has one. New intro and "What is AMA at VCU" blurb written for approval. Three pillars (Knowledge, Opportunity, Community) now sit inside the intro; the separate five-pillar section is gone. Dues show as $60. Upcoming events, Events this month, the ICC countdown, the ICC 2027 promo with Apply to Go and Learn More, the executive board row (now with the faculty advisor) and In Case You Missed It all stay. The bottom membership section and the quick-link grid are gone. The FAQ moved to the homepage. Facebook is gone from every social list.
 
 **About.** Rewritten intro, purpose, numbers, how the chapter connects to AMA Richmond and AMA national, and the timeline. Five pillars, How Joining Works, the membership timeline and the advisor card are gone from this page (the advisor is on the Board page, joining steps are on Get Involved, leadership information is under Members > Leadership).
 
@@ -31,7 +31,7 @@ The revision checklist was worked through page by page. Below: what changed, the
 ## Assumptions to confirm
 
 1. **Katie Gilles is Katie Gilstrap.** No Katie Gilles exists at VCU and RamsConnect lists Katie Gilstrap as faculty advisor, so one advisor card was built under that name. If Katie Gilles is a different person (a new board member), send her role, year, major and headshot and she gets a card like the others.
-2. **Dues display as $55 to $60** until the board picks one number (then `dues` in the sheet's Settings tab, and leave `dues_max` blank).
+2. **Dues are $60** (confirmed October 29). Change it later through `dues` in the sheet's Settings tab.
 3. **Newsletter, Blog and Gallery sit under a "News" menu** rather than three top-level tabs, to keep the menu to one row on laptops. Every page is still one click away and all are in the footer.
 4. **The leaderboard lives on the Accomplishments page** (the checklist asked for three Members subsections and did not place it). It has its own anchor and footer link.
 5. **Homepage blurb, tagline and the three pillar descriptions** are drafts for approval; edit them in `js/data.js` (`org.tagline`, `org.blurb`, `pillars`).
@@ -56,7 +56,6 @@ Written content
 - MoT: consultant names, roles, specialties, Linktree links; areas of concentration and services; past clients; business partners; leadership titles and descriptions.
 - Alumni stories and accomplishments (name, class year, where they are now, a line or two).
 - Updated ICC fundraising copy if the draft on the page is not right.
-- Final dues amount.
 
 Links and accounts
 
