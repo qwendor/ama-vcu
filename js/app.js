@@ -29,7 +29,7 @@
   /* ---------- tiny view helpers ---------- */
   const ico = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
   const sticker = () => '';   // v2: no doodle stickers
-  const logoStill = (cls = '', w = 150) => `<svg class="${cls}" viewBox="0 0 766 400" width="${w}" role="img" aria-label="AMA at VCU"><use href="#mark3d"/></svg>`;
+  const logoStill = (cls = '', w = 150) => `<svg class="${cls}" viewBox="0 0 200 110" width="${w}" role="img" aria-label="American Marketing Association"><use href="#mark"/></svg>`;
   const shortRole = r => r.replace(/^Director of /, '').replace(/ of Events & Operations$/, '').replace(/^Community Outreach$/, 'Outreach');
   const swash = () => '';
   const ext = (href, label, cls = 'btn btn-gold') => `<a class="${cls}" href="${href}" target="_blank" rel="noopener">${label} ${ico('i-ext')}</a>`;
@@ -208,7 +208,7 @@
     <section class="hero" id="top">
       ${heroBackground()}
       <div class="hero-inner">
-        <div class="hero-logo"><div data-logo></div></div>
+        <div class="hero-mark" role="img" aria-label="American Marketing Association"><svg viewBox="0 0 200 110"><use href="#mark"/></svg></div>
         <span class="hero-school">Virginia Commonwealth University</span>
         <h1>American Marketing Association</h1>
         <p class="tagline">Define your brand. The only marketing organization at VCU: speakers, competitions, coffee chats and a chapter that travels to ICC together.</p>
