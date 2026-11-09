@@ -1,10 +1,10 @@
 # AMA at VCU website: how the board updates it
 
-Everything on the site can be changed from the editor at **https://amavcu.pages.dev/admin**. No code, no Claude, works on a laptop or a phone. There is also a small "Board login" link at the bottom of every page.
+Everything on the site can be changed from the editor at **https://www.vcuama.site/admin**. No code, no Claude, works on a laptop or a phone. There is also a small "Board login" link at the bottom of every page.
 
 ## Getting in
 
-1. Go to https://amavcu.pages.dev/admin.
+1. Go to https://www.vcuama.site/admin.
 2. **First time only:** type the setup code Cooper gave the chapter, then choose the board password (10 characters or more). This is one shared password for the board; keep it in the board drive, not in a group chat.
 3. After that, just type the password. A device stays signed in for 30 days.
 
@@ -55,7 +55,7 @@ Forgot the password? On the sign-in screen press "Forgot it, or first time here?
 
 - Photos are resized on upload; JPG and PNG work best. If an iPhone photo will not upload, export it as JPG first. One file can be up to 12 MB (a newsletter PDF, for example).
 - Deleting something is undoable from History after you save.
-- The site at https://qwendor.github.io/ama-vcu/ is a mirror of the same content; the editor only runs at amavcu.pages.dev.
+- The site's main address is https://www.vcuama.site (the bare vcuama.site forwards there). https://amavcu.pages.dev is the same site under its original address, and https://qwendor.github.io/ama-vcu/ is a read-only mirror; the editor runs at www.vcuama.site/admin and amavcu.pages.dev/admin.
 - Submissions from the website forms (accomplishments, ideas, feedback) go to the Inbox. If the board also wants them by email, Cooper can switch that on.
 
 ## For whoever maintains the code (Cooper)

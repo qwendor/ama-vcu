@@ -874,7 +874,7 @@
     try { s = await api("session"); }
     catch (e) {
       app.replaceChildren(h("div", { class: "gate" }, h("div", { class: "gate-card" }, h("div", { class: "mark", html: MARK }), h("h1", null, "Editor not available here"),
-        h("p", null, "This copy of the site has no backend. Open the editor on the live site: "), h("a", { class: "btn btn--main", href: "https://amavcu.pages.dev/admin" }, "amavcu.pages.dev/admin"))));
+        h("p", null, "This copy of the site has no backend. Open the editor on the live site: "), h("a", { class: "btn btn--main", href: "https://www.vcuama.site/admin" }, "vcuama.site/admin"))));
       return;
     }
     if (!s.authed) return gate(s.setupNeeded ? "setup" : "login");

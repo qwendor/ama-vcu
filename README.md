@@ -75,7 +75,7 @@ The mark is the `#mark` SVG symbol in `index.html` (three stroke-drawn letters o
 
 The site is live in two places:
 
-- https://amavcu.pages.dev (Cloudflare Pages, the link to share)
+- https://www.vcuama.site (the chapter's domain, Namecheap CNAME to the Cloudflare Pages project; bare vcuama.site forwards to www) and https://amavcu.pages.dev (the same Cloudflare Pages project)
 - https://qwendor.github.io/ama-vcu/ (GitHub Pages, repo `qwendor/ama-vcu`)
 
 To publish a change: commit it, then run `python tools/publish.py`. That pushes to GitHub (Pages rebuilds in about a minute) and deploys the committed files to Cloudflare Pages in the layout the Functions need (site in `public/`, `functions/` and `src/` beside it). Only files tracked by git go online; `assets/raw/`, `tools/`, the setup code and `.dev.vars` stay on the PC. Deploys never touch the content, uploads or password saved through the editor (they live in KV). The editor only works on the Cloudflare host; the GitHub mirror reads the saved content from it.

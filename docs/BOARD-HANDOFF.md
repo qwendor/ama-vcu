@@ -1,10 +1,10 @@
 # AMA at VCU website: what changed and what we still need
 
-Updated November 8, 2026. Live site: https://amavcu.pages.dev (still marked as a concept and hidden from search until the board approves it). Board editor: https://amavcu.pages.dev/admin.
+Updated November 8, 2026. Live site: https://www.vcuama.site (the chapter's Namecheap domain, connected November 8; the bare vcuama.site forwards to it, and amavcu.pages.dev still works). Still marked as a concept and hidden from search until the board flips the switch in the editor. Board editor: https://www.vcuama.site/admin.
 
 ## The big change: the board edits the site itself
 
-Everything the board asked to maintain without code now lives in a password-protected editor at `/admin` (there is a "Board login" link at the bottom of every page). One shared board password; the first person in sets it with the setup code Cooper gives you. The editor has a live preview and keeps the last 25 saves.
+Everything the board asked to maintain without code now lives in a password-protected editor at https://www.vcuama.site/admin (there is a "Board login" link at the bottom of every page). One shared board password; the first person in sets it with the setup code Cooper gives you. The editor has a live preview and keeps the last 25 saves.
 
 What it edits: every headline, paragraph and button label on every page (each page has its own section in the editor), the three pillars, the ICC promo cards, the About cards and timeline, the join steps, the points lines, the footer and the donate panel, the menu labels and footer columns, the category lists, the form fields, the small repeated words, the homepage slideshow photos and the video poster, colors, fonts, motion, the logo, the board year and address, and the search-engine switch; plus events (add, update, delete, past and upcoming, with flyers and RamsConnect links), newsletter issues (upload the PDF or paste a link; newest shows, the rest become the archive), the points leaderboard (paste from a spreadsheet), accomplishments (website submissions arrive in an Inbox and go live with one click), gallery albums and photos (upload straight from a phone), executive board members and the faculty advisor (names, roles, headshots, LinkedIn, bios), Marketers of Tomorrow (consultants, leadership, services, clients, partners, status and application link), alumni stories, blog posts, the FAQ, the homepage words, dues, every link, the recruitment video, a homepage background video, and the ICC name, city and dates. Full instructions: `docs/ADMIN-GUIDE.md`.
 
@@ -54,6 +54,6 @@ Everything below can be added directly in the editor by whoever has the password
 
 ## Where things are
 
-- Editor: https://amavcu.pages.dev/admin (setup code from Cooper, once)
+- Editor: https://www.vcuama.site/admin (setup code from Cooper, once)
 - Guide for the board: `docs/ADMIN-GUIDE.md`
-- Code: GitHub `qwendor/ama-vcu`; live at https://amavcu.pages.dev, mirror at https://qwendor.github.io/ama-vcu/
+- Code: GitHub `qwendor/ama-vcu`; live at https://www.vcuama.site (also https://amavcu.pages.dev), mirror at https://qwendor.github.io/ama-vcu/
