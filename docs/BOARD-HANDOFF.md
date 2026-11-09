@@ -20,7 +20,7 @@ The blog starts empty on purpose: the board writes its own posts in the editor. 
 
 **Board.** Profile pages for each member, real LinkedIn links for all nine, faculty advisor card (headshot placeholder), board application slot. "Katie Gilles": see assumptions.
 
-**Marketers of Tomorrow.** Own tab. Apply button, a "Bring us a project" button that emails Heather Pham (phamhh3@vcu.edu), how it works, roles, an agency-visit photo, the e-board group photo from the November shoot, and placeholder sections for services, consultants (headshot, role, expertise, Linktree) and clients. The 16 e-board portraits are in the gallery and in the editor's photo library, ready to attach to consultant cards once names and roles are known.
+**Marketers of Tomorrow.** Own tab. Apply button, a "Bring us a project" button that emails Heather Pham (phamhh3@vcu.edu), how it works, roles, an agency-visit photo, the e-board group photo from the November shoot, the services (digital marketing, social media and content strategy, general promotion), the team (Isabelle Gonzaga, Sanaa Tanner and Sophia Melita, consultants; Ellias Awel, videographer), leadership (Heather Pham, Founder & CEO; Debelu Ojukwu, COO) and the clients Rally Skin and the Mary and Frances Youth Center. The 16 e-board portraits are in the gallery and in the editor's photo library, ready to attach to each card.
 
 **ICC 2027.** Fundraising copy corrected (Chicago last year, New Orleans this year), "Fund the Trip" is "Donate", one donate panel everywhere (Venmo and Cash App; no sponsor button), conference photo in the fundraising section.
 
@@ -37,14 +37,14 @@ The blog starts empty on purpose: the board writes its own posts in the editor. 
 3. **The leaderboard lives on the Accomplishments page.**
 4. **Homepage tagline, intro and pillar lines** are drafts; change them in the editor under Text and links.
 5. **The chapter photos album** uses general captions ("Awards night", "Agency visit", "The 5K") because the folder had no event names. Rename the album, split it into events or fix captions in the editor.
-6. **MoT e-board portraits** are not matched to names (no name list came with the gallery). Attach them to consultant and leadership cards in the editor from the photo library.
+6. **MoT e-board portraits** are in the gallery but not matched to names yet, so the team cards show initials. Attach each portrait to its card in the editor from the photo library.
 
 ## What we still need from the board
 
 Everything below can be added directly in the editor by whoever has the password; send it to Cooper only if you would rather he does it.
 
 1. Faculty advisor headshot and short bio (Katie Gilstrap; confirm the spelling).
-2. Marketers of Tomorrow: consultant names, roles, specialties and Linktree links; Debalu's last name and title; services list; past clients and partners.
+2. Marketers of Tomorrow: which portrait belongs to which person, plus specialties and Linktree links for Isabelle Gonzaga, Sanaa Tanner, Sophia Melita and Ellias Awel.
 3. Board application form link and MoT application form link.
 4. Alumni LinkedIn group link, and any alumni stories (name, class year, where they are now).
 5. Campus or Engineering building video (mp4) for the homepage, if the board wants one.

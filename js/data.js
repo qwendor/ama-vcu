@@ -331,7 +331,7 @@ window.AMA = {
   agency: {
     name: "Marketers of Tomorrow",
     tagline: "AMA at VCU's student-run agency.",
-    pitch: "Real clients, small teams, a finished deliverable with your name on it. Marketers of Tomorrow is where AMA members turn classroom marketing into portfolio work.",
+    pitch: "Marketers of Tomorrow is a non-profit, student-led marketing agency that partners with local businesses and nonprofits to provide affordable and pro bono marketing services while giving students hands-on experience with real clients.",
     status: "Fall 2026 applications closed October 2. The spring cohort opens on Instagram and the Linktree.",
     applyUrl: "https://linktr.ee/AMAVCUChapter",
     email: "phamhh3@vcu.edu",                 // where "Bring us a project" and the client buttons go (Heather Pham, CEO)
@@ -342,13 +342,25 @@ window.AMA = {
       { t: "Present", d: "Pitch the final deliverable to the client. Add it to your resume and LinkedIn." }
     ],
     roles: ["Account lead", "Strategist", "Content creator", "Designer", "Analyst"],
-    concentrations: [],
-    consultants: [],
-    leadership: [
-      { name: "Heather Pham", title: "CEO", photo: "assets/img/board/heather-pham.webp", bio: "", linktree: "", email: "phamhh3@vcu.edu" },
-      { name: "Debalu", title: "MoT leadership", photo: "", bio: "", linktree: "" }
+    concentrations: [
+      { t: "Digital marketing", d: "SEO, website optimization and analytics." },
+      { t: "Social media and content strategy", d: "Content calendars, platform strategy and short-form video." },
+      { t: "General promotion", d: "Event strategy, promotional campaigns, social promotion and event content." }
     ],
-    clients: [],
+    consultants: [
+      { name: "Isabelle Gonzaga", title: "Consultant", expertise: "", photo: "", linktree: "", bio: "" },
+      { name: "Sanaa Tanner", title: "Consultant", expertise: "", photo: "", linktree: "", bio: "" },
+      { name: "Sophia Melita", title: "Consultant", expertise: "", photo: "", linktree: "", bio: "" },
+      { name: "Ellias Awel", title: "Videographer", expertise: "", photo: "", linktree: "", bio: "" }
+    ],
+    leadership: [
+      { name: "Heather Pham", title: "Founder & CEO", photo: "assets/img/board/heather-pham.webp", bio: "", linktree: "", email: "phamhh3@vcu.edu" },
+      { name: "Debelu Ojukwu", title: "COO", photo: "", bio: "", linktree: "", email: "" }
+    ],
+    clients: [
+      { name: "Rally Skin", note: "Rally is an award-winning, clean skincare brand designed for active teens and young athletes who push hard every day.", url: "" },
+      { name: "Mary and Frances Youth Center (MFYC)", note: "The Mary and Frances Youth Center fosters the positive development and education of youth through innovative, sports-based programs that strengthen life skills, expand awareness of and access to higher education, and empower adults to support positive youth development.", url: "" }
+    ],
     partners: []
   },
 
@@ -396,7 +408,7 @@ window.AMA = {
      The board adds albums and photos in /admin. */
   albums: [
     { slug: "chapter-photos", name: "Chapter photos", date: "2026-09-30", cover: "f26-11", blurb: "Awards night, agency visits, the 5K, tabling, speakers and the AMA conference." },
-    { slug: "marketers-of-tomorrow-eboard", name: "Marketers of Tomorrow e-board", date: "2026-11-03", cover: "mot-16", blurb: "The agency's leadership team, photographed by Elliasz." },
+    { slug: "marketers-of-tomorrow-eboard", name: "Marketers of Tomorrow e-board", date: "2026-11-03", cover: "mot-16", blurb: "The agency's leadership team, photographed by Ellias Awel." },
     { slug: "marketing-week-2026", name: "Marketing Week", date: "2026-10-09", cover: "mw-04", blurb: "Five days in October: the Ad Club competition, trivia night, headshots, speakers and the Saxbys mixer." },
     { slug: "interest-meeting-2026", name: "Interest Meeting", date: "2026-09-08", cover: "im-03", blurb: "First meeting of the year and the raffle that sent people home in AMA merch." },
     { slug: "donuts-with-the-dean-2026", name: "Donuts with the Dean", date: "2026-09-03", cover: "dn-04", blurb: "Donuts with the Dean and Directors to open the semester." }
@@ -508,7 +520,7 @@ window.AMA = {
       leadEyebrow: "Leadership", leadTitle: "Who runs MoT", leadAlt: "The Marketers of Tomorrow e-board, November 2026", bioNote: "Bio coming soon.",
       clientsEyebrow: "Clients and partners", clientsTitle: "Who we have worked with",
       clientsEmptyTitle: "Past clients and business partners", clientsEmptyText: "The client list and the organizations MoT has partnered with are coming from MoT leadership.", clientsEmptyBtn: "Become a client",
-      clientsLabel: "Past clients", partnersLabel: "Partners"
+      clientsLabel: "Clients", partnersLabel: "Partners", servicesNote: "Services are subject to change."
     },
     icc: {
       btnApply: "Apply to go", btnDonate: "Donate", countdownChip: "Countdown", countdownTitle: "Wheels up in", countdownNote: "Counting to the morning of",

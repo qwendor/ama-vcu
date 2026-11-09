@@ -468,7 +468,7 @@
     <section class="section" id="services">
       <div class="wrap">
         <div class="sec-head reveal"><div><p class="eyebrow">${esc(T.servicesEyebrow)}</p><h2 class="h-lg">${title(T.servicesTitle)}</h2></div></div>
-        ${A.concentrations.length ? `<div class="grid g3">${A.concentrations.map((c, i) => `<div class="card reveal d${(i % 3) + 1}"><h3 class="h-sm">${esc(c.t)}</h3><p style="margin:0">${esc(c.d || '')}</p></div>`).join('')}</div>` : placeholder(T.servicesEmptyTitle, T.servicesEmptyText, ask('Ask about a project'))}
+        ${A.concentrations.length ? `<div class="grid g3">${A.concentrations.map((c, i) => `<div class="card reveal d${(i % 3) + 1}"><h3 class="h-sm">${esc(c.t)}</h3><p style="margin:0">${esc(c.d || '')}</p></div>`).join('')}</div>${T.servicesNote ? `<p class="small muted" style="margin:16px 0 0">${esc(T.servicesNote)}</p>` : ''}` : placeholder(T.servicesEmptyTitle, T.servicesEmptyText, ask('Ask about a project'))}
       </div>
     </section>
     <section class="section s-cream" id="consultants">
