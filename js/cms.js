@@ -326,6 +326,57 @@ window.AMA_CMS = (() => {
     if (Array.isArray(c.posts)) D.posts = c.posts.filter(p => str(p.title)).map(p => ({ slug: slugify(p.slug || p.title), title: str(p.title), date: toISO(p.date) || todayISO(), tag: str(p.tag) || 'ICYMI', dek: str(p.dek), cover: srcOf(p.cover), thumb: smOf(p.cover), instagram: str(p.instagram),
       body: Array.isArray(p.body) ? p.body : String(p.body || '').split(/\n\s*\n/).map(s => s.trim()).filter(Boolean), gallery: Array.isArray(p.gallery) ? p.gallery : [] })).sort((a, b) => b.date.localeCompare(a.date));
     if (Array.isArray(c.faq) && c.faq.length) D.faq = c.faq.filter(f => str(f.q)).map(f => ({ q: str(f.q), a: str(f.a), link: str(f.link), linkLabel: str(f.linkLabel) }));
+    /* page writing */
+    if (c.copy && typeof c.copy === 'object') Object.keys(D.copy).forEach(page => {
+      const src = c.copy[page]; if (!src || typeof src !== 'object') return;
+      Object.keys(src).forEach(k => { if (typeof src[k] === 'string') D.copy[page][k] = src[k]; });
+    });
+    if (Array.isArray(c.pillars) && c.pillars.length) D.pillars = c.pillars.filter(p => str(p.name)).map(p => ({ name: str(p.name), short: str(p.short), icon: str(p.icon) || 'i-star' }));
+    if (Array.isArray(c.iccFeatures) && c.iccFeatures.length) D.iccFeatures = c.iccFeatures.filter(f => str(f.title)).map(f => ({ title: str(f.title), text: str(f.text), img: srcOf(f.img) }));
+    if (Array.isArray(c.aboutCards) && c.aboutCards.length) D.aboutCards = c.aboutCards.filter(x => str(x.title)).map(x => ({ chip: str(x.chip), title: str(x.title), text: str(x.text), url: str(x.url), btn: str(x.btn) }));
+    if (Array.isArray(c.timeline) && c.timeline.length) D.timeline = c.timeline.filter(x => str(x.when) || str(x.text)).map(x => ({ when: str(x.when), text: str(x.text) }));
+    if (c.aboutPhoto !== undefined) D.aboutPhoto = srcOf(c.aboutPhoto);
+    if (c.donatePhoto !== undefined) D.donatePhoto = srcOf(c.donatePhoto);
+    if (Array.isArray(c.iccCards) && c.iccCards.length) D.iccCards = c.iccCards.map(x => ({ chip: str(x.chip), title: str(x.title), text: str(x.text), btn: str(x.btn) }));
+    if (c.icc && typeof c.icc === 'object') {
+      const I = c.icc;
+      ['name', 'short', 'city', 'dates', 'about'].forEach(k => setStr(D.icc, k, I[k]));
+      if (toISO(I.start)) D.icc.start = toISO(I.start) + 'T09:00:00-05:00';
+      if (toISO(I.end)) D.icc.end = toISO(I.end);
+      if (Array.isArray(I.competitions)) D.icc.competitions = I.competitions.map(str).filter(Boolean);
+      if (I.fundraising && typeof I.fundraising === 'object') ['eyebrow', 'head', 'body'].forEach(k => setStr(D.icc.fundraising, k, I.fundraising[k]));
+      if (I.photo !== undefined) D.icc.photo = srcOf(I.photo);
+      if (Array.isArray(I.results)) D.icc.results = I.results.filter(y => str(y.year)).map(y => ({ year: str(y.year), city: str(y.city), dates: str(y.dates), source: str(y.source), note: str(y.note), wins: (y.wins || []).filter(w => str(w.who)).map(w => ({ comp: str(w.comp), place: num(w.place) || 0, who: str(w.who) })) }));
+    }
+    if (c.membership && typeof c.membership === 'object') {
+      const M = c.membership;
+      if (Array.isArray(M.steps) && M.steps.length) D.membership.steps = M.steps.filter(s => str(s.t)).map(s => ({ t: str(s.t), d: str(s.d) }));
+      if (Array.isArray(M.knownPoints)) D.membership.knownPoints = M.knownPoints.filter(p => str(p.what)).map(p => ({ what: str(p.what), pts: str(p.pts), isGoal: !!p.isGoal }));
+      setStr(D.membership, 'pointsNote', M.pointsNote);
+    }
+    if (c.mot && typeof c.mot === 'object') {
+      const M = c.mot, A = D.agency;
+      setStr(A, 'name', M.name); setStr(A, 'pitch', M.pitch); if ('email' in M) A.email = str(M.email); if ('status' in M) A.status = str(M.status);
+      if (Array.isArray(M.how) && M.how.length) A.how = M.how.filter(s => str(s.t)).map(s => ({ t: str(s.t), d: str(s.d) }));
+      if (Array.isArray(M.roles)) A.roles = M.roles.map(str).filter(Boolean);
+      if (M.photo !== undefined) A.photo = srcOf(M.photo);
+      if (M.groupPhoto !== undefined) A.groupPhoto = M.groupPhoto ? srcOf(M.groupPhoto) : (M.groupPhoto === null ? null : undefined);
+      if (Array.isArray(M.leadership)) A.leadership = M.leadership.filter(p => str(p.name)).map(p => ({ name: str(p.name), title: str(p.title), expertise: str(p.expertise), photo: srcOf(p.photo), linktree: str(p.linktree), bio: str(p.bio), email: str(p.email) }));
+    }
+    if (c.leadership && typeof c.leadership === 'object') {
+      const L = c.leadership;
+      setStr(D.leadership, 'intro', L.intro); setStr(D.leadership, 'season', L.season);
+      if (Array.isArray(L.paths) && L.paths.length) D.leadership.paths = L.paths.filter(p => str(p.t)).map(p => ({ t: str(p.t), d: str(p.d), cta: str(p.cta), url: str(p.url) }));
+    }
+    if (Array.isArray(c.opportunities) && c.opportunities.length) D.opportunities = c.opportunities.filter(o => str(o.title)).map(o => ({ cat: D.opportunityCats[o.cat] ? o.cat : 'development', title: str(o.title), d: str(o.d), url: str(o.url) }));
+    if (c.alumniMeta && typeof c.alumniMeta === 'object') {
+      const A = c.alumniMeta;
+      setStr(D.alumni, 'intro', A.intro);
+      if (Array.isArray(A.waysToHelp) && A.waysToHelp.length) D.alumni.waysToHelp = A.waysToHelp.filter(w => str(w.t)).map(w => ({ t: str(w.t), d: str(w.d) }));
+      if (Array.isArray(A.forAlumniAndMembers)) D.alumni.forAlumniAndMembers = A.forAlumniAndMembers.filter(w => str(w.t)).map(w => ({ t: str(w.t), d: str(w.d), url: str(w.url) }));
+    }
+    if (Array.isArray(c.surveys)) D.forms.surveys = c.surveys.filter(s => str(s.title) && str(s.url)).map(s => ({ title: str(s.title), note: str(s.note), url: str(s.url) }));
+    if ('videoTitle' in S) setStr(D.video, 'title', S.videoTitle);
     D.saved = true;
     return true;
   }
@@ -366,6 +417,7 @@ window.AMA_CMS = (() => {
       if (e.origin !== location.origin || !e.data || e.data.type !== 'ama:draft') return;
       resetToPristine(); applySaved(e.data.content || {});
       const T = window.AMA_TEST; if (!T) return;
+      if (T.chrome) T.chrome();
       if (e.data.hash && e.data.hash !== location.hash) location.hash = e.data.hash;
       setTimeout(() => T.render(true), 30);
     });

@@ -1,6 +1,7 @@
 /* Site editor for /admin. No build step: plain JS that draws forms from the SECTIONS list below.
    Content is saved as one JSON document through /api/content (functions/api/[[path]].js) and the
-   public site reads it in js/cms.js. To add a field: one line in SECTIONS here, read it in cms.js. */
+   public site reads it in js/cms.js. To add a field: one line in SECTIONS here, read it in cms.js.
+   Page writing lives under copy.<page>.<key>; *stars* in a title mark the gold words. */
 (() => {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -144,6 +145,12 @@
       const i = id();
       return wrap(def, h("textarea", { id: i, rows: def.rows || 4, placeholder: def.placeholder, oninput: (e) => { set(base, def.key, e.target.value); changed(); } }, get(base, def.key) || ""), i);
     },
+    strings(def, base) {
+      const i = id();
+      return wrap(def, h("textarea", { id: i, rows: def.rows || 4,
+        oninput: (e) => { set(base, def.key, e.target.value.split("\n").map((s) => s.trim()).filter(Boolean)); changed(); } },
+        (get(base, def.key) || []).join("\n")), i);
+    },
     toggle(def, base) {
       const v = get(base, def.key);
       return h("div", { class: "f" }, h("label", { class: "switch" },
@@ -247,19 +254,50 @@
   // ---------------------------------------------------------------- what the editor shows
   const TYPES = () => Object.entries(SITE.eventTypes).map(([k, v]) => [k, v.label]);
   const CATS = () => Object.entries(SITE.accomplishmentCats);
+  const OPPCATS = () => Object.entries(SITE.opportunityCats);
+  const ICONS = [["i-bulb", "Light bulb"], ["i-bolt", "Bolt"], ["i-users", "People"], ["i-star", "Star"], ["i-trophy", "Trophy"], ["i-heart", "Heart"], ["i-coffee", "Coffee"], ["i-cal", "Calendar"], ["i-gift", "Gift"], ["i-check", "Check"]];
   const autoSlug = (it, title) => { if (it._auto) it.slug = slugify(title); };
-  const person = (noun) => ({ type: "cards", noun, titleKey: "name", fresh: () => ({ name: "", title: "", expertise: "", photo: null, linktree: "", bio: "" }), fields: [
+  const GOLD = "Put *stars* around the words that should be gold.";
+  // page writing fields: cp(page, key, label, type, extra)
+  const cp = (page, key, label, type = "text", extra = {}) => ({ key: `copy.${page}.${key}`, type, label, ...extra });
+  const ta = (page, key, label, rows = 3, extra = {}) => cp(page, key, label, "textarea", { rows, ...extra });
+  const person = (noun) => ({ type: "cards", noun, titleKey: "name", fresh: () => ({ name: "", title: "", expertise: "", photo: null, linktree: "", bio: "", email: "" }), fields: [
     { key: "name", type: "text", label: "Name" }, { key: "title", type: "text", label: "Role or title", placeholder: noun === "leader" ? "CEO" : "Consultant" },
     { key: "expertise", type: "text", label: "Areas of expertise", placeholder: "Social media, content, brand" },
     { key: "photo", type: "image", label: "Headshot", portrait: true },
     { key: "linktree", type: "url", label: "Linktree or LinkedIn link" },
+    { key: "email", type: "text", label: "Email (optional)", help: "Adds an Email button on the card." },
     { key: "bio", type: "textarea", rows: 3, label: "Short bio" } ] });
+  const textLinkCards = (key, noun, label) => ({ key, type: "cards", noun, titleKey: "t", label, fresh: () => ({ t: "", d: "", url: "" }), fields: [
+    { key: "t", type: "text", label: "Title" }, { key: "d", type: "textarea", rows: 2, label: "Text" }, { key: "url", type: "url", label: "Link (optional)" } ] });
 
   const SECTIONS = [
+    // ---------------- pages
+    { id: "home", label: "Home page", icon: "house", hash: () => "#/", lead: "Everything written on the home page. Events, the board and the FAQ have their own sections.",
+      groups: [
+        { title: "Top of the page", fields: [cp("home", "label", "Small label over the headline"), cp("home", "title", "Big headline"), ta("home", "tagline", "Tagline under the headline", 3), cp("home", "btnJoin", "First button"), cp("home", "btnEvents", "Second button")] },
+        { title: "Numbers strip", fields: [cp("home", "statFounded", "Label under the founding year"), cp("home", "statWins", "Label under the placements count", "text", { help: "Change the year when the next ICC results come in." }), cp("home", "statDays", "Label under the countdown"), cp("home", "statDues", "Label under the dues")] },
+        { title: "What is AMA at VCU", fields: [cp("home", "introEyebrow", "Small heading"), cp("home", "introTitle", "Heading", "text", { help: GOLD }), { key: "settings.blurb", type: "textarea", rows: 5, label: "Paragraph" }, cp("home", "introBtn1", "First button"), cp("home", "introBtn2", "Second button"), { key: "settings.videoTitle", type: "text", label: "Text on the video button" }, cp("home", "videoNote", "Tag shown while there is no video")] },
+        { title: "Three pillars", fields: [cp("home", "pillarsEyebrow", "Small heading"), { key: "pillars", type: "cards", noun: "pillar", titleKey: "name", label: "", fresh: () => ({ name: "", short: "", icon: "i-star" }), fields: [{ key: "name", type: "text", label: "Name" }, { key: "short", type: "textarea", rows: 2, label: "One line" }, { key: "icon", type: "select", label: "Icon", options: ICONS }] }] },
+        { title: "Upcoming events block", fields: [cp("home", "eventsEyebrow", "Small heading"), cp("home", "eventsTitleMonth", "Heading when events fall this month"), cp("home", "eventsTitle", "Heading otherwise"), cp("home", "eventsMore", "Link to the full calendar"), cp("home", "eventsEmptyTitle", "Card shown when few events are coming: title"), cp("home", "eventsEmptyText", "Card shown when few events are coming: text"), cp("home", "countdownNote", "Line under the ICC dates in the countdown card"), cp("home", "countdownBtn", "Countdown card: first button"), cp("home", "countdownBtn2", "Countdown card: second button")] },
+        { title: "ICC promo", fields: [cp("home", "iccEyebrow", "Small heading"), cp("home", "iccApply", "Apply button"), cp("home", "iccMore", "Learn more button"), { key: "iccFeatures", type: "cards", noun: "card", titleKey: "title", label: "The four cards", fresh: () => ({ title: "", text: "", img: null }), fields: [{ key: "title", type: "text", label: "Title" }, { key: "text", type: "textarea", rows: 2, label: "Text" }, { key: "img", type: "image", label: "Photo" }] }] },
+        { title: "Board row", fields: [cp("home", "boardEyebrow", "Small heading", "text", { help: "Leave empty for \"2026-27 executive board\" (the year updates itself)." }), cp("home", "boardTitle", "Heading", "text", { help: GOLD }), cp("home", "boardMore", "Link to the board page")] },
+        { title: "Recaps block (shows once there are blog posts)", fields: [cp("home", "newsEyebrow", "Small heading"), cp("home", "newsTitle", "Heading"), cp("home", "newsMore", "Link to all posts")] },
+        { title: "FAQ heading", fields: [cp("home", "faqEyebrow", "Small heading"), cp("home", "faqTitle", "Heading", "text", { help: GOLD }), cp("home", "faqLede", "Line under the heading", "text", { help: "The chapter email is added after it automatically." })] },
+      ] },
+    { id: "about", label: "About page", icon: "info", hash: () => "#/about", lead: "The About page, top to bottom.",
+      groups: [
+        { title: "Top", fields: [cp("about", "eyebrow", "Small heading"), cp("about", "title", "Headline", "text", { help: GOLD }), ta("about", "lede", "Intro paragraph", 4)] },
+        { title: "Our purpose", fields: [cp("about", "purposeEyebrow", "Small heading"), ta("about", "quote", "Quote (shown large)", 3), ta("about", "p1", "First paragraph", 4), ta("about", "p2", "Second paragraph", 3), cp("about", "btnJoin", "First button"), cp("about", "btnBoard", "Second button")] },
+        { title: "Numbers", fields: [cp("about", "numFounded", "Label under the founding year"), cp("about", "numWins", "Label under the placements count"), cp("about", "numPoints", "Label under the points number"), cp("about", "numDues", "Label under the dues")] },
+        { title: "Three organizations", fields: [cp("about", "orgsEyebrow", "Small heading"), cp("about", "orgsTitle", "Heading", "text", { help: GOLD }), { key: "aboutCards", type: "cards", noun: "card", titleKey: "title", label: "", fresh: () => ({ chip: "", title: "", text: "", url: "", btn: "" }), fields: [{ key: "chip", type: "text", label: "Tag" }, { key: "title", type: "text", label: "Title" }, { key: "text", type: "textarea", rows: 3, label: "Text" }, { key: "url", type: "url", label: "Link (optional)" }, { key: "btn", type: "text", label: "Button text" }] }] },
+        { title: "Timeline", fields: [cp("about", "historyEyebrow", "Small heading"), cp("about", "historyTitle", "Heading", "text", { help: GOLD }), { key: "timeline", type: "rows", label: "Moments", cols: [["when", "When", "1fr"], ["text", "What happened", "3fr"]], add: "Add a moment" }, { key: "aboutPhoto", type: "image", label: "Photo beside the timeline" }, cp("about", "historyAlt", "Photo description (for screen readers)")] },
+      ] },
     { id: "events", label: "Events", icon: "calendar-blank", noun: "event", list: "events", titleKey: "title", thumb: "img", hash: () => "#/events",
-      lead: "Everything on the Events page and the home page. Upcoming events show the date and time; the room stays on RamsConnect unless you turn locations on in Text and links.",
+      lead: "Everything on the Events page and the home page. Upcoming events show the date and time; the room stays on RamsConnect unless you turn locations on in Links and settings.",
       sub: (e) => [e.tba ? "Date TBA" : fmtDate(e.date), (SITE.eventTypes[e.type] || {}).label].filter(Boolean).join(" · "),
       fresh: () => ({ id: "ev-" + Date.now().toString(36), title: "", date: "", end: "", time: "", type: "event", series: "", place: "", blurb: "", img: null, points: "", rsvp: "", tba: false, ctaLabel: "", ctaUrl: "" }),
+      pageGroups: [{ title: "Events page text", fields: [cp("events", "eyebrow", "Small heading"), cp("events", "title", "Headline", "text", { help: GOLD }), ta("events", "lede", "Intro paragraph", 3), cp("events", "btnCalendar", "Calendar button"), cp("events", "btnRegister", "RamsConnect button"), cp("events", "locked", "Locations note"), cp("events", "upcomingLabel", "Label over upcoming events"), cp("events", "recapLabel", "Word after each past month"), cp("events", "emptyTitle", "No upcoming events: title"), cp("events", "emptyText", "No upcoming events: text")] }],
       groups: [
         { title: "The event", fields: [
           { key: "title", type: "text", label: "Title" },
@@ -278,58 +316,11 @@
           { key: "ctaLabel", type: "text", label: "Button text", placeholder: "Apply for ICC 2027" },
           { key: "ctaUrl", type: "url", label: "Button link" } ] },
       ] },
-    { id: "newsletters", label: "Newsletter", icon: "newspaper", noun: "issue", list: "newsletters", titleKey: "month", hash: () => "#/newsletter",
-      lead: "Upload each issue as a PDF (or paste a link to it). The newest issue shows on the Newsletter page and in the home page link; the rest become the archive.",
-      sub: (n) => [fmtDate(n.date), n.file ? "PDF" : n.link ? "Link" : "No file yet"].filter(Boolean).join(" · "),
-      fresh: () => ({ month: "", date: new Date().toISOString().slice(0, 10), file: "", link: "", blurb: "" }),
-      groups: [
-        { title: "The issue", fields: [
-          { key: "month", type: "text", label: "Issue name", placeholder: "November 2026" },
-          { key: "date", type: "date", label: "Date sent", help: "Newest date shows first." },
-          { key: "file", type: "file", accept: "application/pdf", label: "PDF of the issue", help: "Up to 12 MB. It shows inside the page and opens in a new tab." },
-          { key: "link", type: "url", label: "Or a link to the issue", placeholder: "https://…", help: "Used when there is no PDF (Mailchimp or Canva web view, for example)." },
-          { key: "blurb", type: "textarea", rows: 3, label: "Two-line summary", help: "Shown above the issue." } ] },
-      ] },
-    { id: "leaderboard", label: "Points leaderboard", icon: "trophy", hash: () => "#/accomplishments#leaderboard",
-      lead: "Names and points. Names only, no photos. Shown on the Accomplishments page.",
-      groups: [
-        { title: "Paste a fresh list", fields: [{ key: "leaderboard.members", type: "paste", label: "Paste from your spreadsheet", placeholder: "Jordan R.\t165\nPriya S.\t150", help: "One person per line: name, then points. Replaces the whole list below." }] },
-        { title: "The list", fields: [
-          { key: "leaderboard.updated", type: "date", label: "Last updated" },
-          { key: "leaderboard.members", type: "rows", label: "Members", cols: [["name", "Name", "2fr"], ["pts", "Points", "1fr"]], add: "Add a member" } ] },
-      ] },
-    { id: "accomplishments", label: "Accomplishments", icon: "medal", noun: "accomplishment", list: "accomplishments", titleKey: "who", hash: () => "#/accomplishments",
-      lead: "Members doing big things. Submissions from the website land in the Inbox; add them here with one click, then switch them on.",
-      sub: (a) => [a.what, a.approved === false ? "hidden" : null].filter(Boolean).join(" · "),
-      off: (a) => a.approved === false,
-      fresh: () => ({ who: "", what: "", where: "", when: "", cat: "internship", approved: true }),
-      groups: [
-        { title: "The win", fields: [
-          { key: "who", type: "text", label: "Name" },
-          { key: "what", type: "text", label: "What they did", placeholder: "Marketing intern, summer 2027" },
-          { key: "where", type: "text", label: "Company, organization or event" },
-          { key: "when", type: "text", label: "When", placeholder: "May 2027" },
-          { key: "cat", type: "select", label: "Kind", options: CATS },
-          { key: "approved", type: "toggle", label: "Show on the site", defaultOn: true } ] },
-      ] },
-    { id: "albums", label: "Gallery", icon: "images", noun: "album", list: "albums", titleKey: "name", thumb: "cover", hash: (it) => it && it.slug ? "#/gallery/" + it.slug : "#/gallery",
-      lead: "One album per event. Upload the photos straight from your phone or laptop; they are resized for you.",
-      sub: (a) => [fmtDate(a.date), `${(a.photos || []).length} photos`].filter(Boolean).join(" · "),
-      slugged: true,
-      fresh: () => ({ _auto: true, slug: "", name: "", date: new Date().toISOString().slice(0, 10), blurb: "", cover: null, photos: [] }),
-      groups: [
-        { title: "The album", fields: [
-          { key: "name", type: "text", label: "Album name", onchange: autoSlug },
-          { key: "date", type: "date", label: "Event date" },
-          { key: "blurb", type: "textarea", rows: 2, label: "One line about it" },
-          { key: "cover", type: "image", label: "Cover photo", help: "If empty, the first photo is used." } ] },
-        { title: "Photos", fields: [{ key: "photos", type: "images", label: "Photos in this album" }] },
-        { title: "Web address", fields: [{ key: "slug", type: "slug", prefix: "#/gallery/", label: "Link for this album" }] },
-      ] },
     { id: "board", label: "Executive board", icon: "users-three", noun: "board member", list: "board", titleKey: "name", thumb: "photo", hash: (it) => it && it.slug ? "#/board/" + it.slug : "#/board",
       lead: "The order here is the order on the site. Every spring: update names, roles, photos and LinkedIn links.",
       sub: (m) => m.role, slugged: true,
       fresh: () => ({ _auto: true, slug: "", name: "", role: "", year: "", major: "", goal: "", fun: "", linkedin: "", bio: "", photo: null }),
+      pageGroups: [{ title: "Board page text", fields: [cp("board", "eyebrow", "Small heading", "text", { help: "Leave empty for \"2026-27 executive board\"." }), cp("board", "title", "Headline", "text", { help: GOLD }), ta("board", "lede", "Intro paragraph", 3), cp("board", "nextChip", "Yellow card: tag"), cp("board", "nextTitle", "Yellow card: title"), { key: "leadership.season", type: "textarea", rows: 3, label: "Yellow card: text (also used on the Leadership page)" }, cp("board", "nextBtn", "Application button (when there is a link)"), cp("board", "nextBtnEmail", "Email button (when there is no link)"), cp("board", "nextBtn2", "Second button"), cp("board", "nextNote", "Note when no application link is set"), cp("board", "headshotNote", "Advisor card: text where a photo is missing"), cp("board", "advisorBio", "Advisor card: text where the bio is missing")] }],
       groups: [
         { title: "The person", fields: [
           { key: "name", type: "text", label: "Name", onchange: autoSlug },
@@ -348,31 +339,46 @@
         { key: "advisor.role", type: "text", label: "Position", placeholder: "Associate Professor of Marketing, VCU School of Business" },
         { key: "advisor.photo", type: "image", label: "Headshot", portrait: true },
         { key: "advisor.bio", type: "textarea", rows: 4, label: "Bio" }, { key: "advisor.linkedin", type: "url", label: "LinkedIn link" } ] }] },
-    { id: "mot", label: "Marketers of Tomorrow", icon: "briefcase", hash: () => "#/mot", lead: "The agency page: status line, consultants, leadership, services and clients.",
+    { id: "mot", label: "Marketers of Tomorrow", icon: "briefcase", hash: () => "#/mot", lead: "The agency page: words, status, consultants, leadership, services and clients.",
       groups: [
-        { title: "Applications", fields: [
-          { key: "mot.status", type: "text", label: "Status line", placeholder: "Spring 2027 applications open January 20." },
-          { key: "mot.applyUrl", type: "url", label: "Application link", help: "Where the Apply button goes." } ] },
-        { title: "Consultants", fields: [{ key: "mot.consultants", ...person("consultant"), label: "This semester's consultants" }] },
-        { title: "Leadership", fields: [{ key: "mot.leadership", ...person("leader"), label: "Who runs MoT" }] },
-        { title: "Areas of concentration", fields: [{ key: "mot.concentrations", type: "rows", label: "Services", cols: [["t", "Service", "1fr"], ["d", "One line about it", "2fr"]], add: "Add a service" }] },
-        { title: "Clients and partners", fields: [
+        { title: "Top of the page", fields: [cp("mot", "eyebrow", "Small heading"), { key: "mot.name", type: "text", label: "Agency name" }, { key: "mot.pitch", type: "textarea", rows: 3, label: "Intro paragraph" }, cp("mot", "btnApply", "Apply button"), cp("mot", "btnProject", "Contact button"), { key: "mot.email", type: "text", label: "Contact email", help: "Where the contact buttons on this page send people (Heather Pham today)." }, { key: "mot.status", type: "text", label: "Status line", placeholder: "Spring 2027 applications open January 20." }, { key: "mot.applyUrl", type: "url", label: "Application link" }] },
+        { title: "How it works", fields: [cp("mot", "howEyebrow", "Small heading"), cp("mot", "howTitle", "Heading", "text", { help: GOLD }), { key: "mot.how", type: "cards", noun: "step", titleKey: "t", label: "Steps", fresh: () => ({ t: "", d: "" }), fields: [{ key: "t", type: "text", label: "Step" }, { key: "d", type: "textarea", rows: 2, label: "Text" }] }] },
+        { title: "Roles", fields: [cp("mot", "rolesEyebrow", "Small heading"), cp("mot", "rolesTitle", "Heading"), { key: "mot.roles", type: "strings", label: "Roles (one per line)", rows: 5 }, ta("mot", "rolesText", "Text under the roles", 2), { key: "mot.photo", type: "image", label: "Photo beside the roles" }, cp("mot", "rolesAlt", "Photo description")] },
+        { title: "Areas of concentration", fields: [cp("mot", "servicesEyebrow", "Small heading"), cp("mot", "servicesTitle", "Heading"), { key: "mot.concentrations", type: "rows", label: "Services", cols: [["t", "Service", "1fr"], ["d", "One line about it", "2fr"]], add: "Add a service" }, cp("mot", "servicesEmptyTitle", "Shown while the list is empty: title"), ta("mot", "servicesEmptyText", "Shown while the list is empty: text", 2)] },
+        { title: "Consultants", fields: [cp("mot", "teamEyebrow", "Small heading"), cp("mot", "teamTitle", "Heading"), ta("mot", "teamLede", "Line under the heading", 2), { key: "mot.consultants", ...person("consultant"), label: "This semester's consultants" }, cp("mot", "teamEmptyTitle", "Shown while the list is empty: title"), ta("mot", "teamEmptyText", "Shown while the list is empty: text", 2), cp("mot", "teamEmptyBtn", "Shown while the list is empty: button")] },
+        { title: "Leadership", fields: [cp("mot", "leadEyebrow", "Small heading"), cp("mot", "leadTitle", "Heading"), { key: "mot.groupPhoto", type: "image", label: "Group photo above the cards", help: "Remove it to show the cards alone." }, cp("mot", "leadAlt", "Group photo description"), { key: "mot.leadership", ...person("leader"), label: "Who runs MoT" }, cp("mot", "bioNote", "Text where a bio is missing")] },
+        { title: "Clients and partners", fields: [cp("mot", "clientsEyebrow", "Small heading"), cp("mot", "clientsTitle", "Heading"), cp("mot", "clientsLabel", "Label over clients"), cp("mot", "partnersLabel", "Label over partners"),
           { key: "mot.clients", type: "rows", label: "Past clients", cols: [["name", "Client", "1fr"], ["note", "Project", "1fr"], ["url", "Link (optional)", "1fr"]], add: "Add a client" },
-          { key: "mot.partners", type: "rows", label: "Partners", cols: [["name", "Organization", "1fr"], ["note", "What you did together", "1fr"], ["url", "Link (optional)", "1fr"]], add: "Add a partner" } ] },
+          { key: "mot.partners", type: "rows", label: "Partners", cols: [["name", "Organization", "1fr"], ["note", "What you did together", "1fr"], ["url", "Link (optional)", "1fr"]], add: "Add a partner" },
+          cp("mot", "clientsEmptyTitle", "Shown while both lists are empty: title"), ta("mot", "clientsEmptyText", "Shown while both lists are empty: text", 2), cp("mot", "clientsEmptyBtn", "Shown while both lists are empty: button")] },
       ] },
-    { id: "alumni", label: "Alumni", icon: "handshake", noun: "alumni story", list: "alumni", titleKey: "name", thumb: "photo", hash: () => "#/opportunities#alumni",
-      lead: "Where graduates landed. Shown on the Opportunities & Alumni page.",
-      sub: (a) => [a.year ? "Class of " + a.year : "", a.now].filter(Boolean).join(" · "),
-      fresh: () => ({ name: "", year: "", now: "", story: "", url: "", photo: null }),
-      groups: [{ title: "The alum", fields: [
-        { key: "name", type: "text", label: "Name" }, { key: "year", type: "text", label: "Class year", placeholder: "2024" },
-        { key: "now", type: "text", label: "What they do now", placeholder: "Brand Manager, Example Co." },
-        { key: "story", type: "textarea", rows: 3, label: "A line or two" },
-        { key: "url", type: "url", label: "LinkedIn link" }, { key: "photo", type: "image", label: "Photo (optional)", portrait: true } ] }] },
+    { id: "icc", label: "ICC", icon: "airplane-tilt", hash: () => "#/icc", lead: "The conference page, the countdown and the results. The home page ICC block reads the same name, city and dates.",
+      groups: [
+        { title: "The conference", fields: [{ key: "icc.name", type: "text", label: "Full name" }, { key: "icc.short", type: "text", label: "Short name", placeholder: "ICC 2027" }, { key: "icc.city", type: "text", label: "City" }, { key: "icc.dates", type: "text", label: "Dates in words", placeholder: "April 8 to 10, 2027" }, { key: "icc.start", type: "date", label: "First day (the countdown counts to it)" }, { key: "icc.end", type: "date", label: "Last day" }, { key: "icc.about", type: "textarea", rows: 3, label: "About the conference" }, { key: "settings.iccApplication", type: "url", label: "Application link" }, cp("icc", "btnApply", "Apply button"), cp("icc", "btnDonate", "Donate button")] },
+        { title: "Countdown card", fields: [cp("icc", "countdownChip", "Tag"), cp("icc", "countdownTitle", "Heading"), cp("icc", "countdownNote", "Text before the date")] },
+        { title: "Three cards", fields: [{ key: "iccCards", type: "cards", noun: "card", titleKey: "title", label: "", fresh: () => ({ chip: "", title: "", text: "", btn: "" }), fields: [{ key: "chip", type: "text", label: "Tag" }, { key: "title", type: "text", label: "Title" }, { key: "text", type: "textarea", rows: 3, label: "Text (the second card shows the competitions list instead)" }, { key: "btn", type: "text", label: "Application button text (optional)" }] }, { key: "icc.competitions", type: "strings", label: "Competitions (one per line)", rows: 6 }] },
+        { title: "Results", fields: [cp("icc", "resultsEyebrow", "Small heading"), cp("icc", "resultsTitle", "Heading", "text", { help: GOLD }), ta("icc", "resultsLede", "Line under the heading", 2),
+          { key: "icc.results", type: "cards", noun: "year", titleKey: "year", label: "Years", fresh: () => ({ year: "", city: "", dates: "", source: "", note: "", wins: [] }), fields: [{ key: "year", type: "text", label: "Year" }, { key: "city", type: "text", label: "City" }, { key: "dates", type: "text", label: "Dates" }, { key: "source", type: "url", label: "Link to the official results" }, { key: "note", type: "textarea", rows: 2, label: "Note (optional)" }, { key: "wins", type: "rows", label: "Placements", cols: [["place", "Place (number, 0 = honorable)", "1fr"], ["who", "Who", "2fr"], ["comp", "Competition", "2fr"]], add: "Add a placement" }] }] },
+        { title: "Fundraising", fields: [{ key: "icc.fundraising.eyebrow", type: "text", label: "Small heading" }, { key: "icc.fundraising.head", type: "text", label: "Heading", help: GOLD }, { key: "icc.fundraising.body", type: "textarea", rows: 4, label: "Text" }, cp("icc", "fundBtn", "Donate button"), cp("icc", "fundBtn2", "Second button"), { key: "icc.photo", type: "image", label: "Photo" }, cp("icc", "fundAlt", "Photo description")] },
+      ] },
+    { id: "newsletters", label: "Newsletter", icon: "newspaper", noun: "issue", list: "newsletters", titleKey: "month", hash: () => "#/newsletter",
+      lead: "Upload each issue as a PDF (or paste a link to it). The newest issue shows on the Newsletter page and in the home page link; the rest become the archive.",
+      sub: (n) => [fmtDate(n.date), n.file ? "PDF" : n.link ? "Link" : "No file yet"].filter(Boolean).join(" · "),
+      fresh: () => ({ month: "", date: new Date().toISOString().slice(0, 10), file: "", link: "", blurb: "" }),
+      pageGroups: [{ title: "Newsletter page text", fields: [cp("news", "eyebrow", "Small heading"), cp("news", "title", "Headline", "text", { help: GOLD }), ta("news", "lede", "Intro paragraph", 3), cp("news", "archiveEyebrow", "Archive: small heading"), cp("news", "archiveTitle", "Archive: heading"), cp("news", "archiveEmpty", "Archive: text when there is only one issue"), cp("news", "inboxChip", "Join card: tag"), cp("news", "inboxTitle", "Join card: title"), cp("news", "inboxText", "Join card: text"), cp("news", "inboxBtn", "Join card: button"), cp("news", "openBtn", "Button for a PDF issue"), cp("news", "readBtn", "Button for a linked issue")] }],
+      groups: [
+        { title: "The issue", fields: [
+          { key: "month", type: "text", label: "Issue name", placeholder: "November 2026" },
+          { key: "date", type: "date", label: "Date sent", help: "Newest date shows first." },
+          { key: "file", type: "file", accept: "application/pdf", label: "PDF of the issue", help: "Up to 12 MB. It shows inside the page and opens in a new tab." },
+          { key: "link", type: "url", label: "Or a link to the issue", placeholder: "https://…", help: "Used when there is no PDF (Mailchimp or Canva web view, for example)." },
+          { key: "blurb", type: "textarea", rows: 3, label: "Two-line summary", help: "Shown above the issue." } ] },
+      ] },
     { id: "posts", label: "Blog", icon: "article", noun: "post", list: "posts", titleKey: "title", thumb: "cover", hash: (it) => it && it.slug ? "#/blog/" + it.slug : "#/blog",
       lead: "Recaps and guides. The three newest also show on the home page under In case you missed it.",
       sub: (p) => [fmtDate(p.date), p.tag].filter(Boolean).join(" · "), slugged: true,
       fresh: () => ({ _auto: true, slug: "", title: "", date: new Date().toISOString().slice(0, 10), tag: "ICYMI", dek: "", body: "", cover: null, instagram: "" }),
+      pageGroups: [{ title: "Blog page text", fields: [cp("blog", "eyebrow", "Small heading"), cp("blog", "title", "Headline", "text", { help: GOLD }), ta("blog", "lede", "Intro paragraph", 2), cp("blog", "emptyTitle", "No posts yet: title"), ta("blog", "emptyText", "No posts yet: text", 2), cp("blog", "emptyBtn", "No posts yet: first button"), cp("blog", "emptyBtn2", "No posts yet: second button")] }],
       groups: [
         { title: "The post", fields: [
           { key: "title", type: "text", label: "Title", onchange: autoSlug },
@@ -383,28 +389,89 @@
           { key: "instagram", type: "url", label: "Instagram post link (optional)", help: "Adds a See the post on Instagram button." } ] },
         { title: "Web address", fields: [{ key: "slug", type: "slug", prefix: "#/blog/", label: "Link for this post" }] },
       ] },
+    { id: "albums", label: "Gallery", icon: "images", noun: "album", list: "albums", titleKey: "name", thumb: "cover", hash: (it) => it && it.slug ? "#/gallery/" + it.slug : "#/gallery",
+      lead: "One album per event. Upload the photos straight from your phone or laptop; they are resized for you.",
+      sub: (a) => [fmtDate(a.date), `${(a.photos || []).length} photos`].filter(Boolean).join(" · "),
+      slugged: true,
+      fresh: () => ({ _auto: true, slug: "", name: "", date: new Date().toISOString().slice(0, 10), blurb: "", cover: null, photos: [] }),
+      pageGroups: [{ title: "Gallery page text", fields: [cp("gallery", "eyebrow", "Small heading"), cp("gallery", "title", "Headline", "text", { help: GOLD }), ta("gallery", "lede", "Intro paragraph", 2), cp("gallery", "emptyTitle", "Empty album: title"), cp("gallery", "emptyText", "Empty album: text")] }],
+      groups: [
+        { title: "The album", fields: [
+          { key: "name", type: "text", label: "Album name", onchange: autoSlug },
+          { key: "date", type: "date", label: "Event date" },
+          { key: "blurb", type: "textarea", rows: 2, label: "One line about it" },
+          { key: "cover", type: "image", label: "Cover photo", help: "If empty, the first photo is used." } ] },
+        { title: "Photos", fields: [{ key: "photos", type: "images", label: "Photos in this album" }] },
+        { title: "Web address", fields: [{ key: "slug", type: "slug", prefix: "#/gallery/", label: "Link for this album" }] },
+      ] },
+    { id: "accomplishments", label: "Accomplishments", icon: "medal", noun: "accomplishment", list: "accomplishments", titleKey: "who", hash: () => "#/accomplishments",
+      lead: "Members doing big things. Submissions from the website land in the Inbox; add them here with one click, then switch them on.",
+      sub: (a) => [a.what, a.approved === false ? "hidden" : null].filter(Boolean).join(" · "),
+      off: (a) => a.approved === false,
+      fresh: () => ({ who: "", what: "", where: "", when: "", cat: "internship", approved: true }),
+      pageGroups: [{ title: "Accomplishments page text", fields: [cp("acc", "eyebrow", "Small heading"), cp("acc", "title", "Headline", "text", { help: GOLD }), ta("acc", "lede", "Intro paragraph", 3), cp("acc", "btnSubmit", "Submit button"), cp("acc", "btnBoard", "Leaderboard button"), cp("acc", "submitEyebrow", "Submit section: small heading"), cp("acc", "submitTitle", "Submit section: heading", "text", { help: GOLD }), ta("acc", "submitLede", "Submit section: text", 3), cp("acc", "submitSmall", "Submit section: small note"), cp("acc", "formTitle", "Form title"), cp("acc", "formNote", "Form note"), cp("acc", "formBtn", "Form button")] }],
+      groups: [
+        { title: "The win", fields: [
+          { key: "who", type: "text", label: "Name" },
+          { key: "what", type: "text", label: "What they did", placeholder: "Marketing intern, summer 2027" },
+          { key: "where", type: "text", label: "Company, organization or event" },
+          { key: "when", type: "text", label: "When", placeholder: "May 2027" },
+          { key: "cat", type: "select", label: "Kind", options: CATS },
+          { key: "approved", type: "toggle", label: "Show on the site", defaultOn: true } ] },
+      ] },
+    { id: "leaderboard", label: "Points leaderboard", icon: "trophy", hash: () => "#/accomplishments#leaderboard",
+      lead: "Names and points. Names only, no photos. Shown on the Accomplishments page.",
+      groups: [
+        { title: "Paste a fresh list", fields: [{ key: "leaderboard.members", type: "paste", label: "Paste from your spreadsheet", placeholder: "Jordan R.\t165\nPriya S.\t150", help: "One person per line: name, then points. Replaces the whole list below." }] },
+        { title: "The list", fields: [
+          { key: "leaderboard.updated", type: "date", label: "Last updated" },
+          { key: "leaderboard.members", type: "rows", label: "Members", cols: [["name", "Name", "2fr"], ["pts", "Points", "1fr"]], add: "Add a member" },
+          { key: "settings.activePoints", type: "number", label: "Points needed for Active Member" } ] },
+        { title: "Words around the leaderboard", fields: [cp("acc", "lbEyebrow", "Small heading"), cp("acc", "lbTitle", "Heading", "text", { help: GOLD }), cp("acc", "lbLede", "Line under the heading", "text", { help: "{goal} becomes the Active Member number." }), cp("acc", "lbSample", "Tag shown while the list is sample data"), cp("acc", "pointsChip", "Points card: tag"), cp("acc", "pointsTitle", "Points card: heading"), { key: "membership.knownPoints", type: "cards", noun: "line", titleKey: "what", label: "Points card: lines", fresh: () => ({ what: "", pts: "", isGoal: false }), fields: [{ key: "what", type: "text", label: "What" }, { key: "pts", type: "text", label: "Points" }, { key: "isGoal", type: "toggle", label: "This is the Active Member goal (no plus sign)" }] }, { key: "membership.pointsNote", type: "textarea", rows: 2, label: "Points card: note" }, cp("acc", "pointsAfter", "Points card: sentence after the note"), cp("acc", "notTitle", "Yellow card: title"), cp("acc", "notText", "Yellow card: text"), cp("acc", "notBtn", "Yellow card: button")] },
+      ] },
+    { id: "leadership", label: "Leadership", icon: "flag", hash: () => "#/leadership", lead: "Members > Leadership: how to get involved in running the chapter.",
+      groups: [
+        { title: "Top", fields: [cp("lead", "eyebrow", "Small heading"), cp("lead", "title", "Headline", "text", { help: GOLD }), { key: "leadership.intro", type: "textarea", rows: 3, label: "Intro paragraph" }] },
+        { title: "Ways to lead", fields: [cp("lead", "pathsEyebrow", "Small heading"), cp("lead", "pathsTitle", "Heading"), { key: "leadership.paths", type: "cards", noun: "path", titleKey: "t", label: "", fresh: () => ({ t: "", d: "", cta: "", url: "" }), fields: [{ key: "t", type: "text", label: "Title" }, { key: "d", type: "textarea", rows: 3, label: "Text" }, { key: "cta", type: "select", label: "Button goes to", options: [["", "No button"], ["board", "Executive board page"], ["mot", "Marketers of Tomorrow page"], ["icc", "ICC page"], ["involved", "Get Involved page"]] }, { key: "url", type: "url", label: "Or a web link (used when no page is picked)" }] }] },
+        { title: "Executive board block", fields: [cp("lead", "boardEyebrow", "Small heading"), cp("lead", "boardTitle", "Heading"), { key: "leadership.season", type: "textarea", rows: 3, label: "Text (also on the Board page)" }, cp("lead", "btnApply", "Application button (when there is a link)"), cp("lead", "btnEmail", "Email button (when there is no link)"), cp("lead", "btnBoard", "Second button"), cp("lead", "note", "Note when no application link is set"), cp("lead", "rolesChip", "Tag over the roles list")] },
+      ] },
+    { id: "opportunities", label: "Opportunities & Alumni", icon: "handshake", hash: () => "#/opportunities", lead: "Members > Opportunities & Alumni: places to look, and everything about alumni.",
+      groups: [
+        { title: "Top", fields: [cp("opp", "eyebrow", "Small heading"), cp("opp", "title", "Headline", "text", { help: GOLD }), ta("opp", "lede", "Intro paragraph", 2)] },
+        { title: "Places to look", fields: [cp("opp", "oppEyebrow", "Small heading"), cp("opp", "oppTitle", "Heading"), ta("opp", "oppLede", "Line under the heading", 2), { key: "opportunities", type: "cards", noun: "resource", titleKey: "title", label: "Resources", fresh: () => ({ cat: "internships", title: "", d: "", url: "" }), fields: [{ key: "cat", type: "select", label: "Category", options: OPPCATS }, { key: "title", type: "text", label: "Name" }, { key: "d", type: "textarea", rows: 2, label: "One line" }, { key: "url", type: "url", label: "Link" }] }] },
+        { title: "Alumni", fields: [cp("opp", "alumniEyebrow", "Small heading"), cp("opp", "alumniTitle", "Heading"), { key: "alumniMeta.intro", type: "textarea", rows: 2, label: "Intro" }, { key: "settings.alumniLinkedIn", type: "url", label: "Alumni LinkedIn group link" }, cp("opp", "groupChip", "Group card: tag"), cp("opp", "groupTitle", "Group card: title"), cp("opp", "groupText", "Group card: text"), cp("opp", "groupBtn", "Group card: button"), cp("opp", "groupEmptyTitle", "No group link yet: title"), ta("opp", "groupEmptyText", "No group link yet: text", 2), cp("opp", "groupEmptyBtn", "No group link yet: button"),
+          { key: "alumni", type: "cards", noun: "alumni story", titleKey: "name", label: "Alumni stories", fresh: () => ({ name: "", year: "", now: "", story: "", url: "", photo: null }), fields: [{ key: "name", type: "text", label: "Name" }, { key: "year", type: "text", label: "Class year", placeholder: "2024" }, { key: "now", type: "text", label: "What they do now" }, { key: "story", type: "textarea", rows: 3, label: "A line or two" }, { key: "url", type: "url", label: "LinkedIn link" }, { key: "photo", type: "image", label: "Photo (optional)", portrait: true }] },
+          cp("opp", "storiesEmptyTitle", "No stories yet: title"), ta("opp", "storiesEmptyText", "No stories yet: text", 2), cp("opp", "storiesEmptyBtn", "No stories yet: button"), cp("opp", "btnInvolved", "Get involved button"), cp("opp", "btnDonate", "Donate button")] },
+        { title: "Ways alumni can help", fields: [{ key: "alumniMeta.waysToHelp", type: "cards", noun: "way", titleKey: "t", label: "", fresh: () => ({ t: "", d: "" }), fields: [{ key: "t", type: "text", label: "Title" }, { key: "d", type: "textarea", rows: 2, label: "Text" }] }] },
+        { title: "For alumni and current members", fields: [cp("opp", "followEyebrow", "Small heading"), cp("opp", "followTitle", "Heading"), textLinkCards("alumniMeta.forAlumniAndMembers", "item", "")] },
+      ] },
+    { id: "involved", label: "Get Involved", icon: "hand-waving", hash: () => "#/involved", lead: "Join steps, the idea box, feedback, surveys, donate and follow along.",
+      groups: [
+        { title: "Top", fields: [cp("involved", "eyebrow", "Small heading"), cp("involved", "title", "Headline", "text", { help: GOLD }), ta("involved", "lede", "Intro paragraph", 2)] },
+        { title: "Join", fields: [cp("involved", "joinEyebrow", "Small heading"), cp("involved", "joinTitle", "Heading", "text", { help: GOLD }), cp("involved", "btnRams", "RamsConnect button"), cp("involved", "btnForm", "Membership form button"), cp("involved", "btnGroupme", "GroupMe button"), { key: "membership.steps", type: "cards", noun: "step", titleKey: "t", label: "The steps", fresh: () => ({ t: "", d: "" }), fields: [{ key: "t", type: "text", label: "Step" }, { key: "d", type: "textarea", rows: 2, label: "Text" }] }, { key: "settings.dues", type: "number", label: "Annual dues (number only)" }, { key: "settings.duesNote", type: "textarea", rows: 2, label: "Dues note under the steps" }] },
+        { title: "Idea drop box", fields: [cp("involved", "ideasEyebrow", "Small heading"), cp("involved", "ideasTitle", "Heading", "text", { help: GOLD }), ta("involved", "ideasLede", "Text", 3), cp("involved", "ideasSmall", "Small note"), cp("involved", "ideasFormTitle", "Form title"), cp("involved", "ideasBtn", "Form button")] },
+        { title: "Feedback", fields: [cp("involved", "fbEyebrow", "Small heading"), cp("involved", "fbTitle", "Heading", "text", { help: GOLD }), ta("involved", "fbLede", "Text", 3), cp("involved", "fbBtn", "Form button")] },
+        { title: "Surveys and forms", fields: [cp("involved", "surveysEyebrow", "Small heading"), cp("involved", "surveysTitle", "Heading"), { key: "surveys", type: "cards", noun: "form", titleKey: "title", label: "", fresh: () => ({ title: "", note: "", url: "" }), fields: [{ key: "title", type: "text", label: "Name" }, { key: "note", type: "text", label: "One line" }, { key: "url", type: "url", label: "Link" }] }] },
+        { title: "Donate", fields: [cp("involved", "donateEyebrow", "Small heading"), cp("involved", "donateTitle", "Heading", "text", { help: GOLD }), ta("involved", "donateLede", "Text", 3), cp("involved", "donateBtn", "Button"), { key: "donatePhoto", type: "image", label: "Photo" }, cp("involved", "donateAlt", "Photo description")] },
+        { title: "Follow along", fields: [cp("involved", "socialEyebrow", "Small heading"), cp("involved", "socialTitle", "Heading", "text", { help: GOLD }), cp("involved", "socialInstagram", "Instagram card line"), cp("involved", "socialGroupme", "GroupMe card line"), cp("involved", "socialLinkedin", "LinkedIn card line"), cp("involved", "socialRamsconnect", "RamsConnect card line")] },
+      ] },
+    // ---------------- site-wide
     { id: "faq", label: "FAQ", icon: "question", hash: () => "#/", lead: "The questions at the bottom of the home page.",
       groups: [{ title: "Questions", fields: [{ key: "faq", type: "cards", noun: "question", titleKey: "q", label: "", fresh: () => ({ q: "", a: "", link: "", linkLabel: "" }), fields: [
         { key: "q", type: "text", label: "Question" }, { key: "a", type: "textarea", rows: 3, label: "Answer" },
         { key: "link", type: "text", label: "Link (optional)", placeholder: "#/involved#join", help: "A page on the site (starts with #/) or a full web address." }, { key: "linkLabel", type: "text", label: "Link text", placeholder: "See the four steps" } ] }] }] },
-    { id: "settings", label: "Text and links", icon: "gear", hash: () => "#/", lead: "Words on the home page, dues, links and the ICC dates.",
+    { id: "settings", label: "Links and settings", icon: "gear", hash: () => "#/", lead: "Every link on the site, the recruitment video, the homepage background and the event location rule.",
       groups: [
-        { title: "Home page words", fields: [
-          { key: "settings.tagline", type: "text", label: "Tagline", help: "First sentence under the big headline." },
-          { key: "settings.blurb", type: "textarea", rows: 5, label: "What is AMA at VCU" },
-          { key: "settings.email", type: "text", label: "Chapter email" } ] },
-        { title: "Dues and points", fields: [
-          { key: "settings.dues", type: "number", label: "Annual dues (number only)" },
-          { key: "settings.duesNote", type: "text", label: "Note under the dues" },
-          { key: "settings.activePoints", type: "number", label: "Points for Active Member" } ] },
+        { title: "Chapter", fields: [{ key: "settings.email", type: "text", label: "Chapter email", help: "Where the contact buttons and website forms point." }] },
         { title: "Applications and forms", fields: [
           { key: "settings.iccApplication", type: "url", label: "ICC application" }, { key: "settings.motApplication", type: "url", label: "Marketers of Tomorrow application" },
           { key: "settings.boardApplication", type: "url", label: "Executive board application" }, { key: "settings.becomeMember", type: "url", label: "Membership form" },
-          { key: "settings.ramsconnectJoin", type: "url", label: "RamsConnect join link" }, { key: "settings.ramsconnectEvents", type: "url", label: "RamsConnect events page" } ] },
+          { key: "settings.ramsconnect", type: "url", label: "RamsConnect page" }, { key: "settings.ramsconnectJoin", type: "url", label: "RamsConnect join link" }, { key: "settings.ramsconnectEvents", type: "url", label: "RamsConnect events page" },
+          { key: "settings.googleCalendar", type: "url", label: "Google Calendar link" }, { key: "settings.newsletterArchive", type: "url", label: "Newsletter archive (RamsConnect)" } ] },
         { title: "Social links", fields: [
           { key: "settings.instagram", type: "url", label: "Instagram" }, { key: "settings.tiktok", type: "url", label: "TikTok" },
           { key: "settings.linkedin", type: "url", label: "LinkedIn page" }, { key: "settings.linktree", type: "url", label: "Linktree" },
-          { key: "settings.groupme", type: "url", label: "GroupMe invite" }, { key: "settings.alumniLinkedIn", type: "url", label: "Alumni LinkedIn group" } ] },
+          { key: "settings.groupme", type: "url", label: "GroupMe invite" } ] },
         { title: "Donations", fields: [
           { key: "settings.donate", type: "url", label: "One official giving link", help: "If set, every Donate button goes straight there instead of showing Venmo and Cash App." },
           { key: "settings.venmo", type: "url", label: "Venmo link" }, { key: "settings.cashapp", type: "url", label: "Cash App link" } ] },
@@ -413,34 +480,43 @@
           { key: "settings.videoInstagram", type: "url", label: "Or an Instagram reel link" },
           { key: "settings.heroVideo", type: "url", label: "Home page background video (mp4 link)", help: "Replaces the campus photos. Leave empty to keep the photos." } ] },
         { title: "Events", fields: [{ key: "settings.showLocations", type: "toggle", label: "Show rooms and addresses on upcoming events", help: "Off = people get the room on RamsConnect when they register." }] },
-        { title: "ICC", fields: [
-          { key: "settings.iccShort", type: "text", label: "Name", placeholder: "ICC 2027" }, { key: "settings.iccCity", type: "text", label: "City", placeholder: "New Orleans, LA" },
-          { key: "settings.iccDates", type: "text", label: "Dates in words", placeholder: "April 8 to 10, 2027" },
-          { key: "settings.iccStart", type: "date", label: "First day (the countdown counts to it)" }, { key: "settings.iccEnd", type: "date", label: "Last day" },
-          { key: "settings.iccAbout", type: "textarea", rows: 3, label: "About ICC" },
-          { key: "settings.fundHead", type: "text", label: "Fundraising headline" }, { key: "settings.fundBody", type: "textarea", rows: 3, label: "Fundraising text" } ] },
       ] },
+    { id: "footer", label: "Footer and donate panel", icon: "rows", hash: () => "#/", lead: "The bottom of every page, and the panel every Donate button opens.",
+      groups: [
+        { title: "Footer", fields: [cp("footer", "title", "Heading"), ta("footer", "text", "Text", 3), cp("footer", "tags", "Hashtags"), cp("footer", "login", "Board login link text"), cp("footer", "concept", "Small note at the very bottom", "text", { help: "Clear it once the site is official." })] },
+        { title: "Donate panel", fields: [cp("donate", "eyebrow", "Small heading"), cp("donate", "title", "Heading", "text", { help: GOLD }), ta("donate", "text", "Text", 3), cp("donate", "venmoNote", "Line under Venmo"), cp("donate", "cashNote", "Line under Cash App"), cp("donate", "footnote", "Text before the email address")] },
+      ] },
+    // ---------------- tools
     { id: "inbox", label: "Inbox", icon: "tray", custom: inboxPanel, hash: () => "#/" },
     { id: "history", label: "History", icon: "clock-counter-clockwise", custom: historyPanel, hash: () => "#/" },
     { id: "account", label: "Password", icon: "lock-key", custom: accountPanel, hash: () => "#/" },
   ];
   const sectionOf = (sid) => SECTIONS.find((s) => s.id === sid);
+  const DIVIDERS = { faq: "Site", inbox: "Tools" };
 
   // ---------------------------------------------------------------- the content built into the site, as the starting point
   function seed() {
     const A = SITE, L = A.links, M = A.membership, I = A.icc;
     const img = (src, sm) => src ? { src, sm: sm || src, w: 0, h: 0, alt: "" } : null;
-    const personOf = (p) => ({ name: p.name, title: p.title || "", expertise: p.expertise || "", photo: img(p.photo), linktree: p.linktree || "", bio: p.bio || "" });
+    const personOf = (p) => ({ name: p.name, title: p.title || "", expertise: p.expertise || "", photo: img(p.photo), linktree: p.linktree || "", bio: p.bio || "", email: p.email || "" });
     const orgOf = (o) => ({ name: o.name, note: o.note || "", url: o.url || "" });
     return {
       settings: {
-        tagline: A.org.tagline, blurb: A.org.blurb, email: A.org.email, dues: M.dues, duesNote: M.duesNote || "", activePoints: M.activePoints,
+        blurb: A.org.blurb, email: A.org.email, dues: M.dues, duesNote: M.duesNote || "", activePoints: M.activePoints, videoTitle: A.video.title,
         instagram: L.instagram, tiktok: L.tiktok, linkedin: L.linkedin, linktree: L.linktree, groupme: L.groupme, ramsconnect: L.ramsconnect, ramsconnectJoin: L.ramsconnectJoin, ramsconnectEvents: L.ramsconnectEvents,
         becomeMember: L.becomeMember, iccApplication: L.iccApplication, accomplishmentForm: L.accomplishmentForm || "", motApplication: L.motApplication || "", boardApplication: L.boardApplication || "", alumniLinkedIn: L.alumniLinkedIn || "",
         donate: L.donate || "", venmo: L.venmo, cashapp: L.cashapp, googleCalendar: L.googleCalendar, newsletterArchive: L.newsletterArchive,
         videoYoutube: A.video.youtube || "", videoInstagram: A.video.instagram || "", heroVideo: A.hero.video || "", showLocations: !!(A.integrations && A.integrations.showLocations),
-        iccShort: I.short, iccCity: I.city, iccDates: I.dates, iccStart: I.start.slice(0, 10), iccEnd: I.end, iccAbout: I.about, fundHead: I.fundraising.head, fundBody: I.fundraising.body,
       },
+      copy: clone(A.copy),
+      pillars: A.pillars.map((p) => ({ name: p.name, short: p.short, icon: p.icon || "i-star" })),
+      iccFeatures: A.iccFeatures.map((f) => ({ title: f.title, text: f.text, img: img(f.img) })),
+      aboutCards: clone(A.aboutCards), timeline: clone(A.timeline), aboutPhoto: img("assets/img/photos/about-speaker.webp"), donatePhoto: img("assets/img/photos/donate-event.webp"),
+      iccCards: clone(A.iccCards),
+      icc: { name: I.name, short: I.short, city: I.city, dates: I.dates, start: I.start.slice(0, 10), end: I.end, about: I.about, competitions: I.competitions.slice(), photo: img("assets/img/photos/icc-winners.webp"),
+        fundraising: { eyebrow: I.fundraising.eyebrow, head: I.fundraising.head, body: I.fundraising.body },
+        results: I.results.map((y) => ({ year: String(y.year), city: y.city, dates: y.dates, source: y.source || "", note: y.note || "", wins: y.wins.map((w) => ({ place: String(w.place), who: w.who, comp: w.comp })) })) },
+      membership: { steps: clone(M.steps), knownPoints: M.knownPoints.map((p) => ({ what: p.what, pts: String(p.pts), isGoal: !!p.isGoal })), pointsNote: M.pointsNote },
       events: A.events.map((e) => ({ id: e.id, title: e.title, date: e.date || "", end: e.end || "", time: e.time || "", type: e.type, series: e.series || "", place: e.place || "", blurb: e.blurb || "", img: img(e.img), points: e.points || "", rsvp: e.rsvp || "", tba: !!e.tba, ctaLabel: e.cta ? e.cta.label : "", ctaUrl: e.cta ? e.cta.url : "" })),
       newsletters: [],
       leaderboard: { updated: A.leaderboard.updated, members: A.leaderboard.members.map((m) => ({ name: m.name, pts: String(m.pts) })) },
@@ -450,19 +526,27 @@
         photos: A.gallery.filter((g) => g.album === a.name).map((g) => ({ src: `assets/img/gallery/${g.f}.webp`, sm: `assets/img/gallery/t/${g.f}.webp`, w: g.w, h: g.h, alt: g.cap })) })),
       board: A.board.map((m) => ({ slug: m.slug, name: m.name, role: m.role, year: m.year, major: m.major, goal: m.goal, fun: m.fun, linkedin: m.linkedin || "", bio: m.bio || "", photo: img(`assets/img/board/${m.slug}.webp`) })),
       advisor: { name: A.org.advisor.name, title: A.org.advisor.title, role: A.org.advisor.role, bio: A.org.advisor.bio || "", linkedin: A.org.advisor.linkedin || "", photo: img(A.org.advisor.photo) },
-      mot: { status: A.agency.status, applyUrl: A.agency.applyUrl, consultants: A.agency.consultants.map(personOf), leadership: A.agency.leadership.map(personOf), concentrations: A.agency.concentrations.map((c) => ({ t: c.t, d: c.d || "" })), clients: A.agency.clients.map(orgOf), partners: A.agency.partners.map(orgOf) },
+      mot: { name: A.agency.name, pitch: A.agency.pitch, email: A.agency.email || "", status: A.agency.status, applyUrl: A.agency.applyUrl, how: clone(A.agency.how), roles: A.agency.roles.slice(), photo: img("assets/img/photos/mot-agency.webp"), groupPhoto: img("assets/img/photos/mot-eboard.webp"),
+        consultants: A.agency.consultants.map(personOf), leadership: A.agency.leadership.map(personOf), concentrations: A.agency.concentrations.map((c) => ({ t: c.t, d: c.d || "" })), clients: A.agency.clients.map(orgOf), partners: A.agency.partners.map(orgOf) },
+      leadership: { intro: A.leadership.intro, season: A.leadership.season, paths: A.leadership.paths.map((p) => ({ t: p.t, d: p.d, cta: p.cta || "", url: p.url || "" })) },
+      opportunities: A.opportunities.map((o) => ({ cat: o.cat, title: o.title, d: o.d, url: o.url || (o.route ? location.origin + "/" + o.route : "") })),
       alumni: A.alumni.stories.map((s) => ({ name: s.name, year: s.year || "", now: s.now || "", story: s.story || "", url: s.url || "", photo: img(s.photo) })),
-      posts: A.posts.map((p) => ({ slug: p.slug, title: p.title, date: p.date, tag: p.tag, dek: p.dek, body: p.body.join("\n\n"), cover: img(p.cover, p.thumb), instagram: p.instagram || "", gallery: p.gallery || [] })),
+      alumniMeta: { intro: A.alumni.intro, waysToHelp: clone(A.alumni.waysToHelp), forAlumniAndMembers: clone(A.alumni.forAlumniAndMembers) },
+      surveys: clone(A.forms.surveys),
+      posts: A.posts.map((p) => ({ slug: p.slug, title: p.title, date: p.date, tag: p.tag, dek: p.dek, body: (p.body || []).join("\n\n"), cover: img(p.cover, p.thumb), instagram: p.instagram || "", gallery: p.gallery || [] })),
       faq: A.faq.map((f) => ({ q: f.q, a: f.a, link: f.link || "", linkLabel: f.linkLabel || "" })),
     };
   }
-  // an older save may lack keys added later: fill the holes from the built-in content
+  // an older save may lack keys added later: fill the holes from the built-in content (two levels deep)
   function fill(c) {
     const s = seed();
-    for (const k of Object.keys(s)) {
-      if (c[k] === undefined || c[k] === null) c[k] = s[k];
-      else if (!Array.isArray(s[k]) && typeof s[k] === "object") for (const kk of Object.keys(s[k])) if (c[k][kk] === undefined) c[k][kk] = s[k][kk];
-    }
+    const merge = (dst, src, depth) => {
+      for (const k of Object.keys(src)) {
+        if (dst[k] === undefined || dst[k] === null) dst[k] = src[k];
+        else if (depth > 0 && !Array.isArray(src[k]) && typeof src[k] === "object" && src[k] && typeof dst[k] === "object" && !Array.isArray(dst[k])) merge(dst[k], src[k], depth - 1);
+      }
+    };
+    merge(c, s, 2);
     return c;
   }
 
@@ -498,7 +582,7 @@
     for (const s of SECTIONS.filter((x) => x.list)) {
       const used = new Set();
       for (const it of draft[s.list] || []) {
-        if (!String(it[s.titleKey] || "").trim()) { goSection(s.id, draft[s.list].indexOf(it)); toast(`Give this ${s.noun} a ${s.titleKey === "who" ? "name" : s.titleKey === "month" ? "name" : s.titleKey} before saving.`, true); return; }
+        if (!String(it[s.titleKey] || "").trim()) { goSection(s.id, draft[s.list].indexOf(it)); toast(`Give this ${s.noun} a ${s.titleKey === "who" || s.titleKey === "month" ? "name" : s.titleKey} before saving.`, true); return; }
         if (s.slugged) {
           let base = slugify(it.slug || it[s.titleKey]) || s.noun.replace(/\s+/g, "-"), slug = base, n = 2;
           while (used.has(slug)) slug = `${base}-${n++}`;
@@ -526,8 +610,8 @@
         h("a", { class: "btn btn--small", href: "/", target: "_blank", rel: "noopener" }, icon("arrow-square-out"), "View site"),
         h("button", { id: "save", class: "btn btn--main", onclick: save }, icon("floppy-disk"), "Save")),
       h("div", { class: "body" + (showPreview ? "" : " no-preview") },
-        h("nav", { class: "side", "aria-label": "Sections" }, SECTIONS.map((s) => [
-          s.id === "faq" || s.id === "inbox" ? h("hr") : null,
+        h("nav", { class: "side", "aria-label": "Sections" }, h("div", { class: "side-label" }, "Pages"), SECTIONS.map((s) => [
+          DIVIDERS[s.id] ? [h("hr"), h("div", { class: "side-label" }, DIVIDERS[s.id])] : null,
           h("button", { type: "button", "data-sec": s.id, "aria-current": view.section === s.id ? "true" : null, onclick: () => goSection(s.id) }, icon(s.icon), s.label,
             s.id === "inbox" && inboxCount ? h("span", { class: "badge" }, inboxCount) : null)])),
         h("main", { class: "panel", id: "panel" }),
@@ -560,6 +644,7 @@
   }
 
   const groups = (gs, base) => gs.map((g) => h("section", { class: "group" }, h("h3", null, g.title), g.fields.map((f) => FIELDS[f.type](f, base))));
+  const foldedGroups = (gs, label) => h("details", { class: "fold" }, h("summary", null, icon("text-aa"), label || "Page text"), groups(gs, draft));
 
   function listPanel(s) {
     const arr = draft[s.list] || (draft[s.list] = []);
@@ -569,6 +654,7 @@
       h("div", { class: "panel-head" }, h("h2", null, s.label),
         h("button", { class: "btn btn--main btn--small", onclick: () => { arr.unshift(s.fresh()); view.item = 0; changed(true); } }, icon("plus"), "Add " + s.noun)),
       h("p", { class: "lead" }, s.lead),
+      s.pageGroups ? foldedGroups(s.pageGroups, "Words on this page") : null,
       arr.length ? h("div", { class: "items" }, arr.map((it, i) => {
         const im = s.thumb && it[s.thumb];
         return h("div", { class: "item" + (s.off && s.off(it) ? " off" : "") },

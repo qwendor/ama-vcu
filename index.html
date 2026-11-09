@@ -118,8 +118,8 @@
       <div class="foot-brand">
         <span class="foot-lockup" aria-hidden="true"><svg class="foot-mark" viewBox="0 0 288 110"><use href="#mark"/></svg><span class="brand-ama">American Marketing Association</span></span>
         <div>
-          <h3>The home for marketers at VCU</h3>
-          <p>American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.</p>
+          <h3 id="footTitle">The home for marketers at VCU</h3>
+          <p id="footText">American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.</p>
           <div class="social-row" id="footSocial"></div>
         </div>
       </div>
@@ -129,9 +129,9 @@
     </div>
     <div class="foot-bottom">
       <span>© <span id="year"></span> AMA at VCU · <a id="footMail" href="#">amavcuchapter@gmail.com</a> · 907 Floyd Avenue, Richmond, VA 23284</span>
-      <span>#oneama #amavcu · <a class="foot-admin" href="admin/">Board login</a></span>
+      <span><span id="footTags">#oneama #amavcu · </span><a class="foot-admin" id="footAdmin" href="admin/">Board login</a></span>
     </div>
-    <p class="foot-note">Concept preview built for the AMA at VCU board. Not yet an official chapter site.</p>
+    <p class="foot-note" id="footNote">Concept preview built for the AMA at VCU board. Not yet an official chapter site.</p>
   </div>
 </footer>
 
@@ -140,11 +140,11 @@
   <div class="modal-back" data-close></div>
   <div class="modal-card">
     <button type="button" class="modal-x" data-close aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button>
-    <p class="eyebrow">Donate</p>
-    <h3 id="donateTitle">Support the <em class="serif">chapter.</em></h3>
-    <p>Dues keep the lights on. Donations cover competition travel, catering and event costs. Every dollar goes back into the chapter.</p>
+    <p class="eyebrow" id="donateEyebrow">Donate</p>
+    <h3 id="donateTitle">Support the <em class="serif gold">chapter.</em></h3>
+    <p id="donateText">Dues keep the lights on. Donations cover competition travel, catering and event costs. Every dollar goes back into the chapter.</p>
     <div class="donate-opts" id="donateOpts"></div>
-    <p class="small muted">Questions? Email <a id="donateMail" href="#">amavcuchapter@gmail.com</a>.</p>
+    <p class="small muted"><span id="donateNote">Questions? Email </span><a id="donateMail" href="#">amavcuchapter@gmail.com</a>.</p>
   </div>
 </div>
 

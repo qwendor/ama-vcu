@@ -334,6 +334,7 @@ window.AMA = {
     pitch: "Real clients, small teams, a finished deliverable with your name on it. Marketers of Tomorrow is where AMA members turn classroom marketing into portfolio work.",
     status: "Fall 2026 applications closed October 2. The spring cohort opens on Instagram and the Linktree.",
     applyUrl: "https://linktr.ee/AMAVCUChapter",
+    email: "phamhh3@vcu.edu",                 // where "Bring us a project" and the client buttons go (Heather Pham, CEO)
     how: [
       { t: "Apply", d: "A short application each semester. No portfolio required, just interest and follow-through." },
       { t: "Get matched", d: "Teams of 3 to 5 are paired with a local business, nonprofit or campus org." },
@@ -344,7 +345,7 @@ window.AMA = {
     concentrations: [],
     consultants: [],
     leadership: [
-      { name: "Heather Pham", title: "CEO", photo: "assets/img/board/heather-pham.webp", bio: "", linktree: "" },
+      { name: "Heather Pham", title: "CEO", photo: "assets/img/board/heather-pham.webp", bio: "", linktree: "", email: "phamhh3@vcu.edu" },
       { name: "Debalu", title: "MoT leadership", photo: "", bio: "", linktree: "" }
     ],
     clients: [],
@@ -453,6 +454,162 @@ window.AMA = {
     { f: "dn-02", album: "Donuts with the Dean", cap: "Donuts with the Dean and Directors", w: 1080, h: 1080 },
     { f: "dn-03", album: "Donuts with the Dean", cap: "Morning crowd", w: 1080, h: 1080 },
     { f: "dn-04", album: "Donuts with the Dean", cap: "Until next time", w: 1080, h: 1080 }
+  ],
+
+
+  /* ---- Every piece of page writing, editable in /admin (Pages). Put *stars* around words to show them in gold. ---- */
+  copy: {
+    home: {
+      label: "Virginia Commonwealth University", title: "American Marketing Association",
+      tagline: "The home for marketers at VCU. Learn from people in the industry, compete on a national stage, and find your people over coffee. Open to every major.",
+      btnJoin: "Become a member", btnEvents: "Upcoming events",
+      statFounded: "Founded", statWins: "ICC 2026 placements", statDays: "Days to ICC 2027", statDues: "Annual dues",
+      introEyebrow: "What is AMA at VCU", introTitle: "Real-world marketing experience, on campus.", introBtn1: "About the chapter", introBtn2: "How to join",
+      videoNote: "Video coming soon", pillarsEyebrow: "Three pillars",
+      eventsEyebrow: "Upcoming events", eventsTitleMonth: "Events this month", eventsTitle: "Coming up", eventsMore: "Full calendar",
+      eventsEmptyTitle: "New events post on RamsConnect and Instagram first.", eventsEmptyText: "Coffee chats, speakers and competitions are added through the semester.",
+      countdownNote: "Applications are open.", countdownBtn: "Apply to go", countdownBtn2: "Learn more",
+      iccEyebrow: "International Collegiate Conference", iccApply: "Apply to go", iccMore: "Learn more",
+      boardEyebrow: "", boardTitle: "The people behind the chapter", boardMore: "Full bios",
+      newsEyebrow: "In case you missed it", newsTitle: "Recaps and photo dumps", newsMore: "All posts",
+      faqEyebrow: "FAQ", faqTitle: "Questions people ask", faqLede: "Still stuck? DM us on Instagram or email"
+    },
+    about: {
+      eyebrow: "About us", title: "The only marketing org at VCU, *since 1983.*",
+      lede: "AMA at VCU is the collegiate chapter of the American Marketing Association on the VCU campus: a student-run community for anyone who wants to learn marketing from the people who do it, and a bridge to AMA Richmond, the professional chapter a few blocks away.",
+      purposeEyebrow: "Our purpose", quote: "To give members the resources and community to develop their marketing and business skills outside the classroom.",
+      p1: "That means guest speakers, workshops, study groups, a student-run agency and a delegation at the International Collegiate Conference every spring. It also means coffee chats on Sundays, raffles at interest meetings and a group chat that actually answers.",
+      p2: "Membership is open to every major. Our ICC winners include psychology, philosophy and information systems students.",
+      btnJoin: "Join the chapter", btnBoard: "Meet the board",
+      numFounded: "Founded (reinstated 2008)", numWins: "ICC 2026 placements", numPoints: "Points to Active Member", numDues: "Dues for the whole year",
+      orgsEyebrow: "How the chapter fits together", orgsTitle: "Three organizations, one membership",
+      historyEyebrow: "History", historyTitle: "A short *timeline*", historyAlt: "Members at a chapter speaker event"
+    },
+    events: {
+      eyebrow: "Events", title: "What's *happening*",
+      lede: "Coffee chats, speakers, competitions and service days. Upcoming events show the date and time here; the room or address is on RamsConnect, where you register.",
+      btnCalendar: "Add our Google Calendar", btnRegister: "Register on RamsConnect", locked: "Locations unlock on RamsConnect",
+      upcomingLabel: "Coming up", recapLabel: "recap", emptyTitle: "New events post on RamsConnect and Instagram first.", emptyText: "Check back soon, or add the Google Calendar above."
+    },
+    board: {
+      eyebrow: "", title: "The people behind *@amavcu*",
+      lede: "Nine students run the chapter: events, finance, membership, fundraising, outreach, communications and social media, with a senior advisor keeping us honest and a faculty advisor in the School of Business. Say hi at the next coffee chat.",
+      nextChip: "Leadership", nextTitle: "Want to be on this page next year?", nextBtn: "Board application", nextBtnEmail: "Email about the board", nextBtn2: "Leadership paths",
+      nextNote: "The application form link goes here when the board publishes it.", advisorBio: "Bio coming from the board.", headshotNote: "Headshot coming"
+    },
+    mot: {
+      eyebrow: "Our student-run agency", btnApply: "Apply to MoT", btnProject: "Bring us a project",
+      howEyebrow: "How it works", howTitle: "Real clients, *real work*",
+      rolesEyebrow: "Roles", rolesTitle: "Pick a lane, or try all five", rolesText: "Teams are small on purpose. Everyone presents, everyone ships something they can show a recruiter.", rolesAlt: "Members on an agency visit",
+      servicesEyebrow: "Areas of concentration", servicesTitle: "What MoT does for clients",
+      servicesEmptyTitle: "Concentrations and services", servicesEmptyText: "MoT leadership is finalizing the list of services the agency offers. Until then, the roles above are the best guide to the work.",
+      teamEyebrow: "The team", teamTitle: "Meet the consultants", teamLede: "Each consultant lists what they offer and how to connect. Reach out through their Linktree.",
+      teamEmptyTitle: "This semester's consultants", teamEmptyText: "Headshots, roles, areas of expertise and Linktree links for the current cohort are being collected from MoT. Check back soon.", teamEmptyBtn: "Apply to join them",
+      leadEyebrow: "Leadership", leadTitle: "Who runs MoT", leadAlt: "The Marketers of Tomorrow e-board, November 2026", bioNote: "Bio coming soon.",
+      clientsEyebrow: "Clients and partners", clientsTitle: "Who we have worked with",
+      clientsEmptyTitle: "Past clients and business partners", clientsEmptyText: "The client list and the organizations MoT has partnered with are coming from MoT leadership.", clientsEmptyBtn: "Become a client",
+      clientsLabel: "Past clients", partnersLabel: "Partners"
+    },
+    icc: {
+      btnApply: "Apply to go", btnDonate: "Donate", countdownChip: "Countdown", countdownTitle: "Wheels up in", countdownNote: "Counting to the morning of",
+      resultsEyebrow: "Results", resultsTitle: "VCU at *ICC*", resultsLede: "Every placement from the official AMA results. Click a year for the source.",
+      fundBtn: "Donate", fundBtn2: "See past winners", fundAlt: "VCU students with a certificate at the AMA conference"
+    },
+    acc: {
+      eyebrow: "Accomplishments", title: "Members doing *big things*",
+      lede: "Awards, internships, job offers and other wins from AMA members, plus the membership points leaderboard. Got a win? Submit it and we will feature you here and on Instagram.",
+      btnSubmit: "Submit yours", btnBoard: "Points leaderboard",
+      lbEyebrow: "Membership points", lbTitle: "The leaderboard", lbLede: "Every event earns points. Reach {goal} and you are an Active Member.", lbSample: "Sample data until the first points import",
+      pointsChip: "How points work", pointsTitle: "Show up, level up", pointsAfter: "Points post after each event.",
+      notTitle: "Not on the board yet?", notText: "Pay dues, register on RamsConnect, and come to the next coffee chat.", notBtn: "Next event",
+      submitEyebrow: "Submit yours", submitTitle: "Internship? Offer? Award?",
+      submitLede: "Tell us and we will feature it here and on @amavcu. Internships landed, job offers signed, competitions won, anything you are proud of.",
+      submitSmall: "Entries go to the board, who review them before anything posts.", formTitle: "Submit yours", formNote: "The board reviews every entry before it posts here and on Instagram.", formBtn: "Submit"
+    },
+    lead: {
+      eyebrow: "Members · Leadership", title: "Lead the *chapter*",
+      pathsEyebrow: "Ways to lead", pathsTitle: "Four paths in",
+      boardEyebrow: "Executive board", boardTitle: "Applications open each spring", btnApply: "Board application", btnEmail: "Email about the board", btnBoard: "This year's board",
+      note: "The application form link goes here when the board publishes it.", rolesChip: "The roles"
+    },
+    opp: {
+      eyebrow: "Members · Opportunities & Alumni", title: "Internships, careers and *alumni*",
+      lede: "Where members find internships and jobs, how to grow before graduation, and how alumni stay part of the chapter.",
+      oppEyebrow: "Opportunities", oppTitle: "Places to look", oppLede: "Internships and jobs move fast. Start here, and drop opportunities you find into the GroupMe.",
+      alumniEyebrow: "Alumni", alumniTitle: "Once AMA, always AMA",
+      groupChip: "Alumni network", groupTitle: "AMA at VCU alumni on LinkedIn", groupText: "Job leads, mentoring and reunions.", groupBtn: "Join the group",
+      groupEmptyTitle: "Alumni LinkedIn group", groupEmptyText: "The link to the AMA at VCU alumni LinkedIn group goes here once the board shares it.", groupEmptyBtn: "Are you an alum? Say hi",
+      storiesEmptyTitle: "Alumni accomplishments and stories", storiesEmptyText: "Alumni updates will be featured here: where our graduates landed and what they are building. Alumni, send yours.", storiesEmptyBtn: "Share your update",
+      btnInvolved: "Get involved as an alum", btnDonate: "Donate",
+      followEyebrow: "For alumni and current members", followTitle: "Opportunities that follow you"
+    },
+    news: {
+      eyebrow: "Newsletter", title: "The *monthly*",
+      lede: "One email a month with recaps, what is coming up and the reminders you will forget otherwise. The newest issue is here; older ones are in the archive.",
+      archiveEyebrow: "Archive", archiveTitle: "Previous issues", archiveEmpty: "Older issues are on RamsConnect.",
+      inboxChip: "Get it in your inbox", inboxTitle: "Members get the newsletter automatically", inboxText: "Join on RamsConnect and the monthly lands in your VCU email.", inboxBtn: "Join on RamsConnect",
+      openBtn: "Open the issue", readBtn: "Read the issue", currentChip: "Current issue", locationsNote: "Upcoming event locations are on RamsConnect, where you register."
+    },
+    blog: {
+      eyebrow: "Blog", title: "Recaps, guides and *ICYMI*", lede: "What happened, what we learned, and how to get the most out of the chapter. Photo dumps live in the gallery.",
+      emptyTitle: "First posts coming soon", emptyText: "Event recaps and photo dumps will land here. Until then, everything drops on Instagram first.", emptyBtn: "Follow @amavcu", emptyBtn2: "Photo albums",
+      backLabel: "All posts", morePhotos: "More photos", igBtn: "See the post on Instagram", followBtn: "Follow @amavcu", photosLabel: "Photos"
+    },
+    gallery: {
+      eyebrow: "Gallery", title: "Pics or it *didn't happen*", lede: "One album per event. Open an album to see every photo. Want yours added? Tag @amavcu.",
+      backLabel: "All albums", emptyTitle: "Photos coming", emptyText: "This album is set up but the photos have not been added yet.", photosWord: "photos", comingSoon: "Coming soon"
+    },
+    involved: {
+      eyebrow: "Get involved", title: "Your move, *marketer.*", lede: "Join, drop an event idea, tell us what to fix, or chip in for the ICC trip. All of it lives on this page.",
+      joinEyebrow: "Join", joinTitle: "Four steps, *one semester*", btnRams: "Join on RamsConnect", btnForm: "Membership form", btnGroupme: "GroupMe", duesPrefix: "Dues:",
+      ideasEyebrow: "Idea drop box", ideasTitle: "What should we *do next?*",
+      ideasLede: "A speaker you want to hear, a company tour, a themed coffee chat, a collab with another org. Drop it here and the board reads every one at its weekly meeting.",
+      ideasSmall: "Add your name if you want credit, or stay anonymous.", ideasFormTitle: "Drop an idea", ideasBtn: "Send it to the board",
+      fbEyebrow: "Feedback", fbTitle: "Tell us the *truth*", fbLede: "Too many events? Not enough? Something awkward at a meeting? This is the place. Anonymous unless you sign it.", fbBtn: "Send feedback",
+      surveysEyebrow: "Surveys & forms", surveysTitle: "Open right now",
+      donateEyebrow: "Donate", donateTitle: "Support the *chapter.*", donateLede: "Donations cover competition travel, catering and event costs. Every dollar goes back into the chapter.", donateBtn: "Donate", donateAlt: "The chapter at an awards night",
+      socialEyebrow: "Follow along", socialTitle: "Where everything *drops first*",
+      socialInstagram: "@amavcu, where everything drops first", socialGroupme: "Reminders, polls and rides", socialLinkedin: "Follow the chapter page", socialRamsconnect: "Register for every event here"
+    },
+    footer: {
+      title: "The home for marketers at VCU",
+      text: "American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.",
+      tags: "#oneama #amavcu", concept: "Concept preview built for the AMA at VCU board. Not yet an official chapter site.", login: "Board login"
+    },
+    donate: {
+      eyebrow: "Donate", title: "Support the *chapter.*",
+      text: "Dues keep the lights on. Donations cover competition travel, catering and event costs. Every dollar goes back into the chapter.",
+      venmoNote: "Kayla Lee, chapter president", cashNote: "Candace Heath, director of finance", footnote: "Questions? Email"
+    }
+  },
+
+  /* ICC promo cards on the home page (title, text, photo). */
+  iccFeatures: [
+    { title: "Compete", text: "Perfect Pitch, the Sales Competition, case and strategy rounds against 150+ chapters.", img: "assets/img/photos/compete.webp" },
+    { title: "Learn", text: "Keynotes and workshops from marketers at the top of the industry.", img: "assets/img/gallery/mw-13.webp" },
+    { title: "Network", text: "A recruiter hall and 1,600 students who do what you do.", img: "assets/img/photos/network.webp" },
+    { title: "Travel", text: "Three days in New Orleans with the chapter, fundraised together.", img: "assets/img/photos/travel.webp" }
+  ],
+
+  /* About page: the three organization cards and the timeline. */
+  aboutCards: [
+    { chip: "On campus", title: "AMA at VCU", text: "Housed in the VCU School of Business and advised by Katie Gilstrap. The Center for Professional Selling coaches our competition teams. Events, the agency and the ICC trip all start here.", url: "", btn: "" },
+    { chip: "In Richmond", title: "AMA Richmond", text: "The professional chapter: mixers, speakers and a local job board where members meet the people hiring in this city.", url: "https://amarichmond.org", btn: "amarichmond.org" },
+    { chip: "Nationwide", title: "AMA national", text: "Chapter dues include AMA national membership: the Career Center, webinars, certifications and the International Collegiate Conference.", url: "https://www.ama.org", btn: "ama.org" }
+  ],
+  timeline: [
+    { when: "1983", text: "VCU's AMA chapter is founded." },
+    { when: "2008", text: "The chapter is reinstated and has run every year since." },
+    { when: "April 2024", text: "Clean sweep of the Perfect Pitch podium at ICC in New Orleans." },
+    { when: "March 2026", text: "Eight placements in Chicago, including first in the Design Lab Marketing Competition." },
+    { when: "April 2027", text: "ICC heads back to New Orleans. We are going." }
+  ],
+
+  /* ICC page: the three cards under the countdown. The middle card lists icc.competitions. */
+  iccCards: [
+    { chip: "What it is", title: "Three days, 1,600+ marketers", text: "Keynotes, workshops, a recruiter hall and the biggest collegiate marketing competitions in the country." },
+    { chip: "Competitions", title: "Where VCU shows up", text: "" },
+    { chip: "How to go", title: "Apply, pay dues, prep", text: "Fill out the application, stay current on dues and points, and come to the prep sessions. Fundraising covers part of the trip.", btn: "Application" }
   ],
 
   faq: [

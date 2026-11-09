@@ -23,7 +23,7 @@ Forgot the password? On the sign-in screen press "Forgot it, or first time here?
 
 **Post the newsletter.** Newsletter, then "Add issue". Name it ("November 2026"), set the date, upload the PDF (or paste a link to the web version), add a two-line summary. The newest issue shows on the Newsletter page and in the home page link; older issues become the archive.
 
-**Update points.** Points leaderboard. Paste the names and points from your spreadsheet into the big box (one person per line) and the list fills itself, or edit rows by hand. Set the "Last updated" date.
+**Update points.** Points leaderboard. Either paste the names and points from your spreadsheet into the big box (one person per line) and the list fills itself, or edit the rows by hand: change a number, add a member, remove one, reorder. Set the "Last updated" date and press Save.
 
 **Approve an accomplishment.** When a member submits one on the website it lands in **Inbox**. Press "Add to the site", check the wording, make sure "Show on the site" is on, Save. Ideas and feedback from the website land in the Inbox too.
 
@@ -35,7 +35,9 @@ Forgot the password? On the sign-in screen press "Forgot it, or first time here?
 
 **Blog.** Blog, then "Add post". Title, date, tag, one-line teaser, cover photo, the text (leave an empty line between paragraphs) and the Instagram link if there is one. The three newest posts also show on the home page.
 
-**Words, dues, links, ICC dates.** Text and links: the homepage tagline and intro, dues and points, every application and social link, the recruitment video, a homepage background video, whether rooms show on upcoming events, and the ICC name, city, dates and countdown date. **FAQ** has its own section.
+**Change any words on the site.** Every page has its own section (Home page, About page, ICC, Leadership, Opportunities & Alumni, Get Involved, Footer and donate panel), and list pages (Events, Board, Newsletter, Blog, Gallery, Accomplishments) have a "Words on this page" box at the top. Headlines, paragraphs, button labels, the three pillars, the ICC promo cards, the About cards and timeline, the join steps, the points lines, the ICC results and more are all plain text boxes. In a heading, put *stars* around the words that should show in gold.
+
+**Links and settings.** The chapter email, every application, RamsConnect and social link, the donation links, the recruitment video, a homepage background video, and whether rooms show on upcoming events. **FAQ** has its own section.
 
 ## Good to know
 
