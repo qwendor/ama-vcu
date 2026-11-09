@@ -10,8 +10,10 @@ export async function onRequest({ request, env, next }) {
   let content = null;
   try { content = await loadContent(env); } catch { return res; }
   if (!content) return res;
+  const indexable = !!(content.settings && content.settings.indexable);
   const out = new HTMLRewriter()
     .on("script#__content", { element(el) { el.setInnerContent(JSON.stringify(content).replace(/</g, "\\u003c"), { html: true }); } })
+    .on('meta[name="robots"]', { element(el) { el.setAttribute("content", indexable ? "index, follow" : "noindex, nofollow"); } })
     .transform(res);
   const headers = new Headers(out.headers);
   headers.set("cache-control", "no-cache");

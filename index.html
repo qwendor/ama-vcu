@@ -13,7 +13,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%231B2B4E'/%3E%3Cpath d='M7 42l8-20 8 20M27 42V22l6 12 6-12v20M44 22l11 10-11 10' fill='none' stroke='%23fff' stroke-width='3.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link id="fontLink" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -54,15 +54,15 @@
   </defs>
 </svg>
 
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip" id="skipLink" href="#main">Skip to content</a>
 
 <header class="site-head" id="siteHead">
   <div class="wrap head-row">
     <a href="#/" class="brand" aria-label="AMA at VCU home">
-      <span class="brand-lockup"><svg class="brand-mark" viewBox="0 0 288 110" role="img" aria-label="American Marketing Association"><use href="#mark"/></svg><span class="brand-ama">American Marketing Association</span></span>
-      <span class="brand-text">Virginia Commonwealth University</span>
+      <span class="brand-lockup" id="brandLockup"><svg class="brand-mark" viewBox="0 0 288 110" role="img" aria-label="American Marketing Association"><use href="#mark"/></svg><span class="brand-ama">American Marketing Association</span></span>
+      <span class="brand-text" id="brandText">Virginia Commonwealth University</span>
     </a>
-    <nav class="nav" aria-label="Main">
+    <nav class="nav" id="navMain" aria-label="Main">
       <a href="#/" data-nav="">Home</a>
       <a href="#/about" data-nav="about">About</a>
       <a href="#/events" data-nav="events">Events</a>
@@ -88,7 +88,7 @@
       <a href="#/involved" data-nav="involved">Get involved</a>
     </nav>
     <div class="head-actions">
-      <button type="button" class="btn btn-gold btn-sm" data-donate><svg class="ic"><use href="#i-heart"/></svg>Donate</button>
+      <button type="button" class="btn btn-gold btn-sm" data-donate><svg class="ic"><use href="#i-heart"/></svg><span id="headDonateLabel">Donate</span></button>
       <button type="button" class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg></button>
     </div>
   </div>
@@ -97,10 +97,10 @@
 <div class="mobile-menu" id="mobileMenu" hidden>
   <div class="mm-inner">
     <div class="mm-top">
-      <span class="tag-pill">Menu</span>
+      <span class="tag-pill" id="mmTitle">Menu</span>
       <button type="button" class="menu-btn" id="menuClose" aria-label="Close menu"><svg class="ic"><use href="#i-x"/></svg></button>
     </div>
-    <div class="mm-groups">
+    <div class="mm-groups" id="mmGroups">
       <div><h4>Chapter</h4><a href="#/">Home</a><a href="#/about">About</a><a href="#/events">Events</a><a href="#/board">Executive board</a><a href="#/mot">Marketers of Tomorrow</a><a href="#/icc">ICC 2027</a></div>
       <div><h4>Members</h4><a href="#/accomplishments">Accomplishments</a><a href="#/accomplishments#leaderboard">Points leaderboard</a><a href="#/leadership">Leadership</a><a href="#/opportunities">Opportunities &amp; Alumni</a></div>
       <div><h4>News</h4><a href="#/newsletter">Newsletter</a><a href="#/blog">Blog</a><a href="#/gallery">Gallery</a></div>
@@ -114,21 +114,18 @@
 
 <footer class="site-foot s-navy">
   <div class="wrap">
-    <div class="foot-grid">
+    <div class="foot-grid" id="footGrid">
       <div class="foot-brand">
-        <span class="foot-lockup" aria-hidden="true"><svg class="foot-mark" viewBox="0 0 288 110"><use href="#mark"/></svg><span class="brand-ama">American Marketing Association</span></span>
+        <span class="foot-lockup" id="footLockup" aria-hidden="true"><svg class="foot-mark" viewBox="0 0 288 110"><use href="#mark"/></svg><span class="brand-ama">American Marketing Association</span></span>
         <div>
           <h3 id="footTitle">The home for marketers at VCU</h3>
           <p id="footText">American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.</p>
           <div class="social-row" id="footSocial"></div>
         </div>
       </div>
-      <div class="foot-col"><h4>Chapter</h4><a href="#/about">About</a><a href="#/events">Events</a><a href="#/board">Executive board</a><a href="#/mot">Marketers of Tomorrow</a><a href="#/icc">ICC 2027</a></div>
-      <div class="foot-col"><h4>Members</h4><a href="#/accomplishments">Accomplishments</a><a href="#/accomplishments#leaderboard">Points leaderboard</a><a href="#/leadership">Leadership</a><a href="#/opportunities">Opportunities &amp; Alumni</a><a href="#/newsletter">Newsletter</a></div>
-      <div class="foot-col"><h4>Connect</h4><a href="#/blog">Blog</a><a href="#/gallery">Gallery</a><a href="#/involved">Get involved</a><a href="#/involved#feedback">Feedback &amp; surveys</a><a id="footRams" href="#" target="_blank" rel="noopener">RamsConnect</a><a id="footLinktree" href="#" target="_blank" rel="noopener">Linktree</a></div>
     </div>
     <div class="foot-bottom">
-      <span>© <span id="year"></span> AMA at VCU · <a id="footMail" href="#">amavcuchapter@gmail.com</a> · 907 Floyd Avenue, Richmond, VA 23284</span>
+      <span>© <span id="year"></span> <span id="footOrg">AMA at VCU</span> · <a id="footMail" href="#">amavcuchapter@gmail.com</a> · <span id="footAddress">907 Floyd Avenue, Richmond, VA 23284</span></span>
       <span><span id="footTags">#oneama #amavcu · </span><a class="foot-admin" id="footAdmin" href="admin/">Board login</a></span>
     </div>
     <p class="foot-note" id="footNote">Concept preview built for the AMA at VCU board. Not yet an official chapter site.</p>

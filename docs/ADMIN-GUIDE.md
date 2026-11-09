@@ -35,9 +35,21 @@ Forgot the password? On the sign-in screen press "Forgot it, or first time here?
 
 **Blog.** Blog, then "Add post". Title, date, tag, one-line teaser, cover photo, the text (leave an empty line between paragraphs) and the Instagram link if there is one. The three newest posts also show on the home page.
 
+**Change the home page photos.** Home page, "Background photos": add, remove or reorder the slideshow photos behind the headline (wide photos work best) and set how long each stays. The picture behind the recruitment video button is in the "What is AMA at VCU" box on the same page.
+
 **Change any words on the site.** Every page has its own section (Home page, About page, ICC, Leadership, Opportunities & Alumni, Get Involved, Footer and donate panel), and list pages (Events, Board, Newsletter, Blog, Gallery, Accomplishments) have a "Words on this page" box at the top. Headlines, paragraphs, button labels, the three pillars, the ICC promo cards, the About cards and timeline, the join steps, the points lines, the ICC results and more are all plain text boxes. In a heading, put *stars* around the words that should show in gold.
 
-**Links and settings.** The chapter email, every application, RamsConnect and social link, the donation links, the recruitment video, a homepage background video, and whether rooms show on upcoming events. **FAQ** has its own section.
+**Links and settings.** The chapter email, short and full name, board year, founding year and address, every application, RamsConnect and social link, the donation links, the recruitment video, a homepage background video, whether rooms show on upcoming events, and the "Let Google list this site" switch (leave it off while the site is a preview; turning it on removes the search-engine block). **FAQ** has its own section.
+
+**Menu and footer.** The words in the top menu, the dropdowns, the phone menu, the logo lockup and the footer columns (headings and links).
+
+**Categories.** Event types and their colors, accomplishment kinds and opportunity categories. Renaming keeps existing items attached.
+
+**Look.** The main dark color, the accent color, the light section background, the font pair, scroll animations on or off, and an uploaded logo in place of the built-in white mark.
+
+**Small words.** Buttons, labels and messages that repeat across the site (Register, Find on LinkedIn, pts, Coming soon, the form messages), plus every form field label, placeholder and the feedback topic choices.
+
+**Newsletter.** Besides uploading issues, the built-in issue (the one shown until the first upload) and the archive links are editable under "Words on this page".
 
 ## Good to know
 

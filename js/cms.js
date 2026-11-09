@@ -294,6 +294,18 @@ window.AMA_CMS = (() => {
     if (toISO(S.iccStart)) D.icc.start = toISO(S.iccStart) + 'T09:00:00-05:00';
     if (toISO(S.iccEnd)) D.icc.end = toISO(S.iccEnd);
     setStr(D.icc.fundraising, 'head', S.fundHead); setStr(D.icc.fundraising, 'body', S.fundBody);
+    /* chapter facts */
+    if (num(S.founded)) D.org.founded = num(S.founded);
+    if (num(S.reinstated)) D.org.reinstated = num(S.reinstated);
+    setStr(D.org, 'year', S.year); setStr(D.org, 'address', S.address); setStr(D.org, 'short', S.shortName); setStr(D.org, 'name', S.orgName);
+    /* category lists (before events and accomplishments use them) */
+    const catMap = (list, fallbackKey) => { const o = {}; (list || []).forEach(t => { const k = slugify(t.key || t.label); if (k && str(t.label)) o[k] = str(t.label); }); return Object.keys(o).length ? o : null; };
+    if (Array.isArray(c.eventTypes) && c.eventTypes.length) {
+      const o = {}; c.eventTypes.forEach(t => { const k = slugify(t.key || t.label); if (k && str(t.label)) o[k] = { label: str(t.label), color: /^#[0-9a-f]{6}$/i.test(t.color || '') ? t.color : '#D4DCEA' }; });
+      if (Object.keys(o).length) { if (!o.event) o.event = D.eventTypes.event || { label: 'Event', color: '#D4DCEA' }; D.eventTypes = o; }
+    }
+    const accCats = Array.isArray(c.accomplishmentCats) ? catMap(c.accomplishmentCats) : null; if (accCats) D.accomplishmentCats = accCats;
+    const oppCats = Array.isArray(c.opportunityCats) ? catMap(c.opportunityCats) : null; if (oppCats) D.opportunityCats = oppCats;
     if (Array.isArray(c.events)) D.events = c.events.filter(e => str(e.title)).map((e, i) => ({
       id: e.id || 'ev-' + i, title: str(e.title), date: toISO(e.date), end: toISO(e.end), time: str(e.time), type: D.eventTypes[e.type] ? e.type : 'event',
       series: str(e.series), place: str(e.place), blurb: str(e.blurb), img: srcOf(e.img), points: num(e.points) || 0, rsvp: str(e.rsvp),
@@ -305,7 +317,7 @@ window.AMA_CMS = (() => {
       if (toISO(c.leaderboard.updated)) D.leaderboard.updated = toISO(c.leaderboard.updated);
     }
     if (Array.isArray(c.accomplishments)) D.accomplishments = c.accomplishments.filter(a => str(a.who) && str(a.what) && a.approved !== false)
-      .map(a => ({ who: str(a.who), what: str(a.what), where: str(a.where), when: str(a.when), cat: D.accomplishmentCats[a.cat] ? a.cat : 'other' }))
+      .map(a => ({ who: str(a.who), what: str(a.what), where: str(a.where), when: str(a.when), cat: D.accomplishmentCats[a.cat] ? a.cat : (D.accomplishmentCats.other ? 'other' : Object.keys(D.accomplishmentCats)[0]) }))
       .concat(PRISTINE.accomplishments.filter(a => a.placeholder));
     if (Array.isArray(c.albums)) D.albums = c.albums.filter(a => str(a.name)).map(a => ({ slug: slugify(a.slug || a.name), name: str(a.name), date: toISO(a.date), blurb: str(a.blurb), cover: srcOf(a.cover),
       photos: (a.photos || []).map(p => ({ src: srcOf(p), sm: smOf(p), w: p.w || 0, h: p.h || 0, alt: str(p.alt) })).filter(p => p.src) }));
@@ -368,7 +380,7 @@ window.AMA_CMS = (() => {
       setStr(D.leadership, 'intro', L.intro); setStr(D.leadership, 'season', L.season);
       if (Array.isArray(L.paths) && L.paths.length) D.leadership.paths = L.paths.filter(p => str(p.t)).map(p => ({ t: str(p.t), d: str(p.d), cta: str(p.cta), url: str(p.url) }));
     }
-    if (Array.isArray(c.opportunities) && c.opportunities.length) D.opportunities = c.opportunities.filter(o => str(o.title)).map(o => ({ cat: D.opportunityCats[o.cat] ? o.cat : 'development', title: str(o.title), d: str(o.d), url: str(o.url) }));
+    if (Array.isArray(c.opportunities) && c.opportunities.length) D.opportunities = c.opportunities.filter(o => str(o.title)).map(o => ({ cat: D.opportunityCats[o.cat] ? o.cat : Object.keys(D.opportunityCats)[0], title: str(o.title), d: str(o.d), url: str(o.url) }));
     if (c.alumniMeta && typeof c.alumniMeta === 'object') {
       const A = c.alumniMeta;
       setStr(D.alumni, 'intro', A.intro);
@@ -377,6 +389,25 @@ window.AMA_CMS = (() => {
     }
     if (Array.isArray(c.surveys)) D.forms.surveys = c.surveys.filter(s => str(s.title) && str(s.url)).map(s => ({ title: str(s.title), note: str(s.note), url: str(s.url) }));
     if ('videoTitle' in S) setStr(D.video, 'title', S.videoTitle);
+    if (S.videoPoster !== undefined && srcOf(S.videoPoster)) D.video.poster = srcOf(S.videoPoster);
+    if (num(S.heroSeconds)) D.hero.secondsPerSlide = Math.max(3, num(S.heroSeconds));
+    if (Array.isArray(c.heroSlides)) D.hero.slides = c.heroSlides.map(s => ({ src: srcOf(s.img), alt: str(s.alt), credit: str(s.credit), license: str(s.license), url: str(s.url) })).filter(s => s.src);
+    /* menu, footer, forms, look */
+    if (c.nav && typeof c.nav === 'object') Object.keys(c.nav).forEach(k => { if (typeof c.nav[k] === 'string' && c.nav[k].trim()) D.nav[k] = c.nav[k]; });
+    if (Array.isArray(c.footerColumns) && c.footerColumns.length) D.footerColumns = c.footerColumns.filter(col => str(col.title)).map(col => ({ title: str(col.title), links: (col.links || []).filter(l => str(l.label) && str(l.href)).map(l => ({ label: str(l.label), href: str(l.href) })) }));
+    if (Array.isArray(c.feedbackOptions) && c.feedbackOptions.length) D.feedbackOptions = c.feedbackOptions.map(str).filter(Boolean);
+    if (c.look && typeof c.look === 'object') {
+      const L = c.look; ['navy', 'gold', 'bg', 'fonts'].forEach(k => { if (typeof L[k] === 'string' && L[k]) D.look[k] = L[k]; });
+      if (typeof L.motion === 'boolean') D.look.motion = L.motion;
+      if (L.logo !== undefined) D.look.logo = srcOf(L.logo);
+    }
+    if (c.newsletterCurrent && typeof c.newsletterCurrent === 'object') {
+      const N = c.newsletterCurrent, cur = D.newsletter.current;
+      ['month', 'issue', 'url', 'intro'].forEach(k => { if (typeof N[k] === 'string') cur[k] = N[k]; });
+      if (Array.isArray(N.sections)) cur.sections = N.sections.filter(s => str(s.h)).map(s => ({ h: str(s.h), items: Array.isArray(s.items) ? s.items.map(str).filter(Boolean) : String(s.items || '').split('\n').map(x => x.trim()).filter(Boolean) }));
+      if (N.spotlight && typeof N.spotlight === 'object') cur.spotlight = { h: str(N.spotlight.h), p: str(N.spotlight.p) };
+    }
+    if (Array.isArray(c.newsletterArchive)) D.newsletter.archive = c.newsletterArchive.filter(a => str(a.month)).map(a => ({ month: str(a.month), date: toISO(a.date), url: str(a.url) }));
     D.saved = true;
     return true;
   }

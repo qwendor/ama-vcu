@@ -514,7 +514,7 @@ window.AMA = {
       howEyebrow: "How it works", howTitle: "Real clients, *real work*",
       rolesEyebrow: "Roles", rolesTitle: "Pick a lane, or try all five", rolesText: "Teams are small on purpose. Everyone presents, everyone ships something they can show a recruiter.", rolesAlt: "Members on an agency visit",
       servicesEyebrow: "Areas of concentration", servicesTitle: "What MoT does for clients",
-      servicesEmptyTitle: "Concentrations and services", servicesEmptyText: "MoT leadership is finalizing the list of services the agency offers. Until then, the roles above are the best guide to the work.",
+      servicesEmptyBtn: "Ask about a project", servicesEmptyTitle: "Concentrations and services", servicesEmptyText: "MoT leadership is finalizing the list of services the agency offers. Until then, the roles above are the best guide to the work.",
       teamEyebrow: "The team", teamTitle: "Meet the consultants", teamLede: "Each consultant lists what they offer and how to connect. Reach out through their Linktree.",
       teamEmptyTitle: "This semester's consultants", teamEmptyText: "Headshots, roles, areas of expertise and Linktree links for the current cohort are being collected from MoT. Check back soon.", teamEmptyBtn: "Apply to join them",
       leadEyebrow: "Leadership", leadTitle: "Who runs MoT", leadAlt: "The Marketers of Tomorrow e-board, November 2026", bioNote: "Bio coming soon.",
@@ -583,6 +583,23 @@ window.AMA = {
       socialEyebrow: "Follow along", socialTitle: "Where everything *drops first*",
       socialInstagram: "@amavcu, where everything drops first", socialGroupme: "Reminders, polls and rides", socialLinkedin: "Follow the chapter page", socialRamsconnect: "Register for every event here"
     },
+    forms: {
+      accName: "Your name", accNamePh: "First and last name", accEmail: "VCU email", accEmailPh: "you@vcu.edu", accCat: "What kind of win?",
+      accWhat: "The accomplishment", accWhatPh: "Marketing intern, summer 2027", accWhere: "Company, organization or event", accWherePh: "Capital One",
+      accWhen: "When", accWhenPh: "May 2027", accFeature: "OK to feature on Instagram",
+      ideaTitle: "The idea", ideaTitlePh: "A Richmond agency tour", ideaWhy: "Why it would work", ideaWhyPh: "Who it is for, when it could happen, anyone we should reach out to", ideaName: "Your name (optional)", ideaNamePh: "Anonymous is fine",
+      fbType: "What is this about?", fbText: "Your feedback", fbTextPh: "Be specific, be honest, be kind", fbName: "Name (optional)", fbNamePh: "Anonymous"
+    },
+    ui: {
+      register: "Register on RamsConnect", locationLocked: "Location on RamsConnect", dateTba: "Date announced on Instagram", follow: "Follow @amavcu",
+      ramsconnect: "RamsConnect", pastEvents: "Past events", listView: "List", calView: "Calendar", subscribe: "Subscribe", today: "Today", nothingToday: "Nothing on this day. Pick a highlighted date.",
+      profile: "Profile", yearMajor: "Year and major", careerGoal: "Career goal", funFact: "Fun fact", boardYear: "Board year", emailBoard: "Email the board", linkedin: "LinkedIn", findLinkedin: "Find on LinkedIn", backToBoard: "Executive board",
+      expertise: "Expertise", linktree: "Linktree", email: "Email", classOf: "Class of", consultant: "Consultant",
+      pts: "pts", toGo: "to go", active: "Active", all: "All", comingSoon: "Coming soon", photosOnDrive: "Photos on Drive", seeInstagram: "See @amavcu", learnMore: "Learn more", visit: "Visit",
+      venmo: "Venmo", cashApp: "Cash App", honorable: "★",
+      toastSent: "Sent to the board. Thank you.", toastAcc: "Submitted. The board reviews entries before they post.", toastEmail: "Your email app should open with everything filled in. Hit send.", toastEmailFail: "Could not send just now. Opening an email instead.", toastVideo: "The recruitment video is being edited. Follow @amavcu to catch it first.",
+      campusPhotos: "Campus photos:"
+    },
     footer: {
       title: "The home for marketers at VCU",
       text: "American Marketing Association at Virginia Commonwealth University. Founded 1983, reinstated 2008, still the only marketing org on campus.",
@@ -623,6 +640,34 @@ window.AMA = {
     { chip: "Competitions", title: "Where VCU shows up", text: "" },
     { chip: "How to go", title: "Apply, pay dues, prep", text: "Fill out the application, stay current on dues and points, and come to the prep sessions. Fundraising covers part of the trip.", btn: "Application" }
   ],
+
+
+  /* Menu labels (the pages behind them stay the same), footer columns and the feedback form choices. */
+  nav: {
+    home: "Home", about: "About", events: "Events", board: "Board", mot: "Marketers of Tomorrow", icc: "ICC 2027", members: "Members", news: "News", involved: "Get involved", donate: "Donate",
+    accomplishments: "Accomplishments", accomplishmentsSub: "Wins, awards and the points leaderboard",
+    leadership: "Leadership", leadershipSub: "Board roles and how to get involved",
+    opportunities: "Opportunities & Alumni", opportunitiesSub: "Internships, careers, alumni network",
+    newsletter: "Newsletter", newsletterSub: "This month plus the archive", blog: "Blog", blogSub: "Recaps and guides, ICYMI", gallery: "Gallery", gallerySub: "Albums from past events",
+    brandCaption: "American Marketing Association", brandSchool: "Virginia Commonwealth University",
+    menuTitle: "Menu", groupChapter: "Chapter", groupMembers: "Members", groupNews: "News", groupJoin: "Join", leaderboard: "Points leaderboard", ideas: "Idea drop box", feedback: "Feedback & surveys", skip: "Skip to content"
+  },
+  footerColumns: [
+    { title: "Chapter", links: [{ label: "About", href: "#/about" }, { label: "Events", href: "#/events" }, { label: "Executive board", href: "#/board" }, { label: "Marketers of Tomorrow", href: "#/mot" }, { label: "ICC 2027", href: "#/icc" }] },
+    { title: "Members", links: [{ label: "Accomplishments", href: "#/accomplishments" }, { label: "Points leaderboard", href: "#/accomplishments#leaderboard" }, { label: "Leadership", href: "#/leadership" }, { label: "Opportunities & Alumni", href: "#/opportunities" }, { label: "Newsletter", href: "#/newsletter" }] },
+    { title: "Connect", links: [{ label: "Blog", href: "#/blog" }, { label: "Gallery", href: "#/gallery" }, { label: "Get involved", href: "#/involved" }, { label: "Feedback & surveys", href: "#/involved#feedback" }, { label: "RamsConnect", href: "https://ramsconnect.vcu.edu/amavcu/" }, { label: "Linktree", href: "https://linktr.ee/AMAVCUChapter" }] }
+  ],
+  feedbackOptions: ["An event", "Membership or dues", "Communication", "The website", "Something else"],
+
+  /* Look: colors, fonts, motion, an uploaded logo (empty = the built-in white mark). */
+  look: { navy: "#1B2B4E", gold: "#F2B21F", bg: "#F3F5F9", fonts: "montserrat-inter", motion: true, logo: "" },
+  fontPairs: {
+    "montserrat-inter": { label: "Montserrat + Inter (default)", heading: "Montserrat", body: "Inter", css: "Montserrat:wght@500;600;700;800&family=Inter:wght@400;500;600;700" },
+    "poppins-inter": { label: "Poppins + Inter", heading: "Poppins", body: "Inter", css: "Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700" },
+    "raleway-lato": { label: "Raleway + Lato", heading: "Raleway", body: "Lato", css: "Raleway:wght@500;600;700;800&family=Lato:wght@400;700" },
+    "oswald-source": { label: "Oswald + Source Sans 3", heading: "Oswald", body: "Source Sans 3", css: "Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;600;700" },
+    "dmsans": { label: "DM Sans (headings and body)", heading: "DM Sans", body: "DM Sans", css: "DM+Sans:wght@400;500;600;700;800" }
+  },
 
   faq: [
     { q: "How do I join?", a: "Four steps: join on RamsConnect, pay dues, hop in the GroupMe and show up to an event. Every step is on the Get Involved page.", link: "#/involved#join", linkLabel: "See the four steps" },

@@ -487,7 +487,7 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 
 /* ---------- footer ---------- */
 .site-foot{padding:60px 0 28px;color:#fff;background:var(--navy-deep)}
-.foot-grid{display:grid;grid-template-columns:2.1fr 1fr 1fr 1fr;gap:34px}
+.foot-grid{display:grid;grid-template-columns:2.1fr repeat(var(--cols,3),1fr);gap:34px}
 @media (max-width:900px){.foot-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.foot-grid{grid-template-columns:1fr}}
 .foot-brand{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
@@ -663,3 +663,11 @@ a.frame{display:block}
 .faq details .faq-link{display:inline-flex;margin:-6px 0 14px;font-size:.8rem}
 .mot-group{max-width:760px;margin-bottom:26px}
 .mot-group img{aspect-ratio:4/3}
+
+/* ---------- uploaded logo in place of the built-in mark ---------- */
+img.logo-img{display:block;width:auto;height:100%;object-fit:contain}
+img.brand-mark{width:auto;height:30px;max-width:180px}
+.site-head.scrolled img.brand-mark{height:26px}
+img.foot-mark{width:auto;height:50px;max-width:220px}
+.hero-mark img.logo-img{width:auto;max-width:100%;max-height:150px;margin:0 auto}
+img.nc-logo{width:auto;height:38px}

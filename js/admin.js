@@ -241,6 +241,13 @@
           def.fields.map((f) => FIELDS[f.type](f, it)))),
         h("div", null, h("button", { type: "button", class: "btn btn--small", onclick: () => { arr.push(def.fresh()); changed(true); } }, icon("plus"), "Add " + def.noun))));
     },
+    color(def, base) {
+      const cur = /^#[0-9a-f]{6}$/i.test(get(base, def.key) || "") ? get(base, def.key) : (def.fallback || "#1B2B4E");
+      const pick = h("input", { type: "color", value: cur, "aria-label": def.label, oninput: (e) => { txt.value = e.target.value.toUpperCase(); set(base, def.key, e.target.value.toUpperCase()); changed(); } });
+      const txt = h("input", { type: "text", value: cur.toUpperCase(), maxlength: 7, "aria-label": def.label + " hex code",
+        oninput: (e) => { let v = e.target.value.trim(); if (v && v[0] !== "#") v = "#" + v; if (/^#[0-9a-f]{6}$/i.test(v)) { pick.value = v; set(base, def.key, v.toUpperCase()); changed(); } } });
+      return wrap(def, h("div", { class: "color" }, pick, txt));
+    },
     paste(def, base) {
       const i = id();
       return wrap(def, h("textarea", { id: i, rows: 5, placeholder: def.placeholder, onchange: (e) => {
@@ -252,9 +259,13 @@
   };
 
   // ---------------------------------------------------------------- what the editor shows
-  const TYPES = () => Object.entries(SITE.eventTypes).map(([k, v]) => [k, v.label]);
-  const CATS = () => Object.entries(SITE.accomplishmentCats);
-  const OPPCATS = () => Object.entries(SITE.opportunityCats);
+  const catOpts = (arr, fallback) => (draft && Array.isArray(draft[arr]) && draft[arr].length) ? draft[arr].filter((t) => t.label).map((t) => [slugify(t.key || t.label), t.label]) : fallback();
+  const TYPES = () => catOpts("eventTypes", () => Object.entries(SITE.eventTypes).map(([k, v]) => [k, v.label]));
+  const CATS = () => catOpts("accomplishmentCats", () => Object.entries(SITE.accomplishmentCats));
+  const OPPCATS = () => catOpts("opportunityCats", () => Object.entries(SITE.opportunityCats));
+  const autoKey = (it, label) => { if (!it._fixed) it.key = slugify(label); };
+  const UI_LABELS = { register: "Register button on events", locationLocked: "Locked location note", dateTba: "Note on events with no date", follow: "Follow button", ramsconnect: "RamsConnect button", pastEvents: "Past events button", listView: "Calendar toggle: list", calView: "Calendar toggle: calendar", subscribe: "Calendar subscribe button", today: "Today", nothingToday: "Empty day message", profile: "Profile link on board cards", yearMajor: "Year and major label", careerGoal: "Career goal label", funFact: "Fun fact label", boardYear: "Board year label", emailBoard: "Email the board button", linkedin: "LinkedIn button", findLinkedin: "LinkedIn search button", backToBoard: "Back link on profiles", expertise: "Expertise label", linktree: "Linktree button", email: "Email button", classOf: "Class of", consultant: "Default consultant title", pts: "Points unit", toGo: "Points to go", active: "Active member badge", all: "All filter", comingSoon: "Coming soon tag", photosOnDrive: "Photos on Drive", seeInstagram: "See Instagram button", learnMore: "Learn more button", visit: "Visit button", venmo: "Venmo name", cashApp: "Cash App name", honorable: "Honorable mention symbol", toastSent: "Message after sending an idea or feedback", toastAcc: "Message after submitting an accomplishment", toastEmail: "Message when the email app opens", toastEmailFail: "Message when sending fails", toastVideo: "Message when there is no video yet", campusPhotos: "Photo credit prefix" };
+  const FORM_LABELS = { accName: "Accomplishment form: name label", accNamePh: "Accomplishment form: name placeholder", accEmail: "Email label", accEmailPh: "Email placeholder", accCat: "Kind label", accWhat: "Accomplishment label", accWhatPh: "Accomplishment placeholder", accWhere: "Where label", accWherePh: "Where placeholder", accWhen: "When label", accWhenPh: "When placeholder", accFeature: "Instagram permission checkbox", ideaTitle: "Idea form: idea label", ideaTitlePh: "Idea placeholder", ideaWhy: "Why label", ideaWhyPh: "Why placeholder", ideaName: "Name label", ideaNamePh: "Name placeholder", fbType: "Feedback form: topic label", fbText: "Feedback label", fbTextPh: "Feedback placeholder", fbName: "Name label", fbNamePh: "Name placeholder" };
   const ICONS = [["i-bulb", "Light bulb"], ["i-bolt", "Bolt"], ["i-users", "People"], ["i-star", "Star"], ["i-trophy", "Trophy"], ["i-heart", "Heart"], ["i-coffee", "Coffee"], ["i-cal", "Calendar"], ["i-gift", "Gift"], ["i-check", "Check"]];
   const autoSlug = (it, title) => { if (it._auto) it.slug = slugify(title); };
   const GOLD = "Put *stars* around the words that should be gold.";
@@ -276,8 +287,13 @@
     { id: "home", label: "Home page", icon: "house", hash: () => "#/", lead: "Everything written on the home page. Events, the board and the FAQ have their own sections.",
       groups: [
         { title: "Top of the page", fields: [cp("home", "label", "Small label over the headline"), cp("home", "title", "Big headline"), ta("home", "tagline", "Tagline under the headline", 3), cp("home", "btnJoin", "First button"), cp("home", "btnEvents", "Second button")] },
+        { title: "Background photos", fields: [
+          { key: "heroSlides", type: "cards", noun: "photo", titleKey: "alt", label: "Slideshow behind the headline", help: "Wide photos work best (a laptop screen shape). They fade from one to the next. A background video in Links and settings replaces them.", fresh: () => ({ img: null, alt: "", credit: "", license: "", url: "" }), fields: [
+            { key: "img", type: "image", label: "Photo" }, { key: "alt", type: "text", label: "What it shows", placeholder: "Snead Hall at sunset" },
+            { key: "credit", type: "text", label: "Photo credit (optional)", help: "Shown in the small line above the numbers strip. Required for borrowed photos, blank for the chapter's own." }, { key: "license", type: "text", label: "License (optional)", placeholder: "CC BY 3.0" }, { key: "url", type: "url", label: "Credit link (optional)" } ] },
+          { key: "settings.heroSeconds", type: "number", label: "Seconds each photo stays" } ] },
         { title: "Numbers strip", fields: [cp("home", "statFounded", "Label under the founding year"), cp("home", "statWins", "Label under the placements count", "text", { help: "Change the year when the next ICC results come in." }), cp("home", "statDays", "Label under the countdown"), cp("home", "statDues", "Label under the dues")] },
-        { title: "What is AMA at VCU", fields: [cp("home", "introEyebrow", "Small heading"), cp("home", "introTitle", "Heading", "text", { help: GOLD }), { key: "settings.blurb", type: "textarea", rows: 5, label: "Paragraph" }, cp("home", "introBtn1", "First button"), cp("home", "introBtn2", "Second button"), { key: "settings.videoTitle", type: "text", label: "Text on the video button" }, cp("home", "videoNote", "Tag shown while there is no video")] },
+        { title: "What is AMA at VCU", fields: [cp("home", "introEyebrow", "Small heading"), cp("home", "introTitle", "Heading", "text", { help: GOLD }), { key: "settings.blurb", type: "textarea", rows: 5, label: "Paragraph" }, cp("home", "introBtn1", "First button"), cp("home", "introBtn2", "Second button"), { key: "settings.videoTitle", type: "text", label: "Text on the video button" }, { key: "settings.videoPoster", type: "image", label: "Picture behind the video button" }, cp("home", "videoNote", "Tag shown while there is no video")] },
         { title: "Three pillars", fields: [cp("home", "pillarsEyebrow", "Small heading"), { key: "pillars", type: "cards", noun: "pillar", titleKey: "name", label: "", fresh: () => ({ name: "", short: "", icon: "i-star" }), fields: [{ key: "name", type: "text", label: "Name" }, { key: "short", type: "textarea", rows: 2, label: "One line" }, { key: "icon", type: "select", label: "Icon", options: ICONS }] }] },
         { title: "Upcoming events block", fields: [cp("home", "eventsEyebrow", "Small heading"), cp("home", "eventsTitleMonth", "Heading when events fall this month"), cp("home", "eventsTitle", "Heading otherwise"), cp("home", "eventsMore", "Link to the full calendar"), cp("home", "eventsEmptyTitle", "Card shown when few events are coming: title"), cp("home", "eventsEmptyText", "Card shown when few events are coming: text"), cp("home", "countdownNote", "Line under the ICC dates in the countdown card"), cp("home", "countdownBtn", "Countdown card: first button"), cp("home", "countdownBtn2", "Countdown card: second button")] },
         { title: "ICC promo", fields: [cp("home", "iccEyebrow", "Small heading"), cp("home", "iccApply", "Apply button"), cp("home", "iccMore", "Learn more button"), { key: "iccFeatures", type: "cards", noun: "card", titleKey: "title", label: "The four cards", fresh: () => ({ title: "", text: "", img: null }), fields: [{ key: "title", type: "text", label: "Title" }, { key: "text", type: "textarea", rows: 2, label: "Text" }, { key: "img", type: "image", label: "Photo" }] }] },
@@ -365,7 +381,14 @@
       lead: "Upload each issue as a PDF (or paste a link to it). The newest issue shows on the Newsletter page and in the home page link; the rest become the archive.",
       sub: (n) => [fmtDate(n.date), n.file ? "PDF" : n.link ? "Link" : "No file yet"].filter(Boolean).join(" · "),
       fresh: () => ({ month: "", date: new Date().toISOString().slice(0, 10), file: "", link: "", blurb: "" }),
-      pageGroups: [{ title: "Newsletter page text", fields: [cp("news", "eyebrow", "Small heading"), cp("news", "title", "Headline", "text", { help: GOLD }), ta("news", "lede", "Intro paragraph", 3), cp("news", "archiveEyebrow", "Archive: small heading"), cp("news", "archiveTitle", "Archive: heading"), cp("news", "archiveEmpty", "Archive: text when there is only one issue"), cp("news", "inboxChip", "Join card: tag"), cp("news", "inboxTitle", "Join card: title"), cp("news", "inboxText", "Join card: text"), cp("news", "inboxBtn", "Join card: button"), cp("news", "openBtn", "Button for a PDF issue"), cp("news", "readBtn", "Button for a linked issue")] }],
+      pageGroups: [
+        { title: "Built-in issue (shows until you upload the first issue above)", fields: [
+          { key: "newsletterCurrent.month", type: "text", label: "Issue name" }, { key: "newsletterCurrent.issue", type: "text", label: "Issue number", placeholder: "Issue 14" }, { key: "newsletterCurrent.url", type: "url", label: "Link to the full issue (optional)" },
+          { key: "newsletterCurrent.intro", type: "textarea", rows: 3, label: "Intro" },
+          { key: "newsletterCurrent.sections", type: "cards", noun: "section", titleKey: "h", label: "Sections", fresh: () => ({ h: "", items: [] }), fields: [{ key: "h", type: "text", label: "Heading" }, { key: "items", type: "strings", label: "Lines (one per line)", rows: 4 }] },
+          { key: "newsletterCurrent.spotlight.h", type: "text", label: "Spotlight heading" }, { key: "newsletterCurrent.spotlight.p", type: "textarea", rows: 2, label: "Spotlight text" } ] },
+        { title: "Archive links for older issues", fields: [{ key: "newsletterArchive", type: "rows", label: "Issues", cols: [["month", "Issue", "1fr"], ["date", "Date (2026-03-02)", "1fr"], ["url", "Link (blank = RamsConnect archive)", "2fr"]], add: "Add an issue" }] },
+        { title: "Newsletter page text", fields: [cp("news", "eyebrow", "Small heading"), cp("news", "title", "Headline", "text", { help: GOLD }), ta("news", "lede", "Intro paragraph", 3), cp("news", "archiveEyebrow", "Archive: small heading"), cp("news", "archiveTitle", "Archive: heading"), cp("news", "archiveEmpty", "Archive: text when there is only one issue"), cp("news", "inboxChip", "Join card: tag"), cp("news", "inboxTitle", "Join card: title"), cp("news", "inboxText", "Join card: text"), cp("news", "inboxBtn", "Join card: button"), cp("news", "openBtn", "Button for a PDF issue"), cp("news", "readBtn", "Button for a linked issue")] }],
       groups: [
         { title: "The issue", fields: [
           { key: "month", type: "text", label: "Issue name", placeholder: "November 2026" },
@@ -462,7 +485,14 @@
         { key: "link", type: "text", label: "Link (optional)", placeholder: "#/involved#join", help: "A page on the site (starts with #/) or a full web address." }, { key: "linkLabel", type: "text", label: "Link text", placeholder: "See the four steps" } ] }] }] },
     { id: "settings", label: "Links and settings", icon: "gear", hash: () => "#/", lead: "Every link on the site, the recruitment video, the homepage background and the event location rule.",
       groups: [
-        { title: "Chapter", fields: [{ key: "settings.email", type: "text", label: "Chapter email", help: "Where the contact buttons and website forms point." }] },
+        { title: "Chapter", fields: [
+          { key: "settings.email", type: "text", label: "Chapter email", help: "Where the contact buttons and website forms point." },
+          { key: "settings.shortName", type: "text", label: "Short name", placeholder: "AMA at VCU", help: "Used in the footer copyright line." },
+          { key: "settings.orgName", type: "text", label: "Full name", placeholder: "American Marketing Association at VCU" },
+          { key: "settings.year", type: "text", label: "Board year", placeholder: "2026-27", help: "Shown in the board headings and on profiles. Change it every spring." },
+          { key: "settings.founded", type: "number", label: "Year founded" }, { key: "settings.reinstated", type: "number", label: "Year reinstated" },
+          { key: "settings.address", type: "text", label: "Address in the footer" } ] },
+        { title: "Search engines", fields: [{ key: "settings.indexable", type: "toggle", label: "Let Google list this site", help: "Leave off while the site is a preview. Turning it on removes the search-engine block on the live site." }] },
         { title: "Applications and forms", fields: [
           { key: "settings.iccApplication", type: "url", label: "ICC application" }, { key: "settings.motApplication", type: "url", label: "Marketers of Tomorrow application" },
           { key: "settings.boardApplication", type: "url", label: "Executive board application" }, { key: "settings.becomeMember", type: "url", label: "Membership form" },
@@ -486,6 +516,38 @@
         { title: "Footer", fields: [cp("footer", "title", "Heading"), ta("footer", "text", "Text", 3), cp("footer", "tags", "Hashtags"), cp("footer", "login", "Board login link text"), cp("footer", "concept", "Small note at the very bottom", "text", { help: "Clear it once the site is official." })] },
         { title: "Donate panel", fields: [cp("donate", "eyebrow", "Small heading"), cp("donate", "title", "Heading", "text", { help: GOLD }), ta("donate", "text", "Text", 3), cp("donate", "venmoNote", "Line under Venmo"), cp("donate", "cashNote", "Line under Cash App"), cp("donate", "footnote", "Text before the email address")] },
       ] },
+    { id: "menu", label: "Menu and footer", icon: "list", hash: () => "#/", lead: "The words in the top menu, the phone menu and the footer columns. The pages behind the menu items stay the same.",
+      groups: [
+        { title: "Top menu", fields: [{ key: "nav.home", type: "text", label: "Home" }, { key: "nav.about", type: "text", label: "About" }, { key: "nav.events", type: "text", label: "Events" }, { key: "nav.board", type: "text", label: "Board" }, { key: "nav.mot", type: "text", label: "Marketers of Tomorrow" }, { key: "nav.icc", type: "text", label: "ICC" }, { key: "nav.members", type: "text", label: "Members (dropdown)" }, { key: "nav.news", type: "text", label: "News (dropdown)" }, { key: "nav.involved", type: "text", label: "Get involved" }, { key: "nav.donate", type: "text", label: "Donate button" }] },
+        { title: "Dropdown items", fields: [
+          { key: "nav.accomplishments", type: "text", label: "Accomplishments" }, { key: "nav.accomplishmentsSub", type: "text", label: "Accomplishments: small line" },
+          { key: "nav.leadership", type: "text", label: "Leadership" }, { key: "nav.leadershipSub", type: "text", label: "Leadership: small line" },
+          { key: "nav.opportunities", type: "text", label: "Opportunities & Alumni" }, { key: "nav.opportunitiesSub", type: "text", label: "Opportunities: small line" },
+          { key: "nav.newsletter", type: "text", label: "Newsletter" }, { key: "nav.newsletterSub", type: "text", label: "Newsletter: small line" },
+          { key: "nav.blog", type: "text", label: "Blog" }, { key: "nav.blogSub", type: "text", label: "Blog: small line" },
+          { key: "nav.gallery", type: "text", label: "Gallery" }, { key: "nav.gallerySub", type: "text", label: "Gallery: small line" } ] },
+        { title: "Phone menu", fields: [{ key: "nav.menuTitle", type: "text", label: "Menu title" }, { key: "nav.groupChapter", type: "text", label: "First group name" }, { key: "nav.groupMembers", type: "text", label: "Second group name" }, { key: "nav.groupNews", type: "text", label: "Third group name" }, { key: "nav.groupJoin", type: "text", label: "Fourth group name" }, { key: "nav.leaderboard", type: "text", label: "Points leaderboard link" }, { key: "nav.ideas", type: "text", label: "Idea drop box link" }, { key: "nav.feedback", type: "text", label: "Feedback link" }, { key: "nav.skip", type: "text", label: "Skip to content (screen readers)" }] },
+        { title: "Logo lockup", fields: [{ key: "nav.brandCaption", type: "text", label: "Small line under the mark" }, { key: "nav.brandSchool", type: "text", label: "Text beside the mark" }] },
+        { title: "Footer columns", fields: [{ key: "footerColumns", type: "cards", noun: "column", titleKey: "title", label: "", fresh: () => ({ title: "", links: [] }), fields: [{ key: "title", type: "text", label: "Column heading" }, { key: "links", type: "rows", label: "Links", cols: [["label", "Text", "1fr"], ["href", "Where it goes (#/about or https://…)", "1fr"]], add: "Add a link" }] }] },
+      ] },
+    { id: "categories", label: "Categories", icon: "tag", hash: () => "#/events", lead: "The types and categories used across the site. Existing items keep working when you rename them.",
+      groups: [
+        { title: "Event types", fields: [{ key: "eventTypes", type: "cards", noun: "type", titleKey: "label", label: "", fresh: () => ({ key: "", label: "", color: "#D4DCEA" }), fields: [{ key: "label", type: "text", label: "Name", onchange: autoKey }, { key: "color", type: "color", label: "Dot color", fallback: "#D4DCEA" }] }] },
+        { title: "Accomplishment kinds", fields: [{ key: "accomplishmentCats", type: "cards", noun: "kind", titleKey: "label", label: "", fresh: () => ({ key: "", label: "" }), fields: [{ key: "label", type: "text", label: "Name", onchange: autoKey }] }] },
+        { title: "Opportunity categories", fields: [{ key: "opportunityCats", type: "cards", noun: "category", titleKey: "label", label: "", fresh: () => ({ key: "", label: "" }), fields: [{ key: "label", type: "text", label: "Name", onchange: autoKey }] }] },
+      ] },
+    { id: "look", label: "Look", icon: "palette", hash: () => "#/", lead: "Colors, fonts, motion and the logo. Changes show in the preview right away.",
+      groups: [
+        { title: "Colors", fields: [{ key: "look.navy", type: "color", label: "Main dark color", fallback: "#1B2B4E", help: "Header, footer and dark sections. Keep it dark so white text stays readable." }, { key: "look.gold", type: "color", label: "Accent color", fallback: "#F2B21F", help: "Buttons, labels and highlights." }, { key: "look.bg", type: "color", label: "Light section background", fallback: "#F3F5F9" }] },
+        { title: "Fonts", fields: [{ key: "look.fonts", type: "select", label: "Font pair", options: () => Object.entries(SITE.fontPairs || {}).map(([k, v]) => [k, v.label]) }] },
+        { title: "Motion", fields: [{ key: "look.motion", type: "toggle", label: "Scroll animations and photo movement", defaultOn: true, help: "Visitors who ask their device for less motion always get the calm version." }] },
+        { title: "Logo", fields: [{ key: "look.logo", type: "image", label: "Uploaded logo (optional)", help: "A wide PNG with a transparent background works best. Remove it to go back to the built-in white mark." }] },
+      ] },
+    { id: "words", label: "Small words", icon: "text-aa", hash: () => "#/events", lead: "Buttons, labels and messages that repeat across the site, plus the form fields.",
+      groups: [
+        { title: "Interface words", fields: Object.entries(UI_LABELS).map(([k, label]) => ({ key: "copy.ui." + k, type: /^toast|nothingToday/.test(k) ? "textarea" : "text", rows: 2, label })) },
+        { title: "Form fields", fields: Object.entries(FORM_LABELS).map(([k, label]) => ({ key: "copy.forms." + k, type: "text", label })).concat([{ key: "feedbackOptions", type: "strings", label: "Feedback form: topic choices (one per line)", rows: 5 }]) },
+      ] },
     // ---------------- tools
     { id: "inbox", label: "Inbox", icon: "tray", custom: inboxPanel, hash: () => "#/" },
     { id: "history", label: "History", icon: "clock-counter-clockwise", custom: historyPanel, hash: () => "#/" },
@@ -507,7 +569,17 @@
         becomeMember: L.becomeMember, iccApplication: L.iccApplication, accomplishmentForm: L.accomplishmentForm || "", motApplication: L.motApplication || "", boardApplication: L.boardApplication || "", alumniLinkedIn: L.alumniLinkedIn || "",
         donate: L.donate || "", venmo: L.venmo, cashapp: L.cashapp, googleCalendar: L.googleCalendar, newsletterArchive: L.newsletterArchive,
         videoYoutube: A.video.youtube || "", videoInstagram: A.video.instagram || "", heroVideo: A.hero.video || "", showLocations: !!(A.integrations && A.integrations.showLocations),
+        videoPoster: img(A.video.poster), heroSeconds: A.hero.secondsPerSlide || 9,
+        shortName: A.org.short, orgName: A.org.name, year: A.org.year, founded: A.org.founded, reinstated: A.org.reinstated, address: A.org.address, indexable: false,
       },
+      nav: clone(A.nav), footerColumns: clone(A.footerColumns), feedbackOptions: A.feedbackOptions.slice(),
+      look: { navy: A.look.navy, gold: A.look.gold, bg: A.look.bg, fonts: A.look.fonts, motion: A.look.motion !== false, logo: img(A.look.logo) },
+      eventTypes: Object.entries(A.eventTypes).map(([k, v]) => ({ key: k, label: v.label, color: v.color, _fixed: true })),
+      accomplishmentCats: Object.entries(A.accomplishmentCats).map(([k, v]) => ({ key: k, label: v, _fixed: true })),
+      opportunityCats: Object.entries(A.opportunityCats).map(([k, v]) => ({ key: k, label: v, _fixed: true })),
+      newsletterCurrent: { month: A.newsletter.current.month, issue: A.newsletter.current.issue, url: A.newsletter.current.url || "", intro: A.newsletter.current.intro, sections: A.newsletter.current.sections.map((x) => ({ h: x.h, items: x.items.slice() })), spotlight: { h: A.newsletter.current.spotlight.h, p: A.newsletter.current.spotlight.p } },
+      newsletterArchive: A.newsletter.archive.map((a) => ({ month: a.month, date: a.date || "", url: a.url || "" })),
+      heroSlides: (A.hero.slides || []).map((s) => ({ img: img(s.src), alt: s.alt || "", credit: s.credit || "", license: s.license || "", url: s.url || "" })),
       copy: clone(A.copy),
       pillars: A.pillars.map((p) => ({ name: p.name, short: p.short, icon: p.icon || "i-star" })),
       iccFeatures: A.iccFeatures.map((f) => ({ title: f.title, text: f.text, img: img(f.img) })),
