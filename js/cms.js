@@ -265,7 +265,8 @@ window.AMA_CMS = (() => {
   const HOME = 'https://amavcu.pages.dev';
   const host = location.hostname;
   const LOCAL = host === 'localhost' || host === '127.0.0.1' || location.protocol === 'file:';
-  const API_BASE = (host.endsWith('.pages.dev') || LOCAL) ? '' : HOME;
+  const HOME_HOSTS = ['vcuama.site', 'www.vcuama.site'];                     // the chapter's domain, served by the same Pages project
+  const API_BASE = (host.endsWith('.pages.dev') || HOME_HOSTS.includes(host) || LOCAL) ? '' : HOME;
   const PREVIEW = qs.get('preview') === '1';
   const PRISTINE = JSON.parse(JSON.stringify(D));
   const clone = o => JSON.parse(JSON.stringify(o));
