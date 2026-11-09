@@ -60,6 +60,10 @@
     return `<svg class="monogram ${cls}" viewBox="0 0 80 80" role="img" aria-label="${esc(name)}"><circle cx="40" cy="40" r="40" fill="${bg}"/><text x="40" y="47" text-anchor="middle" font-family="Montserrat, Inter, sans-serif" font-weight="700" font-size="${ini.length > 1 ? 26 : 32}" fill="#fff" letter-spacing="1">${esc(ini.toUpperCase())}</text></svg>`;
   }
   const photoOr = (src, name, cls = '') => src ? `<img class="${cls}" src="${src}" alt="${esc(name)}" loading="lazy">` : monogram(name, cls);
+  const srcOf = v => typeof v === 'string' ? v : (v && v.src) || '';
+  const photoOf = m => srcOf(m.photo) || `assets/img/board/${m.slug}.webp`;
+  const photoSmOf = m => m.photoSm || photoOf(m);
+  const newsletterMonth = () => (D.newsletter.issues && D.newsletter.issues[0] && D.newsletter.issues[0].month) || D.newsletter.current.month;
   const galleryFull = g => g.src || `assets/img/gallery/${g.f}.webp`;
   const galleryThumb = g => g.thumb || g.src || `assets/img/gallery/t/${g.f}.webp`;
 
@@ -113,7 +117,7 @@
   function boardCard(m, i) {
     const l = li(m);
     return `<article class="member reveal d${(i % 3) + 1}">
-      <a class="frame" href="#/board/${m.slug}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"></a>
+      <a class="frame" href="#/board/${m.slug}"><img src="${photoOf(m)}" alt="${esc(m.name)}" loading="lazy"></a>
       <div class="member-body">
         <h3><a href="#/board/${m.slug}">${esc(m.name)}</a></h3>
         <div class="member-role"><span class="role">${esc(m.role)}</span><a class="li-btn" href="${l.href}" target="_blank" rel="noopener">${ico('i-in')} ${l.label}</a></div>
@@ -141,7 +145,7 @@
     </article>`;
   }
   function boardTile(m) {
-    return `<a href="#/board/${m.slug}" title="${esc(m.name)}, ${esc(m.role)}"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`;
+    return `<a href="#/board/${m.slug}" title="${esc(m.name)}, ${esc(m.role)}"><img src="${photoSmOf(m)}" alt="${esc(m.name)}" loading="lazy"><figcaption>${esc(m.name.split(' ')[0])}<small>${esc(shortRole(m.role))}</small></figcaption></a>`;
   }
   function advisorTile() {
     const a = D.org.advisor;
@@ -157,7 +161,7 @@
   }
   function postCard(p, big = false) {
     return `<a class="post-card ${big ? 'big' : ''} reveal" href="#/blog/${p.slug}">
-      <div class="pc-img"><img src="${big ? p.cover : p.thumb}" alt="" loading="lazy"></div>
+      <div class="pc-img"><img src="${big ? p.cover : (p.thumb || p.cover)}" alt="" loading="lazy"></div>
       <div class="pc-body">
         <div class="pc-meta"><span class="chip">${esc(p.tag)}</span><span>${fmt(p.date, { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
         <h3>${esc(p.title)}</h3>
@@ -180,12 +184,13 @@
     return `<span class="medal ${place <= 3 ? 'm' + place : ''}">${place}${place === 1 ? 'st' : place === 2 ? 'nd' : place === 3 ? 'rd' : 'th'}</span>`;
   }
   function photosOf(album) {
+    if (album.photos && album.photos.length) return album.photos.map(p => ({ src: p.src, thumb: p.sm || p.src, cap: p.alt || '', w: p.w, h: p.h, album: album.name }));
     return D.gallery.filter(g => g.album === album.name);
   }
   function albumCover(a) {
     const ph = photosOf(a);
     const key = a.cover && D.gallery.find(g => g.f === a.cover);
-    const src = key ? `assets/img/gallery/${key.f}.webp` : a.cover ? a.cover : ph.length ? galleryFull(ph[0]) : '';
+    const src = key ? `assets/img/gallery/${key.f}.webp` : a.cover ? a.cover : ph.length ? galleryThumb(ph[0]) : '';
     const n = ph.length;
     return `<a class="album reveal" href="#/gallery/${a.slug}">
       <div class="album-img">${src ? `<img src="${src}" alt="" loading="lazy">` : `<div class="album-empty">${ico('i-ig')}</div>`}</div>
@@ -231,10 +236,10 @@
     const thisMonth = ups.some(e => e.date.slice(0, 7) === TODAY.slice(0, 7));
     const shown = ups.slice(0, 3);
     const feats = [
-      { h: 'Compete', p: 'Perfect Pitch, the Sales Competition, case and strategy rounds against 150+ chapters.', img: 'assets/img/gallery/mw-04.webp' },
+      { h: 'Compete', p: 'Perfect Pitch, the Sales Competition, case and strategy rounds against 150+ chapters.', img: 'assets/img/photos/compete.webp' },
       { h: 'Learn', p: 'Keynotes and workshops from marketers at the top of the industry.', img: 'assets/img/gallery/mw-13.webp' },
-      { h: 'Network', p: 'A recruiter hall and 1,600 students who do what you do.', img: 'assets/img/gallery/mw-14.webp' },
-      { h: 'Travel', p: 'Three days in New Orleans with the chapter, fundraised together.', img: 'assets/img/gallery/mw-02.webp' }
+      { h: 'Network', p: 'A recruiter hall and 1,600 students who do what you do.', img: 'assets/img/photos/network.webp' },
+      { h: 'Travel', p: 'Three days in New Orleans with the chapter, fundraised together.', img: 'assets/img/photos/travel.webp' }
     ];
     return `
     <section class="hero" id="top">
@@ -321,20 +326,20 @@
       </div>
     </section>
 
-    <section class="section s-cream">
+    ${D.posts.length ? `<section class="section s-cream">
       <div class="wrap">
         <div class="sec-head reveal">
           <div><p class="eyebrow">In case you missed it</p><h2 class="h-lg">Recaps and photo dumps</h2></div>
-          <div class="btn-row"><a class="textlink" href="#/newsletter">${esc(D.newsletter.current.month)} newsletter ${ico('i-arrow')}</a><a class="textlink more" href="#/blog">All posts ${ico('i-arrow')}</a></div>
+          <div class="btn-row"><a class="textlink" href="#/newsletter">${esc(newsletterMonth())} newsletter ${ico('i-arrow')}</a><a class="textlink more" href="#/blog">All posts ${ico('i-arrow')}</a></div>
         </div>
         <div class="grid g3">${D.posts.slice(0, 3).map(p => postCard(p)).join('')}</div>
       </div>
-    </section>
+    </section>` : ''}
 
     <section class="section">
       <div class="wrap split" style="align-items:start">
         <div class="reveal"><p class="eyebrow">FAQ</p><h2 class="h-lg">Questions people ask</h2><p class="lede" style="margin-top:12px">Still stuck? Email <a href="mailto:${D.org.email}">${D.org.email}</a> or DM us on Instagram.</p><div class="social-row on-light" style="margin-top:18px">${socialRow()}</div></div>
-        <div class="faq reveal d2">${D.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('')}</div>
+        <div class="faq reveal d2">${D.faq.map(f => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p>${f.link ? `<a class="textlink faq-link" href="${f.link}">${esc(f.linkLabel || 'Learn more')} ${ico('i-arrow')}</a>` : ''}</details>`).join('')}</div>
       </div>
     </section>`;
   };
@@ -384,7 +389,7 @@
           </ul>
         </div>
         <div class="reveal d2">
-          <div class="frame"><img src="assets/img/board-group.webp" alt="The ${D.org.year} executive board"></div>
+          <div class="frame"><img src="assets/img/photos/about-speaker.webp" alt="Members at a chapter speaker event"></div>
         </div>
       </div>
     </section>`;
@@ -428,7 +433,7 @@
     <section class="page-head"><div class="wrap"><a class="textlink back" href="#/board">${ico('i-arrow')} Executive board</a></div></section>
     <section class="section s-cream">
       <div class="wrap profile">
-        <div class="frame reveal"><img src="assets/img/board/${m.slug}.webp" alt="${esc(m.name)}"></div>
+        <div class="frame reveal"><img src="${photoOf(m)}" alt="${esc(m.name)}"></div>
         <div class="reveal d1">
           <span class="chip navy">${esc(m.role)}</span>
           <h1 class="h-lg" style="margin:12px 0 6px">${esc(m.name)}</h1>
@@ -457,7 +462,7 @@
         <div class="steps reveal">${A.how.map(s => `<div class="step"><b>${esc(s.t)}</b><p>${esc(s.d)}</p></div>`).join('')}</div>
         <div class="split" style="margin-top:46px">
           <div class="reveal"><p class="eyebrow">Roles</p><h2 class="h-md">Pick a lane, or try all five</h2><div class="roles" style="margin:14px 0 20px">${A.roles.map(r => `<span class="tag-pill sm">${esc(r)}</span>`).join('')}</div><p>Teams are small on purpose. Everyone presents, everyone ships something they can show a recruiter.</p></div>
-          <div class="reveal d2"><div class="frame"><img src="assets/img/gallery/mw-03.webp" alt="A team working around a table"></div></div>
+          <div class="reveal d2"><div class="frame"><img src="assets/img/photos/mot-agency.webp" alt="Members on an agency visit"></div></div>
         </div>
       </div>
     </section>
@@ -472,6 +477,7 @@
         <div class="sec-head reveal"><div><p class="eyebrow">The team</p><h2 class="h-lg">Meet the consultants</h2></div><p>Each consultant lists what they offer and how to connect. Reach out through their Linktree.</p></div>
         ${A.consultants.length ? `<div class="people">${A.consultants.map(consultantCard).join('')}</div>` : placeholder('This semester’s consultants', 'Headshots, roles, areas of expertise and Linktree links for the current cohort are being collected from MoT. Check back soon.', ext(motApply(), 'Apply to join them', 'btn btn-navy btn-sm'))}
         <div class="sec-head reveal" style="margin-top:56px"><div><p class="eyebrow">Leadership</p><h2 class="h-lg">Who runs MoT</h2></div></div>
+        <div class="frame mot-group reveal"><img src="assets/img/photos/mot-eboard.webp" alt="The Marketers of Tomorrow e-board, November 2026" loading="lazy"></div>
         <div class="people leaders">${A.leadership.map(l => `<article class="person reveal"><div class="person-photo">${photoOr(l.photo, l.name)}</div><h3>${esc(l.name)}</h3><span class="role">${esc(l.title)}</span>${l.bio ? `<p class="small muted">${esc(l.bio)}</p>` : `<p class="small muted">Bio coming soon.</p>`}${l.linktree ? ext(l.linktree, 'Linktree', 'btn btn-navy btn-sm') : ''}</article>`).join('')}</div>
       </div>
     </section>
@@ -522,7 +528,7 @@
     <section class="section s-gold" id="fundraising">
       <div class="wrap split">
         <div class="reveal"><p class="eyebrow">${esc(F.eyebrow)}</p><h2 class="h-lg">${esc(F.head)}</h2><p class="lede" style="margin:12px 0 18px">${esc(F.body)}</p><div class="btn-row"><button type="button" class="btn btn-navy" data-donate>${ico('i-heart')} Donate</button>${route('#/accomplishments', 'See past winners', 'btn btn-ghost')}</div></div>
-        <div class="reveal d2"><div class="frame"><img src="assets/img/gallery/mw-04.webp" alt="Competition winners holding certificates"></div></div>
+        <div class="reveal d2"><div class="frame"><img src="assets/img/photos/icc-winners.webp" alt="VCU students with a certificate at the AMA conference"></div></div>
       </div>
     </section>`;
   };
@@ -638,6 +644,29 @@
   };
 
   pages.newsletter = () => {
+    const issues = D.newsletter.issues || [];
+    if (issues.length) {
+      const cur = issues[0], rest = issues.slice(1), open = cur.file || cur.link;
+      const isPdf = cur.file && /\.pdf(\?|#|$)/i.test(cur.file) || (cur.file && cur.file.startsWith('/media/'));
+      return `
+    ${pageHead('Newsletter', `The <em class="serif gold">monthly</em>`, 'One email a month with recaps, what is coming up and the reminders you will forget otherwise. The newest issue is here; older ones are in the archive.')}
+    <section class="section s-cream">
+      <div class="wrap split" style="align-items:start;grid-template-columns:1.4fr .8fr">
+        <div class="news-card reveal">
+          <div class="nc-head"><div><span class="chip">${cur.date ? fmt(cur.date, { month: 'long', year: 'numeric' }) : 'Current issue'}</span><h3>${esc(cur.month)}</h3></div>${markSvg('nc-logo')}</div>
+          <div class="nc-body">
+            ${cur.blurb ? `<p class="lede" style="margin:0">${esc(cur.blurb)}</p>` : ''}
+            ${isPdf ? `<div class="pdf-frame"><iframe src="${cur.file}#view=FitH" title="${esc(cur.month)} newsletter" loading="lazy"></iframe></div>` : ''}
+            ${open ? `<div class="btn-row">${ext(open, cur.file ? 'Open the issue' : 'Read the issue', 'btn btn-gold')}</div>` : ''}
+          </div>
+        </div>
+        <div style="display:grid;gap:18px">
+          <div class="reveal d1"><p class="eyebrow">Archive</p><h2 class="h-md" style="margin-bottom:12px">Previous issues</h2><div class="archive">${rest.length ? rest.map(a => `<a href="${a.file || a.link || D.links.newsletterArchive}" target="_blank" rel="noopener"><span style="color:var(--ink)">${esc(a.month)}</span><span>${a.date ? fmt(a.date, { month: 'short', day: 'numeric', year: 'numeric' }) : ''} ${ico('i-ext')}</span></a>`).join('') : `<p class="small muted">Older issues are on <a href="${D.links.newsletterArchive}" target="_blank" rel="noopener">RamsConnect</a>.</p>`}</div></div>
+          <div class="card navy reveal d2"><span class="chip">Get it in your inbox</span><h3 class="h-sm" style="margin:8px 0">Members get the newsletter automatically</h3><p class="small" style="opacity:.85">Join on RamsConnect and the monthly lands in your VCU email.</p>${ext(D.links.ramsconnectJoin, 'Join on RamsConnect', 'btn btn-gold btn-sm')}</div>
+        </div>
+      </div>
+    </section>`;
+    }
     const c = D.newsletter.current;
     return `
     ${pageHead('Newsletter', `The <em class="serif gold">monthly</em>`, 'One email a month with recaps, what is coming up and the reminders you will forget otherwise. The current issue lives here; older ones are in the archive.')}
@@ -662,7 +691,7 @@
 
   pages.blog = () => `
     ${pageHead('Blog', `Recaps, guides and <em class="serif gold">ICYMI</em>`, 'What happened, what we learned, and how to get the most out of the chapter. Photo dumps live in the gallery.')}
-    <section class="section s-cream"><div class="wrap"><div class="grid g3" style="align-items:start">${D.posts.map((p, i) => postCard(p, i === 0)).join('')}</div></div></section>`;
+    <section class="section s-cream"><div class="wrap">${D.posts.length ? `<div class="grid g3" style="align-items:start">${D.posts.map((p, i) => postCard(p, i === 0)).join('')}</div>` : placeholder('First posts coming soon', 'Event recaps and photo dumps will land here. Until then, everything drops on Instagram first.', ext(D.links.instagram, 'Follow @amavcu', 'btn btn-navy btn-sm') + route('#/gallery', 'Photo albums', 'btn btn-ghost btn-sm'))}</div></section>`;
 
   pages.post = slug => {
     const p = D.posts.find(x => x.slug === slug);
@@ -672,7 +701,7 @@
     <section class="page-head s-navy"><div class="wrap post"><a class="textlink back" href="#/blog">${ico('i-arrow')} All posts</a><div style="margin-top:14px"><span class="chip">${esc(p.tag)}</span> <span class="small" style="opacity:.8;margin-left:8px">${fmtLong(p.date)}</span></div><h1 class="h-lg" style="margin-top:12px">${esc(p.title)}</h1><p class="lede">${esc(p.dek)}</p></div></section>
     <section class="section s-cream"><div class="wrap post">
       <div class="cover" style="margin-top:-80px"><img src="${p.cover}" alt=""></div>
-      <div class="body">${p.body.map(b => `<p>${esc(b)}</p>`).join('')}</div>
+      <div class="body">${(Array.isArray(p.body) ? p.body : [String(p.body || '')]).map(b => `<p>${esc(b)}</p>`).join('')}</div>
       ${gal.length ? `<p class="eyebrow">Photos</p><div class="post-gallery" data-gallery>${gal.map((g, i) => `<button type="button" data-lb="${i}" data-src="${galleryFull(g)}" data-cap="${esc(g.cap)}"><img src="${galleryThumb(g)}" alt="${esc(g.cap)}" loading="lazy"></button>`).join('')}</div>` : ''}
       <div class="btn-row" style="margin-top:36px">${route('#/gallery', 'More photos', 'btn btn-navy')}${ext(p.instagram || D.links.instagram, p.instagram ? 'See the post on Instagram' : 'Follow @amavcu', 'btn btn-ghost')}</div>
     </div></section>`;
@@ -746,8 +775,8 @@
     </section>
     <section class="section s-gold" id="donate">
       <div class="wrap split">
-        <div class="reveal"><p class="eyebrow">Donate</p><h2 class="h-lg">Send us to <em class="serif">New Orleans.</em></h2><p class="lede" style="margin:12px 0 18px">Donations cover competition travel, catering and the raffles that make events worth showing up to. Every dollar goes back into the chapter.</p><div class="btn-row"><button type="button" class="btn btn-navy btn-lg" data-donate>${ico('i-heart')} Donate</button>${mailBtn('Sponsoring AMA at VCU', 'Sponsor an event', 'btn btn-ghost')}</div></div>
-        <div class="reveal d2"><div class="frame"><img src="assets/img/gallery/mw-14.webp" alt="Members outside Snead Hall"></div></div>
+        <div class="reveal"><p class="eyebrow">Donate</p><h2 class="h-lg">Support the <em class="serif">chapter.</em></h2><p class="lede" style="margin:12px 0 18px">Donations cover competition travel, catering and event costs. Every dollar goes back into the chapter.</p><div class="btn-row"><button type="button" class="btn btn-navy btn-lg" data-donate>${ico('i-heart')} Donate</button></div></div>
+        <div class="reveal d2"><div class="frame"><img src="assets/img/photos/donate-event.webp" alt="The chapter at an awards night"></div></div>
       </div>
     </section>
     <section class="section s-cream" id="socials">
@@ -927,9 +956,15 @@
       const btn = $('button[type=submit]', form);
       const subject = kind === 'accomplishment' ? 'Accomplishment: ' + fields.what : kind === 'idea' ? 'Event idea: ' + fields.title : 'Feedback: ' + fields.type;
       const body = Object.entries(fields).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)}: ${v || '(blank)'}`).join('\n');
+      const okMsg = kind === 'accomplishment' ? 'Submitted. The board reviews entries before they post.' : 'Sent to the board. Thank you.';
+      if (CMS && CMS.siteSubmit) {
+        btn.disabled = true;
+        try { await CMS.siteSubmit(kind, fields); form.reset(); toast(okMsg); btn.disabled = false; return; } catch (err) { /* no backend here: fall through */ }
+        btn.disabled = false;
+      }
       if (CMS && CMS.config.formEndpoint) {
         btn.disabled = true;
-        try { await CMS.submit(kind, fields); form.reset(); toast(kind === 'accomplishment' ? 'Submitted. The board reviews entries before they post.' : 'Sent to the board. Thank you.'); }
+        try { await CMS.submit(kind, fields); form.reset(); toast(okMsg); }
         catch (err) { toast('Could not send just now. Opening an email instead.'); location.href = `mailto:${D.org.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`; }
         btn.disabled = false; return;
       }
@@ -975,8 +1010,7 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDonate(); lbClose(); closeMenu(); $$('.nav-group.open').forEach(g => g.classList.remove('open')); } if (!lb.hidden) { if (e.key === 'ArrowRight') lbShow(lbI + 1); if (e.key === 'ArrowLeft') lbShow(lbI - 1); } });
   $('#donateOpts').innerHTML = [
     ['Venmo', 'Kayla Lee, chapter president', D.links.venmo, '#3D95CE', 'V'],
-    ['Cash App', 'Candace Heath, director of finance', D.links.cashapp, '#00C244', '$'],
-    ['Email about sponsoring', 'Companies and alumni: sponsor an event or the ICC trip', `mailto:${D.org.email}?subject=Sponsoring AMA at VCU`, '#2E456F', '@']
+    ['Cash App', 'Candace Heath, director of finance', D.links.cashapp, '#00C244', '$']
   ].map(([t, d, h, c, l]) => `<a href="${h}" ${h.startsWith('http') ? 'target="_blank" rel="noopener"' : ''}><span class="ico" style="background:${c}">${l}</span><div>${t}<span>${d}</span></div></a>`).join('');
   $('#donateMail').href = `mailto:${D.org.email}`;
   $('#footSocial').innerHTML = socialRow(); $('#mmSocial').innerHTML = socialRow();

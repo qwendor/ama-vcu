@@ -3,7 +3,8 @@
    Reads window.AMA.integrations. Everything is optional: with nothing
    configured the site shows js/data.js unchanged. See docs/ADMIN-GUIDE.md.
 
-   ?cms=0     skip every integration
+   ?cms=0     skip every integration (also ignores content saved in /admin)
+   ?preview=1 live preview frame used by /admin
    ?cms=fresh ignore the ten-minute cache
    ?cms=mock  read the sample CSVs in tools/cms-sample/ (local testing)
    ===================================================================== */
@@ -257,13 +258,127 @@ window.AMA_CMS = (() => {
     return true;
   }
 
+
+  /* ---------- content saved in the /admin editor ----------
+     Arrives inside <script id="__content"> (functions/_middleware.js) on the live site, or is fetched
+     from the live site when this copy runs somewhere else (the GitHub Pages mirror). */
+  const HOME = 'https://amavcu.pages.dev';
+  const host = location.hostname;
+  const LOCAL = host === 'localhost' || host === '127.0.0.1' || location.protocol === 'file:';
+  const API_BASE = (host.endsWith('.pages.dev') || LOCAL) ? '' : HOME;
+  const PREVIEW = qs.get('preview') === '1';
+  const PRISTINE = JSON.parse(JSON.stringify(D));
+  const clone = o => JSON.parse(JSON.stringify(o));
+  let mediaBase = '';
+  const fix = v => (mediaBase && typeof v === 'string' && v.startsWith('/media/')) ? mediaBase + v : v;
+  const srcOf = v => fix(typeof v === 'string' ? v : (v && v.src) || '');
+  const smOf = v => fix((v && typeof v === 'object' && v.sm) || srcOf(v));
+  const str = v => clean(v);
+  const num = v => (v === '' || v == null || isNaN(+v)) ? null : +v;
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+
+  function applySaved(c) {
+    if (!c || typeof c !== 'object') return false;
+    const S = c.settings || {};
+    const setStr = (obj, k, v) => { if (str(v)) obj[k] = str(v); };
+    setStr(D.org, 'tagline', S.tagline); setStr(D.org, 'blurb', S.blurb); setStr(D.org, 'email', S.email);
+    if (num(S.dues) != null) { D.membership.dues = num(S.dues); D.membership.duesMax = 0; }
+    setStr(D.membership, 'duesNote', S.duesNote);
+    if (num(S.activePoints)) D.membership.activePoints = num(S.activePoints);
+    ['instagram', 'tiktok', 'linkedin', 'linktree', 'groupme', 'ramsconnect', 'ramsconnectJoin', 'ramsconnectEvents', 'becomeMember', 'iccApplication', 'accomplishmentForm', 'motApplication', 'boardApplication', 'alumniLinkedIn', 'donate', 'venmo', 'cashapp', 'googleCalendar', 'newsletterArchive'].forEach(k => { if (k in S) D.links[k] = str(S[k]); });
+    if ('videoYoutube' in S) D.video.youtube = str(S.videoYoutube);
+    if ('videoInstagram' in S) D.video.instagram = str(S.videoInstagram);
+    if ('heroVideo' in S) D.hero.video = fix(str(S.heroVideo));
+    if (typeof S.showLocations === 'boolean') C.showLocations = S.showLocations;
+    setStr(D.icc, 'short', S.iccShort); setStr(D.icc, 'city', S.iccCity); setStr(D.icc, 'dates', S.iccDates); setStr(D.icc, 'about', S.iccAbout);
+    if (toISO(S.iccStart)) D.icc.start = toISO(S.iccStart) + 'T09:00:00-05:00';
+    if (toISO(S.iccEnd)) D.icc.end = toISO(S.iccEnd);
+    setStr(D.icc.fundraising, 'head', S.fundHead); setStr(D.icc.fundraising, 'body', S.fundBody);
+    if (Array.isArray(c.events)) D.events = c.events.filter(e => str(e.title)).map((e, i) => ({
+      id: e.id || 'ev-' + i, title: str(e.title), date: toISO(e.date), end: toISO(e.end), time: str(e.time), type: D.eventTypes[e.type] ? e.type : 'event',
+      series: str(e.series), place: str(e.place), blurb: str(e.blurb), img: srcOf(e.img), points: num(e.points) || 0, rsvp: str(e.rsvp),
+      tba: !!e.tba || !toISO(e.date), cta: str(e.ctaUrl) ? { label: str(e.ctaLabel) || 'Learn more', url: str(e.ctaUrl) } : null }));
+    if (Array.isArray(c.newsletters)) D.newsletter.issues = c.newsletters.filter(n => str(n.month)).map(n => ({ month: str(n.month), date: toISO(n.date), file: srcOf(n.file), link: str(n.link), blurb: str(n.blurb) })).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    if (c.leaderboard && Array.isArray(c.leaderboard.members)) {
+      const ms = c.leaderboard.members.filter(m => str(m.name)).map(m => ({ name: str(m.name), pts: num(m.pts) || 0 }));
+      if (ms.length) { D.leaderboard.members = ms; D.leaderboard.demo = false; }
+      if (toISO(c.leaderboard.updated)) D.leaderboard.updated = toISO(c.leaderboard.updated);
+    }
+    if (Array.isArray(c.accomplishments)) D.accomplishments = c.accomplishments.filter(a => str(a.who) && str(a.what) && a.approved !== false)
+      .map(a => ({ who: str(a.who), what: str(a.what), where: str(a.where), when: str(a.when), cat: D.accomplishmentCats[a.cat] ? a.cat : 'other' }))
+      .concat(PRISTINE.accomplishments.filter(a => a.placeholder));
+    if (Array.isArray(c.albums)) D.albums = c.albums.filter(a => str(a.name)).map(a => ({ slug: slugify(a.slug || a.name), name: str(a.name), date: toISO(a.date), blurb: str(a.blurb), cover: srcOf(a.cover),
+      photos: (a.photos || []).map(p => ({ src: srcOf(p), sm: smOf(p), w: p.w || 0, h: p.h || 0, alt: str(p.alt) })).filter(p => p.src) }));
+    if (Array.isArray(c.board)) D.board = c.board.filter(m => str(m.name)).map(m => ({ slug: slugify(m.slug || m.name), name: str(m.name), role: str(m.role), year: str(m.year), major: str(m.major), goal: str(m.goal), fun: str(m.fun), linkedin: str(m.linkedin), bio: str(m.bio), photo: srcOf(m.photo), photoSm: smOf(m.photo) }));
+    if (c.advisor && typeof c.advisor === 'object') D.org.advisor = { ...D.org.advisor, ...Object.fromEntries(Object.entries(c.advisor).filter(([k, v]) => k !== 'photo' && typeof v === 'string')), photo: srcOf(c.advisor.photo) };
+    if (c.mot && typeof c.mot === 'object') {
+      const M = c.mot, A = D.agency;
+      setStr(A, 'status', M.status); setStr(A, 'applyUrl', M.applyUrl);
+      const people = l => (l || []).filter(p => str(p.name)).map(p => ({ name: str(p.name), title: str(p.title), expertise: str(p.expertise), photo: srcOf(p.photo), linktree: str(p.linktree), bio: str(p.bio) }));
+      const orgs = l => (l || []).filter(x => str(x.name)).map(x => ({ name: str(x.name), note: str(x.note), url: str(x.url) }));
+      if (Array.isArray(M.consultants)) A.consultants = people(M.consultants);
+      if (Array.isArray(M.leadership) && M.leadership.length) A.leadership = people(M.leadership);
+      if (Array.isArray(M.concentrations)) A.concentrations = M.concentrations.filter(x => str(x.t)).map(x => ({ t: str(x.t), d: str(x.d) }));
+      if (Array.isArray(M.clients)) A.clients = orgs(M.clients);
+      if (Array.isArray(M.partners)) A.partners = orgs(M.partners);
+    }
+    if (Array.isArray(c.alumni)) D.alumni.stories = c.alumni.filter(a => str(a.name)).map(a => ({ name: str(a.name), year: str(a.year), now: str(a.now), story: str(a.story), url: str(a.url), photo: srcOf(a.photo) }));
+    if (Array.isArray(c.posts)) D.posts = c.posts.filter(p => str(p.title)).map(p => ({ slug: slugify(p.slug || p.title), title: str(p.title), date: toISO(p.date) || todayISO(), tag: str(p.tag) || 'ICYMI', dek: str(p.dek), cover: srcOf(p.cover), thumb: smOf(p.cover), instagram: str(p.instagram),
+      body: Array.isArray(p.body) ? p.body : String(p.body || '').split(/\n\s*\n/).map(s => s.trim()).filter(Boolean), gallery: Array.isArray(p.gallery) ? p.gallery : [] })).sort((a, b) => b.date.localeCompare(a.date));
+    if (Array.isArray(c.faq) && c.faq.length) D.faq = c.faq.filter(f => str(f.q)).map(f => ({ q: str(f.q), a: str(f.a), link: str(f.link), linkLabel: str(f.linkLabel) }));
+    D.saved = true;
+    return true;
+  }
+  function resetToPristine() {
+    Object.keys(PRISTINE).forEach(k => { D[k] = clone(PRISTINE[k]); });
+    C.showLocations = !!(D.integrations && D.integrations.showLocations);
+  }
+  function injected() {
+    try { const el = document.getElementById('__content'); const t = el && el.textContent.trim(); return t ? JSON.parse(t) : null; } catch (e) { return null; }
+  }
+  const INJECTED = MODE === '0' ? null : injected();
+  if (INJECTED) { applySaved(INJECTED); log('saved content applied (injected)'); }
+
+  async function loadSaved() {
+    if (INJECTED || MODE === '0' || !API_BASE) return false;
+    try {
+      const r = await fetch(API_BASE + '/api/content', { mode: 'cors' });
+      if (!r.ok) return false;
+      const data = await r.json();
+      if (!data || !data.content) return false;
+      mediaBase = data.mediaBase || API_BASE;
+      return applySaved(data.content);
+    } catch (e) { log('saved content skipped', e.message); return false; }
+  }
+
+  /* website forms -> the editor's inbox (falls back to the sheet script or email when unreachable) */
+  async function siteSubmit(form, fields) {
+    const fd = new FormData(); fd.append('form', form); fd.append('page', location.href);
+    Object.entries(fields).forEach(([k, v]) => fd.append(k, v == null ? '' : v));
+    const r = await fetch(API_BASE + '/api/submit', { method: 'POST', body: fd, mode: 'cors' });
+    if (!r.ok) throw new Error('submit ' + r.status);
+    return true;
+  }
+
+  /* live preview inside /admin: the editor posts its draft, the page redraws with it */
+  if (PREVIEW) {
+    addEventListener('message', e => {
+      if (e.origin !== location.origin || !e.data || e.data.type !== 'ama:draft') return;
+      resetToPristine(); applySaved(e.data.content || {});
+      const T = window.AMA_TEST; if (!T) return;
+      if (e.data.hash && e.data.hash !== location.hash) location.hash = e.data.hash;
+      setTimeout(() => T.render(true), 30);
+    });
+    addEventListener('load', () => { if (parent !== window) parent.postMessage({ type: 'ama:ready' }, location.origin); });
+  }
+
   /* ---------- main ---------- */
   let promise = null;
   function load() {
     if (promise) return promise;
     promise = (async () => {
       if (MODE === '0') return { changed: false };
-      let changed = false;
+      let changed = await loadSaved();
       if (C.sheetId || MODE === 'mock') {
         const names = ['Settings', 'Events', 'Leaderboard', 'Accomplishments', 'Albums', 'Photos', 'Opportunities', 'Alumni', 'Consultants', 'Concentrations', 'Clients', 'Newsletter'];
         const res = await Promise.all(names.map(tab));
@@ -277,5 +392,5 @@ window.AMA_CMS = (() => {
     return promise;
   }
 
-  return { load, albumPhotos, submit, config: C, parseCSV, toISO, img };
+  return { load, albumPhotos, submit, siteSubmit, applySaved, config: C, parseCSV, toISO, img, apiBase: API_BASE, preview: PREVIEW };
 })();

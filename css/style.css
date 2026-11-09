@@ -652,3 +652,14 @@ a.frame{display:block}
 @media (max-width:560px){.member.advisor{grid-template-columns:1fr}.member.advisor .frame{aspect-ratio:4/3;min-height:0}}
 @media (max-width:560px){.podium{gap:8px}.pod{padding:14px 6px 12px;min-width:0}.pod .av{width:60px;height:60px}.pod.p1 .av{width:76px;height:76px}.pod .pts{font-size:1rem}.pod b{font-size:.86rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 .textlink.back .ic{transform:rotate(180deg)}
+
+/* ---------- newsletter issues uploaded in the editor ---------- */
+.pdf-frame{border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line);background:#fff}
+.pdf-frame iframe{width:100%;height:720px;border:0;display:block}
+@media (max-width:640px){.pdf-frame iframe{height:440px}}
+.foot-admin{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25)}
+.foot-admin:hover{color:var(--gold)}
+
+.faq details .faq-link{display:inline-flex;margin:-6px 0 14px;font-size:.8rem}
+.mot-group{max-width:760px;margin-bottom:26px}
+.mot-group img{aspect-ratio:4/3}

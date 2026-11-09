@@ -1,121 +1,58 @@
-# AMA at VCU website: admin guide
+# AMA at VCU website: how the board updates it
 
-How the board keeps the site current without touching code. Written for whoever holds the "website" job on the board; the one-time setup needs about 30 minutes from someone comfortable with Google accounts.
+Everything on the site can be changed from the editor at **https://amavcu.pages.dev/admin**. No code, no Claude, works on a laptop or a phone. There is also a small "Board login" link at the bottom of every page.
 
-The site reads from four places, in this order of convenience:
+## Getting in
 
-| Source | What it controls | Who edits it |
-|---|---|---|
-| Google Sheet (`AMA website content`) | Events, points leaderboard, accomplishments, gallery albums, opportunities, alumni, MoT consultants and clients, newsletter archive, settings like dues and application links | Any board member with the sheet link |
-| Google Calendar (the chapter calendar) | Upcoming events, automatically | Whoever runs the calendar |
-| Google Drive folders | Photos for each gallery album | Social Media Chair |
-| `js/data.js` in the code | Everything else: page copy, bios, board headshots, FAQ, blog posts | One person, through GitHub's web editor |
+1. Go to https://amavcu.pages.dev/admin.
+2. **First time only:** type the setup code Cooper gave the chapter, then choose the board password (10 characters or more). This is one shared password for the board; keep it in the board drive, not in a group chat.
+3. After that, just type the password. A device stays signed in for 30 days.
 
-Nothing is required. Anything left blank keeps what is built into the site.
+Forgot the password? On the sign-in screen press "Forgot it, or first time here?" and use the setup code again to choose a new one. Changing the password signs every other device out.
 
-## One-time setup
+## How the editor works
 
-### 1. The Google Sheet
+- **Left:** the parts of the site. **Middle:** the boxes you type in. **Right:** a live preview that updates as you type (switch it to phone size with the button above it).
+- **Nothing goes public until you press Save** (top right). The note next to it tells you when changes are waiting. Ctrl+S saves too.
+- The first time anyone opens the editor it is filled with what is on the site today. Change anything, press Save, and from then on the site shows what is saved here.
+- **History** keeps the last 25 saves. Made a mess? Bring an older version back, then Save. You can also download a backup file.
 
-1. Open `docs/AMA-website-content-template.xlsx` (also at https://amavcu.pages.dev/docs/AMA-website-content-template.xlsx). Upload it to the chapter Google Drive and open it with Google Sheets (File > Save as Google Sheets).
-2. Share it: Share > General access > **Anyone with the link: Viewer**. Give board editors edit access by email.
-3. Copy the id from the URL: `https://docs.google.com/spreadsheets/d/`**THIS-PART**`/edit`.
-4. In `js/data.js`, set `integrations.sheetId: "THIS-PART"`.
+## Common jobs
 
-The README tab inside the sheet explains every column. Keep the header rows exactly as they are. Delete the example rows once real ones exist.
+**Add an event.** Events, then "Add event". Title, date, time, type, a line of description, points if it earns any, and the RamsConnect link so the Register button goes straight to it. Upload the flyer if there is one. Past events stay on the Events page as recaps; edit or delete them the same way.
 
-### 2. A Google API key (for Calendar sync and Drive albums)
+**Post the newsletter.** Newsletter, then "Add issue". Name it ("November 2026"), set the date, upload the PDF (or paste a link to the web version), add a two-line summary. The newest issue shows on the Newsletter page and in the home page link; older issues become the archive.
 
-1. Go to https://console.cloud.google.com, create a project called `AMA at VCU website`.
-2. APIs & Services > Library: enable **Google Calendar API** and **Google Drive API**.
-3. APIs & Services > Credentials > Create credentials > **API key**.
-4. Edit the key: Application restrictions > Websites > add `https://amavcu.pages.dev/*` and `https://qwendor.github.io/*` (and the custom domain when there is one). API restrictions > restrict to Calendar and Drive.
-5. In `js/data.js`, set `integrations.googleApiKey`.
+**Update points.** Points leaderboard. Paste the names and points from your spreadsheet into the big box (one person per line) and the list fills itself, or edit rows by hand. Set the "Last updated" date.
 
-The key only reads public calendars and public folders, so it is safe to have in the page.
+**Approve an accomplishment.** When a member submits one on the website it lands in **Inbox**. Press "Add to the site", check the wording, make sure "Show on the site" is on, Save. Ideas and feedback from the website land in the Inbox too.
 
-### 3. Google Calendar sync
+**Add photos.** Gallery, then "Add album" (or open an album). Name it, set the date, press "Add photos" and pick as many as you like. They are resized for you, so phone photos are fine. The first photo is the cover unless you choose one.
 
-1. Open Google Calendar > the chapter calendar > Settings and sharing.
-2. Access permissions: tick **Make available to public** (See all event details).
-3. Copy the **Calendar ID** (ends in `@group.calendar.google.com`) into `integrations.calendarId`.
+**New board, new year.** Executive board: open each person, change the name, role, year, major, goal, fun fact, LinkedIn link, and upload the headshot (a portrait works best). Use the arrows to reorder. The same section has the faculty advisor.
 
-From then on every calendar event shows on the site within about ten minutes. Tips:
+**Marketers of Tomorrow.** Status line, application link, consultants (headshot, role, expertise, Linktree, bio), leadership, services, clients and partners.
 
-- The event title is the headline. The description is the blurb.
-- Put a tag in the description to colour-code it: `#coffee`, `#speaker`, `#pro`, `#social`, `#competition`, `#service`, `#meeting`, `#deadline`.
-- Paste the RamsConnect event link in the description and the site's "Register on RamsConnect" button goes straight to it.
-- Rooms and addresses stay hidden on upcoming events (people get them on RamsConnect). To show them, set `show_locations` to `yes` in the Settings tab of the sheet.
-- Events typed into the Events tab of the sheet work the same way and can carry a flyer image and point value. The two lists merge; duplicates (same date and title) are shown once.
+**Blog.** Blog, then "Add post". Title, date, tag, one-line teaser, cover photo, the text (leave an empty line between paragraphs) and the Instagram link if there is one. The three newest posts also show on the home page.
 
-### 4. Website forms (accomplishment submissions, idea box, feedback)
+**Words, dues, links, ICC dates.** Text and links: the homepage tagline and intro, dues and points, every application and social link, the recruitment video, a homepage background video, whether rooms show on upcoming events, and the ICC name, city, dates and countdown date. **FAQ** has its own section.
 
-With this step the three forms on the site write straight into the Google Sheet and email the chapter. Without it, they open the visitor's email app with everything pre-filled.
+## Good to know
 
-1. In the Google Sheet: Extensions > **Apps Script**. Delete the sample code and paste the script at the bottom of this guide. Save.
-2. Deploy > New deployment > type **Web app**. Execute as: **Me**. Who has access: **Anyone**. Deploy, approve the permissions, copy the web app URL.
-3. In `js/data.js`, set `integrations.formEndpoint` to that URL.
+- Photos are resized on upload; JPG and PNG work best. If an iPhone photo will not upload, export it as JPG first. One file can be up to 12 MB (a newsletter PDF, for example).
+- Deleting something is undoable from History after you save.
+- The site at https://qwendor.github.io/ama-vcu/ is a mirror of the same content; the editor only runs at amavcu.pages.dev.
+- Submissions from the website forms (accomplishments, ideas, feedback) go to the Inbox. If the board also wants them by email, Cooper can switch that on.
 
-Submissions land in the `Accomplishments`, `Ideas` and `Feedback` tabs (the script creates the last two). An accomplishment only appears on the site once someone types `yes` in its `approved` cell.
+## For whoever maintains the code (Cooper)
 
-### 5. Hosting and code edits
+- Code: GitHub `qwendor/ama-vcu`. Static site at the repo root, Cloudflare Pages Functions in `functions/` (login, saving, uploads, inbox, content injection), shared helpers in `src/lib.js`, editor in `admin/` + `js/admin.js` + `css/admin.css`. `wrangler.toml` binds the KV namespace `AMA_SITE` as `SITE`; the setup code is the Pages secret `SETUP_CODE`.
+- Deploy: commit, then `python tools/publish.py`. It pushes to GitHub and deploys to Cloudflare in the layout the Functions need (site in `public/`, `functions/` and `src/` beside it). Deploys never touch saved content, uploads or the password, which live in KV.
+- Local: `python tools/dev_admin.py` (launch config `ama-admin`, port 4306) runs the site with its backend on a local KV; the local setup code is in `.dev.vars`. `tools/dev_admin.py --build-only` just rebuilds `.dist/`.
+- Content model: the editor saves one JSON document (`content` in KV). `functions/_middleware.js` injects it into `index.html` as `<script id="__content">`; `js/cms.js` merges it over `js/data.js` (`applySaved`). To add an editable field: one line in `SECTIONS` in `js/admin.js`, read the same key in `cms.js`.
+- Test hooks: `?cms=0` (ignore saved content), `?preview=1` (editor preview frame), `?fx=0` (no motion), `?now=YYYY-MM-DD` (another day), `?debug=1`.
+- Reset the setup code: `wrangler pages secret put SETUP_CODE --project-name amavcu` (reads the new code from stdin), then update `SETUP-CODE.txt`.
 
-The site is a static folder of files deployed from the GitHub repository `qwendor/ama-vcu` to Cloudflare Pages (https://amavcu.pages.dev) and GitHub Pages (https://qwendor.github.io/ama-vcu/).
+## Optional: Google Sheet instead of the editor
 
-- For text, bios, headshots and anything in `js/data.js`: edit the file on GitHub in the browser (open the file, pencil icon, commit). GitHub Pages updates by itself in a minute or two. Cloudflare Pages updates when Cooper runs `python tools/publish.py`, or automatically once the Pages project is connected to the repository (Cloudflare dashboard > Pages > amavcu > Settings > Builds > connect to GitHub). Connecting it is the recommended final step so nobody depends on one laptop.
-- Board headshots go in `assets/img/board/<slug>.webp` (portrait, about 1200 px tall). The advisor's goes in `assets/img/board/advisor.webp` and `org.advisor.photo` points at it.
-- A campus b-roll video: upload the mp4 somewhere public (Drive does not stream well; YouTube does not work as a background; Cloudflare R2 or the repo itself under 20 MB are fine) and set `hero_video` in the sheet's Settings tab.
-
-## Everyday updates (no code)
-
-| Task | Where |
-|---|---|
-| Add or change an event | Google Calendar, or a row in the Events tab |
-| Update points | Leaderboard tab: name and points. Set `leaderboard_updated` in Settings |
-| Approve a member's accomplishment | Accomplishments tab: type `yes` in the approved column |
-| Add a gallery album | Make a Drive folder for the event, share it as Anyone with the link, drop the photos in, add a row to the Albums tab with the folder link. Or list photo links one per row in the Photos tab |
-| Change the album cover | `cover` column: a Drive share link of the photo |
-| Add MoT consultants, leadership, clients | Consultants, Concentrations and Clients tabs |
-| Add alumni stories | Alumni tab |
-| Newsletter archive | Newsletter tab: month, date, link |
-| Dues, application links, MoT status, TikTok, alumni group, recruitment video | Settings tab |
-
-Changes show within ten minutes. To see them immediately, open the site with `?cms=fresh` added to the address, or do a hard refresh.
-
-## Checking things
-
-- `https://amavcu.pages.dev/?cms=0` shows the site with every integration switched off (what is built in).
-- `?debug=1` prints what was loaded from each source in the browser console.
-- `?now=2027-04-01` previews the site as if it were another day (events sort and expire by date).
-- `?fx=0` turns off motion for screenshots.
-
-## Apps Script (paste into the sheet's Apps Script editor)
-
-```javascript
-const NOTIFY = 'amavcuchapter@gmail.com';
-const TABS = {
-  accomplishment: ['Accomplishments', ['name', 'what', 'where', 'when', 'category', '', 'email', 'feature']],
-  idea: ['Ideas', ['title', 'why', 'name']],
-  feedback: ['Feedback', ['type', 'text', 'name']]
-};
-
-function doPost(e) {
-  const p = e.parameter || {};
-  const def = TABS[p.form] || TABS.feedback;
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheetByName(def[0]);
-  if (!sheet) {
-    sheet = ss.insertSheet(def[0]);
-    sheet.appendRow(def[1].map(h => h || 'approved').concat(['submitted']));
-  }
-  const row = def[1].map(k => (k ? String(p[k] || '') : '')).concat([new Date()]);
-  sheet.appendRow(row);
-  MailApp.sendEmail(NOTIFY, 'Website ' + (p.form || 'form') + ': ' + (p.what || p.title || p.type || ''),
-    Object.keys(p).map(k => k + ': ' + p[k]).join('\n') + '\n\nRow added to the ' + def[0] + ' tab.');
-  return ContentService.createTextOutput('ok');
-}
-
-function doGet() { return ContentService.createTextOutput('AMA at VCU form endpoint'); }
-```
-
-The `accomplishment` row leaves the `approved` cell blank so nothing posts until the board says so.
+The site can also read a Google Sheet (events, points, accomplishments, albums, alumni, consultants, newsletter archive, settings), a public Google Calendar and Drive folders, through `integrations` at the top of `js/data.js`. The editor replaces the need for it, so this path is off by default; `tools/make_sheet_template.py` builds the sheet template if the board ever prefers a spreadsheet.

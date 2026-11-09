@@ -42,7 +42,7 @@ window.AMA = {
   links: {
     instagram: "https://www.instagram.com/amavcu/",
     linkedin: "https://www.linkedin.com/company/amavcu",
-    tiktok: "https://linktr.ee/AMAVCUChapter",            // PLACEHOLDER: TikTok handle not public yet; the Linktree lists it
+    tiktok: "https://www.tiktok.com/@amavcu",
     linktree: "https://linktr.ee/AMAVCUChapter",
     groupme: "https://web.groupme.com/join_group/116731081/YzRrWt4Q",
     ramsconnect: "https://ramsconnect.vcu.edu/amavcu/",
@@ -72,16 +72,14 @@ window.AMA = {
 
   /* Home page background. Set `video` to a campus b-roll mp4 to use it instead of
      the photos (PLACEHOLDER: the board wants real footage, Engineering or campus).
-     Photos come from Wikimedia Commons; keep the credits with them. */
+     Photos come from Wikimedia Commons; keep the credits with them. (Engineering building photos were removed at the board's request.) */
   hero: {
     video: "",
     secondsPerSlide: 9,
     slides: [
-      { src: "assets/img/campus/engineering-west.webp", alt: "VCU Engineering West Hall", credit: "VCU Engineering", license: "CC BY-SA 4.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Engineering_West_Hall.jpg" },
-      { src: "assets/img/campus/engineering-glass.webp", alt: "The glass facade of the College of Engineering", credit: "Alan Levine", license: "CC BY 2.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Engineering_Building_Has_Their_Bicycles_On_(21576925462).jpg" },
       { src: "assets/img/campus/compass.webp", alt: "The Compass and Cabell Library", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Cabell_Library_by_Jeff_Auth.jpg" },
       { src: "assets/img/campus/snead-hall.webp", alt: "Snead Hall, home of the School of Business", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Snead_Hall_by_Jeff_Auth.JPG" },
-      { src: "assets/img/campus/engineering-east.webp", alt: "Engineering East Hall", credit: "JuxtaposedJacob", license: "CC0", url: "https://commons.wikimedia.org/wiki/File:VCU-College-of-Engineering.png" },
+      { src: "assets/img/campus/monroe-park.webp", alt: "Monroe Park Campus", credit: "Packer1028", license: "CC0", url: "https://commons.wikimedia.org/wiki/File:Monroe_Park_Campus.jpg" },
       { src: "assets/img/campus/vcu-letters.webp", alt: "The VCU letters at Shafer Court", credit: "Jeff Auth", license: "CC BY 3.0", url: "https://commons.wikimedia.org/wiki/File:VCU_Shafer_Court_letters_by_Jeff_Auth.jpg" }
     ]
   },
@@ -111,20 +109,20 @@ window.AMA = {
   },
 
   membership: {
-    dues: 60, duesMax: 0,                        // confirmed by the board 2026-10-29
-    duesNote: "Dues cover AMA national membership plus chapter catering, supplies and events.",
+    dues: 60, duesMax: 0, duesNational: 35, duesChapter: 25,   // confirmed by the board 2026-10-29 / 2026-11-08
+    duesNote: "$35 of that is your AMA national membership and $25 goes to the chapter, paid through Venmo. Dues cover catering, supplies and events.",
     duesDeadline: "October 1 (rolling, join any time)",
     activePoints: 200,
-    pointsNote: "Every event earns points. Reach 200 and you are an Active Member with a say in the chapter.",
+    pointsNote: "Every event earns points. Reach 200 and you are an Active Member.",
     knownPoints: [
       { what: "Community service (Richmond SPCA volunteer shift)", pts: 15 },
       { what: "Reach Active Member status", pts: 200, isGoal: true }
     ],
     steps: [
       { t: "Join on RamsConnect", d: "Every event registration runs through RamsConnect, so this comes first." },
-      { t: "Pay dues", d: "$60 for the year. Financial need? Email the board and we will work it out." },
+      { t: "Pay dues", d: "$60 for the year: $35 to AMA national and $25 to the chapter, paid through Venmo. Financial need? Email the board and we will work it out." },
       { t: "Hop in the GroupMe", d: "Reminders, polls, last-minute rides to coffee chats." },
-      { t: "Show up", d: "Every event earns points. Hit 200 and you are an Active Member with a say in the chapter." }
+      { t: "Show up", d: "Every event earns points. Hit 200 and you are an Active Member." }
     ]
   },
 
@@ -139,26 +137,26 @@ window.AMA = {
   ],
 
   /* Executive board. `bio` is optional (PLACEHOLDER: updated bios from the board).
-     `linkedin` empty = the site links a LinkedIn search for the name. */
+     `linkedin` empty = the site links a LinkedIn search for the name (all nine are filled in). */
   board: [
     { slug: "kayla-lee", name: "Kayla Lee", role: "President", year: "Senior", major: "Marketing / Sales",
-      goal: "To use creativity and passion in marketing.", fun: "I love pickle ball!", linkedin: "", bio: "" },
+      goal: "To use creativity and passion in marketing.", fun: "I love pickle ball!", linkedin: "https://www.linkedin.com/in/kayla-lee13", bio: "" },
     { slug: "bryce-langhorne", name: "Bryce Langhorne", role: "Vice President of Events & Operations", year: "Senior", major: "Marketing",
-      goal: "Product marketing.", fun: "I'm really into bonsai trees!", linkedin: "", bio: "" },
+      goal: "Product marketing.", fun: "I'm really into bonsai trees!", linkedin: "https://www.linkedin.com/in/bryce-langhorne-b2854728b/", bio: "" },
     { slug: "candace-heath", name: "Candace Heath", role: "Director of Finance", year: "Junior", major: "Finance",
-      goal: "Financial analyst.", fun: "I am a self-taught hair stylist!", linkedin: "", bio: "" },
+      goal: "Financial analyst.", fun: "I am a self-taught hair stylist!", linkedin: "https://www.linkedin.com/in/candace-heath-e1/", bio: "" },
     { slug: "heather-pham", name: "Heather Pham", role: "Director of Community Outreach", year: "Senior", major: "Marketing / Sales",
-      goal: "Work within the corporate beauty industry or own my own business.", fun: "I love to cook and bake!", linkedin: "", bio: "" },
+      goal: "Work within the corporate beauty industry or own my own business.", fun: "I love to cook and bake!", linkedin: "https://www.linkedin.com/in/heather-pham777/", bio: "" },
     { slug: "ceddy-polk", name: "Ceddy Polk", role: "Director of Membership", year: "Junior", major: "Marketing / Management",
-      goal: "Working in media and PR for high-level clients.", fun: "Mozzarella sticks are my favorite food!", linkedin: "", bio: "" },
+      goal: "Working in media and PR for high-level clients.", fun: "Mozzarella sticks are my favorite food!", linkedin: "https://www.linkedin.com/in/ceddypolk/", bio: "" },
     { slug: "elizabeth-mccormack", name: "Elizabeth McCormack", role: "Director of Communications", year: "Senior", major: "Marketing / Sales",
-      goal: "Entertainment or sports marketing.", fun: "My favorite hobby is skiing!", linkedin: "", bio: "" },
+      goal: "Entertainment or sports marketing.", fun: "My favorite hobby is skiing!", linkedin: "https://www.linkedin.com/in/elizabeth-mccormack-vcu/", bio: "" },
     { slug: "grace-bradbury", name: "Grace Bradbury", role: "Director of Social Media", year: "Sophomore", major: "Marketing / Sales",
-      goal: "Creative director at a marketing or advertising firm.", fun: "I write my own music.", linkedin: "", bio: "" },
+      goal: "Creative director at a marketing or advertising firm.", fun: "I write my own music.", linkedin: "https://www.linkedin.com/in/gracebradburymarketing/", bio: "" },
     { slug: "anisa-chowdhury", name: "Anisa Chowdhury", role: "Director of Fundraising", year: "Junior", major: "Finance",
-      goal: "Financial underwriter.", fun: "I am trilingual!", linkedin: "", bio: "" },
+      goal: "Financial underwriter.", fun: "I am trilingual!", linkedin: "https://www.linkedin.com/in/anisa-c-78058a3b5/", bio: "" },
     { slug: "giulia-da-rocha", name: "Giulia da Rocha", role: "Senior Advisor", year: "Senior", major: "Marketing / Management & Entrepreneurship",
-      goal: "Creative project manager.", fun: "I have a radio show on WVCW.org!", linkedin: "", bio: "" }
+      goal: "Creative project manager.", fun: "I have a radio show on WVCW.org!", linkedin: "https://www.linkedin.com/in/giulia-da-rocha/", bio: "" }
   ],
 
   /* Chapter leadership page (Members > Leadership). */
@@ -390,57 +388,51 @@ window.AMA = {
     ]
   },
 
-  /* Blog. `instagram` is an optional link to the matching post or photo dump. */
-  posts: [
-    { slug: "marketing-week-2026", date: "2026-10-12", tag: "ICYMI", title: "Marketing Week, recapped",
-      dek: "Five days, six events, one very competitive trivia night.",
-      cover: "assets/img/gallery/mw-04.webp", thumb: "assets/img/gallery/t/mw-04.webp", instagram: "",
-      body: [
-        "Marketing Week kicked off Monday with the AMA x Ad Club Marketing Competition in Snead Hall. Teams got a brief, a clock and a room full of people who wanted to win. May the best brief win, and it did: certificates went home with the top team.",
-        "Tuesday was Mocktails & Marketing Trivia. The mocktail bar was a hit, the trivia was harder than anyone expected, and a few tables are still disputing the final round.",
-        "Wednesday, Marketing YOU turned the Snead Hall Courtyard into a photo studio. Build your brand, one headshot at a time. If you got one, update your LinkedIn.",
-        "Thursday was Social Media Unfiltered: a morning with AMA Richmond on The Influencer Effect at The Workshop by T&D, then an evening talk from Lucas Lee, Social Media Manager and Graphic Designer at Nightingale Ice Cream Sandwiches.",
-        "Friday closed it out with the Marketing Mixer Coffee Chat at Saxbys. Part 2 of the photo dump is coming to Instagram. Thank you to the Advertising Club at VCU for the collab."
-      ], gallery: ["mw-02", "mw-03", "mw-04", "mw-05", "mw-06", "mw-08", "mw-10", "mw-13", "mw-14"] },
-    { slug: "david-crowl-golden-rule", date: "2026-09-29", tag: "Speakers", title: "Marketing the golden rule with David Crowl",
-      dek: "A former VP of Marketing at Four Seasons came back to Snead Hall.",
-      cover: "assets/img/flyers/speaker-crowl.webp", thumb: "assets/img/flyers/speaker-crowl.webp", instagram: "",
-      body: [
-        "David Crowl, former VP of Marketing at Four Seasons and a VCU alumnus, joined us in Snead Hall for an evening on the significance of marketing the golden rule: treat the customer the way you would want to be treated, then build the brand around that.",
-        "The room was full, the food was provided, and the Q&A ran long. If you missed it, the next speaker event is already in the works. Register on RamsConnect when it drops."
-      ] },
-    { slug: "interest-meeting-recap", date: "2026-09-09", tag: "ICYMI", title: "Interest meeting recap",
-      dek: "So many new faces. Raffle winners went home with merch.",
-      cover: "assets/img/gallery/im-03.webp", thumb: "assets/img/gallery/t/im-03.webp", instagram: "",
-      body: [
-        "We had a blast getting to see so many new faces at our first interest meeting of the year. The board walked through what AMA is, what the semester looks like, how dues and points work, and why coffee chats are the easiest way in.",
-        "Congrats to our raffle winners, who left with AMA shirts and totes. Missed it? A virtual meeting ran that Friday, and coffee chats happen every other Sunday."
-      ], gallery: ["im-02", "im-03", "im-04"] },
-    { slug: "donuts-with-the-dean", date: "2026-09-04", tag: "ICYMI", title: "Donuts with the Dean and Directors",
-      dek: "The sweetest way to start a semester.",
-      cover: "assets/img/gallery/dn-04.webp", thumb: "assets/img/gallery/t/dn-04.webp", instagram: "",
-      body: [
-        "Donuts with the Dean and Directors was AMAzing. We loved getting to socialize with the School of Business leadership and meet students who had never heard of AMA before that morning.",
-        "A few of them showed up to the interest meeting four days later, which is the whole point."
-      ], gallery: ["dn-02", "dn-03", "dn-04"] },
-    { slug: "icc-guide", date: "2026-09-20", tag: "Guide", title: "ICC 2027: what it is and how to get there",
-      dek: "Three days in New Orleans with 1,600 marketing students. Here is how the trip works.",
-      cover: "assets/img/gallery/mw-14.webp", thumb: "assets/img/gallery/t/mw-14.webp", instagram: "",
-      body: [
-        "The AMA International Collegiate Conference is the biggest event on the chapter calendar. ICC 2027 runs April 8 to 10 in New Orleans. Students compete in Perfect Pitch, the Sales Competition, case and strategy competitions, and more, and the exhibit hall is full of recruiters.",
-        "VCU has a reputation there. In 2024 our chapter swept the Perfect Pitch podium. In 2026 in Chicago, five VCU students placed in the Perfect Pitch top ten, two placed in the Sales Competition, and VCU won the Design Lab Marketing Competition outright.",
-        "How to go: fill out the ICC 2027 application on the Linktree, pay dues, keep your points up, and come to the prep sessions. Fundraising covers part of the trip, which is why the raffles and mocktail nights matter."
-      ] }
-  ],
+  /* Blog. Empty on purpose: the board writes posts in /admin (title, date, tag, teaser, cover photo, text, Instagram link). */
+  posts: [],
 
-  /* Gallery: one album per event. `cover` is a photo key from `photos` (or any image URL).
-     Albums and photos can also come from the sheet (Albums and Photos tabs) or a Drive folder. */
+  /* Gallery: one album per event. `cover` is a photo key from `gallery` (or any image URL).
+     The board adds albums and photos in /admin. */
   albums: [
+    { slug: "chapter-photos", name: "Chapter photos", date: "2026-09-30", cover: "f26-11", blurb: "Awards night, agency visits, the 5K, tabling, speakers and the AMA conference." },
+    { slug: "marketers-of-tomorrow-eboard", name: "Marketers of Tomorrow e-board", date: "2026-11-03", cover: "mot-16", blurb: "The agency's leadership team, photographed by Elliasz." },
     { slug: "marketing-week-2026", name: "Marketing Week", date: "2026-10-09", cover: "mw-04", blurb: "Five days in October: the Ad Club competition, trivia night, headshots, speakers and the Saxbys mixer." },
     { slug: "interest-meeting-2026", name: "Interest Meeting", date: "2026-09-08", cover: "im-03", blurb: "First meeting of the year and the raffle that sent people home in AMA merch." },
     { slug: "donuts-with-the-dean-2026", name: "Donuts with the Dean", date: "2026-09-03", cover: "dn-04", blurb: "Donuts with the Dean and Directors to open the semester." }
   ],
   gallery: [
+    { f: "f26-01", album: "Chapter photos", cap: "Rings up", w: 1600, h: 1075 },
+    { f: "f26-11", album: "Chapter photos", cap: "Certificate time", w: 1600, h: 900 },
+    { f: "f26-09", album: "Chapter photos", cap: "Awards night", w: 1600, h: 900 },
+    { f: "f26-10", album: "Chapter photos", cap: "Awards night", w: 1600, h: 900 },
+    { f: "f26-13", album: "Chapter photos", cap: "Winners at the conference", w: 1600, h: 2133 },
+    { f: "f26-04", album: "Chapter photos", cap: "Conference delegation", w: 1600, h: 2133 },
+    { f: "f26-08", album: "Chapter photos", cap: "At the AMA conference", w: 1319, h: 687 },
+    { f: "f26-02", album: "Chapter photos", cap: "Agency visit", w: 1600, h: 1200 },
+    { f: "f26-16", album: "Chapter photos", cap: "Agency visit", w: 1600, h: 1200 },
+    { f: "f26-03", album: "Chapter photos", cap: "Agency visit", w: 1024, h: 768 },
+    { f: "f26-12", album: "Chapter photos", cap: "The 5K", w: 1600, h: 1066 },
+    { f: "f26-14", album: "Chapter photos", cap: "Medals at the 5K", w: 1600, h: 1066 },
+    { f: "f26-05", album: "Chapter photos", cap: "Speaker event", w: 1600, h: 1200 },
+    { f: "f26-15", album: "Chapter photos", cap: "Speaker event", w: 1600, h: 1279 },
+    { f: "f26-07", album: "Chapter photos", cap: "Tabling", w: 1600, h: 2133 },
+    { f: "f26-06", album: "Chapter photos", cap: "Out and about", w: 1600, h: 2133 },
+    { f: "mot-01", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-02", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-03", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-04", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 1866 },
+    { f: "mot-05", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 1866 },
+    { f: "mot-06", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-07", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-08", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-09", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-10", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-11", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-12", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 1866 },
+    { f: "mot-13", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-14", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 2100 },
+    { f: "mot-15", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 1866 },
+    { f: "mot-16", album: "Marketers of Tomorrow e-board", cap: "Marketers of Tomorrow e-board, November 2026", w: 1400, h: 1866 },
     { f: "mw-02", album: "Marketing Week", cap: "AMA x Ad Club night", w: 1600, h: 1067 },
     { f: "mw-04", album: "Marketing Week", cap: "May the best brief win: competition winners", w: 1600, h: 1067 },
     { f: "mw-03", album: "Marketing Week", cap: "A team at work", w: 1600, h: 1067 },
@@ -464,8 +456,9 @@ window.AMA = {
   ],
 
   faq: [
+    { q: "How do I join?", a: "Four steps: join on RamsConnect, pay dues, hop in the GroupMe and show up to an event. Every step is on the Get Involved page.", link: "#/involved#join", linkLabel: "See the four steps" },
     { q: "Do I have to be a marketing major?", a: "No. Membership is open to every major. Our ICC winners include psychology, philosophy and information systems majors." },
-    { q: "What does it cost?", a: "$60 a year. Part of it is your AMA national membership, the rest funds chapter catering and supplies. Financial need is never a reason not to join, email us." },
+    { q: "What does it cost?", a: "$60 a year: $35 is your AMA national membership and $25 goes to the chapter, paid through Venmo. Financial need is never a reason not to join, email us.", link: "#/involved#join", linkLabel: "How to join and pay" },
     { q: "Where are events?", a: "Mostly Snead Hall and Richmond cafes. Exact rooms and addresses are on RamsConnect, where you also register." },
     { q: "What is a coffee chat?", a: "A biweekly Sunday hangout at a local cafe, 12 to 2 PM. No agenda, no commitment, just marketers and caffeine." },
     { q: "How do points work?", a: "Every event earns points. Reach 200 and you are an Active Member. The leaderboard on the Accomplishments page shows where everyone stands." },

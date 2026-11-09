@@ -1,13 +1,14 @@
 # AMA at VCU website
 
 Website for the American Marketing Association at Virginia Commonwealth University (@amavcu).
-Static site: one `index.html`, one stylesheet, three scripts. No build step, no framework.
-The board updates events, points, photos and more through a Google Sheet, Google Calendar and Drive: see `docs/ADMIN-GUIDE.md`. `docs/BOARD-HANDOFF.md` lists what the board still needs to supply.
+Static site (one `index.html`, two stylesheets, four scripts, no build step) plus a small backend on Cloudflare Pages Functions that powers the board's editor at `/admin`.
+The board updates events, newsletters, points, photos, people and text in the editor: see `docs/ADMIN-GUIDE.md`. `docs/BOARD-HANDOFF.md` lists what changed and what the board still needs to supply.
 
 ## Run it
 
-- Double-click `index.html` to open it from the folder, or
-- serve the folder: `python -m http.server 4305` then open http://localhost:4305
+- Double-click `index.html` to open it from the folder (static site only), or
+- serve the folder: `python -m http.server 4305` then open http://localhost:4305 (static site only), or
+- `python tools/dev_admin.py` (launch config `ama-admin`) for the site WITH the editor and backend on http://127.0.0.1:4306 and http://127.0.0.1:4306/admin, using a local KV store. The local setup code is in `.dev.vars`.
 
 Handy URLs:
 
@@ -21,7 +22,7 @@ Everything the site shows lives in `js/data.js`. Open it in any text editor.
 | What | Where in `data.js` |
 |---|---|
 | Name, tagline, intro blurb, email, faculty advisor | `org` |
-| Google Sheet id, API key, calendar id, form endpoint | `integrations` |
+| Optional Google Sheet / Calendar / Drive hookup (off by default) | `integrations` |
 | Instagram, Linktree, GroupMe, RamsConnect, forms, calendar, application links | `links` |
 | Home background: campus photos with credits, or an mp4 in `hero.video` | `hero` |
 | Recruitment video (YouTube id, reel URL or mp4) | `video` |
@@ -48,7 +49,8 @@ Rules baked into the site:
 - Board photos live in `assets/img/board/<slug>.webp` (portrait) and `<slug>-sq.webp` (square). The `slug` in `data.js` must match.
 - Leave `linkedin: ""` and the site links a LinkedIn search for that name (the button says "Find on LinkedIn"). Paste the real profile URL when you have it.
 - Every Donate button opens the same panel. Set `links.donate` to send them to one official giving page instead.
-- Content from the Google Sheet is merged over this file at load time. `?cms=0` turns that off, `?cms=mock` reads `tools/cms-sample/*.csv` for local testing, `?debug=1` logs what loaded.
+- What the board saves in `/admin` is merged over this file at load time (`js/cms.js`, `applySaved`). `?cms=0` turns that off, `?preview=1` is the editor's live preview frame, `?debug=1` logs what loaded.
+- Once the board saves in the editor, the live site shows the saved content; edits to `js/data.js` only matter for anything the editor does not cover (and as the starting point when nothing is saved).
 
 ## Add photos
 
@@ -66,7 +68,8 @@ The mark is the `#mark` SVG symbol in `index.html` (three stroke-drawn letters o
 - `assets/img/flyers/` event artwork from Instagram
 - `assets/raw/` originals (not needed by the site)
 - `tools/` the Python helpers used to cut portraits, resize photos, build the sheet template (`make_sheet_template.py`) and publish
-- `docs/` the admin guide, the board handoff and the Google Sheet template
+- `docs/` the admin guide, the board handoff and the (optional) Google Sheet template
+- `admin/`, `js/admin.js`, `css/admin.css` the editor; `functions/` + `src/lib.js` the Cloudflare Pages Functions behind it (login, content, uploads, inbox, content injection); `wrangler.toml` binds the KV namespace `AMA_SITE`
 
 ## Deploy
 
@@ -75,6 +78,6 @@ The site is live in two places:
 - https://amavcu.pages.dev (Cloudflare Pages, the link to share)
 - https://qwendor.github.io/ama-vcu/ (GitHub Pages, repo `qwendor/ama-vcu`)
 
-To publish a change: commit it, then run `python tools/publish.py`. That pushes to GitHub (Pages rebuilds in about a minute) and deploys the committed files to Cloudflare Pages. Only files tracked by git go online; `assets/raw/` and `tools/` stay on the PC.
+To publish a change: commit it, then run `python tools/publish.py`. That pushes to GitHub (Pages rebuilds in about a minute) and deploys the committed files to Cloudflare Pages in the layout the Functions need (site in `public/`, `functions/` and `src/` beside it). Only files tracked by git go online; `assets/raw/`, `tools/`, the setup code and `.dev.vars` stay on the PC. Deploys never touch the content, uploads or password saved through the editor (they live in KV). The editor only works on the Cloudflare host; the GitHub mirror reads the saved content from it.
 
 While the site is a concept preview it carries a `noindex` meta tag, a `robots.txt` that blocks crawlers, and a footer line saying it is not yet official. Remove those three when AMA makes it official.

@@ -6,3 +6,10 @@ shots/
 *.mp4
 !assets/logo/*.mp4
 __pycache__/
+
+# editor secrets and local backend state stay on the PC
+SETUP-CODE.txt
+.setup-code
+.dev.vars
+.dist/
+.dist-state-keep/

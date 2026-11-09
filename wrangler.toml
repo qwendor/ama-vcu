@@ -1,0 +1,9 @@
+name = "amavcu"
+pages_build_output_dir = "public"
+compatibility_date = "2026-10-01"
+
+# The board's saved content, uploaded files, form submissions, login and save history all live in this one KV namespace.
+# tools/publish.py packages the site into public/ next to functions/ and src/ before deploying.
+[[kv_namespaces]]
+binding = "SITE"
+id = "8f1c15c74d0148fb9d602d67f9e2583b"
