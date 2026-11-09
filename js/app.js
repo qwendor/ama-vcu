@@ -31,7 +31,7 @@
 
   /* ---------- tiny view helpers ---------- */
   const ico = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#${id}"/></svg>`;
-  const MARK_VB = '0 0 288 110';
+  const MARK_VB = '0 0 348 100';
   const logoSrc = () => srcOf(D.look && D.look.logo);
   const markSvg = (cls = '', label = 'American Marketing Association') => logoSrc() ? `<img class="${cls} logo-img" src="${logoSrc()}" alt="${label}">` : `<svg class="${cls}" viewBox="${MARK_VB}" role="img" aria-label="${label}"><use href="#mark"/></svg>`;
   const U = () => D.copy.ui;
@@ -1066,7 +1066,9 @@
   function chrome() {
     const F = D.copy.footer, M = D.copy.donate, N = D.nav;
     applyLook();
-    const caption = logoSrc() ? '' : `<span class="brand-ama">${esc(N.brandCaption)}</span>`;
+    // two lines like the official lockup: break at a | or a line break if the board typed one, else before the last word
+    const captionLines = s => { const c = String(s || '').trim(); const parts = c.includes('|') ? c.split('|') : c.includes('\n') ? c.split('\n') : c.replace(/\s+(\S+)$/, '\u0000$1').split('\u0000'); return parts.map(x => `<span>${esc(x.trim())}</span>`).join(''); };
+    const caption = logoSrc() ? '' : `<span class="brand-ama">${captionLines(N.brandCaption)}</span>`;
     $('#brandLockup').innerHTML = markSvg('brand-mark') + caption;
     $('#brandText').textContent = N.brandSchool;
     $('#navMain').innerHTML = navHTML();

@@ -111,10 +111,11 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 .head-row{display:flex;align-items:center;gap:22px;height:var(--head-h);transition:height .3s var(--ease)}
 .site-head.scrolled .head-row{height:64px}
 .brand{display:flex;align-items:center;gap:16px;text-decoration:none;color:#fff;margin-right:auto}
-.brand-lockup{display:flex;flex-direction:column;align-items:center;gap:4px}
-.brand-mark{width:80px;height:30px;color:#fff;display:block;overflow:visible;transition:width .3s var(--ease),height .3s var(--ease)}
-.site-head.scrolled .brand-mark{width:70px;height:26px}
-.brand-ama{font-family:var(--fh);font-weight:700;font-size:.42rem;letter-spacing:.16em;text-transform:uppercase;color:#fff;white-space:nowrap;line-height:1}
+/* the lockup: mark, thin rule, two lines of tracked caps. --g is the glyph height; every other size follows the official proportions */
+.brand-lockup{--g:26px;display:flex;align-items:center;color:#fff}
+.brand-mark{height:var(--g);width:calc(var(--g)*3.48);color:#fff;display:block;overflow:visible;transition:width .3s var(--ease),height .3s var(--ease)}
+.site-head.scrolled .brand-lockup{--g:22px}
+.brand-ama{display:flex;flex-direction:column;justify-content:center;font-family:var(--fh);font-weight:700;font-size:calc(var(--g)*.362);line-height:1.31;letter-spacing:.14em;text-transform:uppercase;color:inherit;white-space:nowrap;margin-left:calc(var(--g)*.45);padding:calc(var(--g)*.24) 0 calc(var(--g)*.24) calc(var(--g)*.44);border-left:max(1.5px,calc(var(--g)*.053)) solid currentColor;transition:font-size .3s var(--ease)}
 .brand-text{border-left:1px solid rgba(255,255,255,.35);padding-left:14px;font-family:var(--fh);font-weight:600;font-size:.8rem;line-height:1.2;max-width:150px;color:#fff}
 .site-head .wrap{max-width:1360px}
 .nav{display:flex;align-items:center;gap:0}
@@ -134,7 +135,7 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 .menu-btn{display:none;width:44px;height:44px;border-radius:6px;border:0;background:rgba(255,255,255,.1);color:#fff;align-items:center;justify-content:center}
 .menu-btn .ic{width:1.5em;height:1.5em}
 @media (max-width:1180px){.nav{display:none}.menu-btn{display:inline-flex}}
-@media (max-width:560px){.brand-text{display:none}.brand-mark{width:72px;height:27px}.head-actions .btn{padding:10px 12px}}
+@media (max-width:560px){.brand-text{display:none}.brand-lockup{--g:20px}.head-actions .btn{padding:10px 12px}}
 
 /* mobile menu */
 .mobile-menu{position:fixed;inset:0;z-index:80;background:var(--navy);color:#fff;overflow:auto}
@@ -158,7 +159,7 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 @keyframes kenburnsSolo{from{transform:scale(1) translate(0,0)}to{transform:scale(1.1) translate(-1.5%,1%)}}
 .hero-inner{position:relative;z-index:1;padding:clamp(70px,10vw,120px) var(--gutter) clamp(90px,12vw,140px);max-width:980px;margin:0 auto}
 .hero-mark{width:min(300px,64vw);margin:0 auto 26px;color:#fff;filter:drop-shadow(0 10px 26px rgba(0,0,0,.5))}
-.hero-mark svg{width:100%;height:auto;aspect-ratio:288/110;display:block;overflow:visible}
+.hero-mark svg{width:100%;height:auto;aspect-ratio:348/100;display:block;overflow:visible}
 .hero-school{display:inline-block;background:#fff;color:var(--navy);font-family:var(--fh);font-weight:700;font-size:clamp(.78rem,1.3vw,1rem);letter-spacing:.22em;text-transform:uppercase;padding:.65em 1.4em;margin-bottom:22px}
 .hero h1{font-size:clamp(2.1rem,5.4vw,4.3rem);line-height:1.04;letter-spacing:.02em;text-transform:uppercase;font-weight:800;text-shadow:0 4px 24px rgba(0,0,0,.35)}
 .hero .tagline{font-family:var(--fh);font-weight:500;font-size:clamp(1.05rem,1.8vw,1.45rem);letter-spacing:.06em;margin:18px auto 30px;color:rgba(255,255,255,.92);max-width:48ch}
@@ -381,7 +382,7 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 .news-card h4::before{content:"";width:18px;height:3px;background:var(--gold)}
 .news-card ul{margin:0;padding-left:20px;display:grid;gap:8px}
 .news-card .spot{background:var(--gold-soft);border-radius:var(--r-sm);padding:18px 20px}
-.nc-logo{width:100px;height:38px;color:#fff;overflow:visible}
+.nc-logo{width:110px;height:auto;aspect-ratio:348/100;color:#fff;overflow:visible}
 .archive{display:grid;gap:10px}
 .archive a{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 16px;text-decoration:none;font-weight:600;transition:transform .2s var(--ease),border-color .2s}
 .archive a:hover{transform:translateX(4px);border-color:var(--gold)}
@@ -471,7 +472,7 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 .head-social a:hover{background:#fff;color:var(--navy);border-color:#fff}
 .head-social .ic{fill:currentColor;width:1em;height:1em}
 @media (max-width:1440px){.head-social{display:none}}
-@media (max-width:1300px){.brand-text{display:none}}
+@media (max-width:1500px){.brand-text{display:none}}
 
 /* ---------- modal / toast ---------- */
 .modal{position:fixed;inset:0;z-index:85;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
@@ -493,9 +494,8 @@ em.serif{font-style:normal;color:var(--gold-deep)}
 .foot-brand{display:flex;flex-direction:column;align-items:flex-start;gap:20px}
 .foot-brand h3{font-size:1.4rem;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
 .foot-brand p{color:rgba(255,255,255,.7);max-width:44ch;font-size:.94rem;margin-bottom:18px}
-.foot-lockup{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none;color:#fff}
-.foot-mark{width:130px;height:50px;color:#fff;display:block;overflow:visible}
-.foot-lockup .brand-ama{font-size:.5rem}
+.foot-lockup{--g:32px;display:flex;align-items:center;flex:none;color:#fff}
+.foot-mark{height:var(--g);width:calc(var(--g)*3.48);color:#fff;display:block;overflow:visible}
 .foot-col h4{font-family:var(--fh);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
 .foot-col a{display:block;color:rgba(255,255,255,.82);text-decoration:none;padding:4px 0;font-weight:500;font-size:.94rem}
 .foot-col a:hover{color:var(--gold)}
@@ -666,8 +666,8 @@ a.frame{display:block}
 
 /* ---------- uploaded logo in place of the built-in mark ---------- */
 img.logo-img{display:block;width:auto;height:100%;object-fit:contain}
-img.brand-mark{width:auto;height:30px;max-width:180px}
-.site-head.scrolled img.brand-mark{height:26px}
-img.foot-mark{width:auto;height:50px;max-width:220px}
+img.brand-mark{width:auto;height:calc(var(--g)*1.15);max-width:180px}
+img.foot-mark{width:auto;height:calc(var(--g)*1.25);max-width:220px}
 .hero-mark img.logo-img{width:auto;max-width:100%;max-height:150px;margin:0 auto}
 img.nc-logo{width:auto;height:38px}
+@media (max-width:430px){.brand-lockup .brand-ama{display:none}}

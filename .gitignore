@@ -13,3 +13,4 @@ SETUP-CODE.txt
 .dev.vars
 .dist/
 .dist-state-keep/
+.wrangler/

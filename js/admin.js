@@ -7,7 +7,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const app = $("#app");
   const SITE = window.AMA;                       // js/data.js, the content built into the site (used as the starting point)
-  const MARK = '<svg viewBox="0 0 288 110" aria-hidden="true"><path d="M12 94 L48 16 L84 94 M100 94 V16 L139 71 L178 16 V94 M194 16 L274 55 L194 94" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const MARK = '<svg viewBox="0 0 348 100" aria-hidden="true"><path d="M6 94 L50 6 L94 94 M130 94 V6 L174 94 L218 6 V94 M254 6 L342 50 L254 94" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   // ---------------------------------------------------------------- tiny helpers
   function h(tag, attrs, ...kids) {
@@ -527,7 +527,7 @@
           { key: "nav.blog", type: "text", label: "Blog" }, { key: "nav.blogSub", type: "text", label: "Blog: small line" },
           { key: "nav.gallery", type: "text", label: "Gallery" }, { key: "nav.gallerySub", type: "text", label: "Gallery: small line" } ] },
         { title: "Phone menu", fields: [{ key: "nav.menuTitle", type: "text", label: "Menu title" }, { key: "nav.groupChapter", type: "text", label: "First group name" }, { key: "nav.groupMembers", type: "text", label: "Second group name" }, { key: "nav.groupNews", type: "text", label: "Third group name" }, { key: "nav.groupJoin", type: "text", label: "Fourth group name" }, { key: "nav.leaderboard", type: "text", label: "Points leaderboard link" }, { key: "nav.ideas", type: "text", label: "Idea drop box link" }, { key: "nav.feedback", type: "text", label: "Feedback link" }, { key: "nav.skip", type: "text", label: "Skip to content (screen readers)" }] },
-        { title: "Logo lockup", fields: [{ key: "nav.brandCaption", type: "text", label: "Small line under the mark" }, { key: "nav.brandSchool", type: "text", label: "Text beside the mark" }] },
+        { title: "Logo lockup", fields: [{ key: "nav.brandCaption", type: "text", label: "Lines beside the mark (type | where the line should break)" }, { key: "nav.brandSchool", type: "text", label: "Text beside the mark" }] },
         { title: "Footer columns", fields: [{ key: "footerColumns", type: "cards", noun: "column", titleKey: "title", label: "", fresh: () => ({ title: "", links: [] }), fields: [{ key: "title", type: "text", label: "Column heading" }, { key: "links", type: "rows", label: "Links", cols: [["label", "Text", "1fr"], ["href", "Where it goes (#/about or https://…)", "1fr"]], add: "Add a link" }] }] },
       ] },
     { id: "categories", label: "Categories", icon: "tag", hash: () => "#/events", lead: "The types and categories used across the site. Existing items keep working when you rename them.",
