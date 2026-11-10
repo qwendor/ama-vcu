@@ -289,6 +289,8 @@ window.AMA_CMS = (() => {
     ['instagram', 'tiktok', 'linkedin', 'linktree', 'groupme', 'ramsconnect', 'ramsconnectJoin', 'ramsconnectEvents', 'becomeMember', 'iccApplication', 'accomplishmentForm', 'motApplication', 'boardApplication', 'alumniLinkedIn', 'donate', 'venmo', 'cashapp', 'googleCalendar', 'newsletterArchive'].forEach(k => { if (k in S) D.links[k] = str(S[k]); });
     if ('videoYoutube' in S) D.video.youtube = str(S.videoYoutube);
     if ('videoInstagram' in S) D.video.instagram = str(S.videoInstagram);
+    if ('videoLink' in S) D.video.link = str(S.videoLink);
+    if (S.videoFile !== undefined) D.video.mp4 = fix(srcOf(S.videoFile) || '');
     if ('heroVideo' in S) D.hero.video = fix(str(S.heroVideo));
     if (typeof S.showLocations === 'boolean') C.showLocations = S.showLocations;
     setStr(D.icc, 'short', S.iccShort); setStr(D.icc, 'city', S.iccCity); setStr(D.icc, 'dates', S.iccDates); setStr(D.icc, 'about', S.iccAbout);
@@ -347,7 +349,8 @@ window.AMA_CMS = (() => {
     if (Array.isArray(c.pillars) && c.pillars.length) D.pillars = c.pillars.filter(p => str(p.name)).map(p => ({ name: str(p.name), short: str(p.short), icon: str(p.icon) || 'i-star' }));
     if (Array.isArray(c.iccFeatures) && c.iccFeatures.length) D.iccFeatures = c.iccFeatures.filter(f => str(f.title)).map(f => ({ title: str(f.title), text: str(f.text), img: srcOf(f.img) }));
     if (Array.isArray(c.aboutCards) && c.aboutCards.length) D.aboutCards = c.aboutCards.filter(x => str(x.title)).map(x => ({ chip: str(x.chip), title: str(x.title), text: str(x.text), url: str(x.url), btn: str(x.btn) }));
-    if (Array.isArray(c.timeline) && c.timeline.length) D.timeline = c.timeline.filter(x => str(x.when) || str(x.text)).map(x => ({ when: str(x.when), text: str(x.text) }));
+    if (Array.isArray(c.timeline)) D.timeline = c.timeline.filter(x => str(x.when) || str(x.text)).map(x => ({ when: str(x.when), text: str(x.text) }));   // an emptied list stays empty
+    if (typeof c.showTimeline === 'boolean') D.showTimeline = c.showTimeline;
     if (c.aboutPhoto !== undefined) D.aboutPhoto = srcOf(c.aboutPhoto);
     if (c.donatePhoto !== undefined) D.donatePhoto = srcOf(c.donatePhoto);
     if (Array.isArray(c.iccCards) && c.iccCards.length) D.iccCards = c.iccCards.map(x => ({ chip: str(x.chip), title: str(x.title), text: str(x.text), btn: str(x.btn) }));

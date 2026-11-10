@@ -25,7 +25,8 @@ Everything the site shows lives in `js/data.js`. Open it in any text editor.
 | Optional Google Sheet / Calendar / Drive hookup (off by default) | `integrations` |
 | Instagram, Linktree, GroupMe, RamsConnect, forms, calendar, application links | `links` |
 | Home background: campus photos with credits, or an mp4 in `hero.video` | `hero` |
-| Recruitment video (YouTube id, reel URL or mp4) | `video` |
+| Recruitment video (any link: YouTube, Vimeo, Drive play on the page; Instagram/TikTok open in a tab; or an uploaded mp4) | `video` |
+| About page timeline on/off | `showTimeline` |
 | Idea box and feedback form embeds, survey list | `forms` |
 | Dues, points, join steps | `membership` |
 | The three pillars (name, icon, one line) | `pillars` |

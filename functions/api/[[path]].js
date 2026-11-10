@@ -12,6 +12,7 @@ const KEEP_VERSIONS = 25;
 const MAX_INBOX = 400;
 const TYPES = {
   "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png", "image/gif": "gif", "application/pdf": "pdf",
+  "video/mp4": "mp4", "video/webm": "webm", "video/quicktime": "mov",
 };
 const FORMS = { accomplishment: ["name", "email", "category", "what", "where", "when", "feature"], idea: ["title", "why", "name"], feedback: ["type", "text", "name"] };
 const goodPassword = (p) => typeof p === "string" && p.length >= 10 && p.length <= 200;
@@ -137,7 +138,7 @@ export async function onRequest({ request, env, params }) {
     if (path === "media" && method === "POST") {
       const type = (request.headers.get("content-type") || "").split(";")[0].trim();
       const ext = TYPES[type];
-      if (!ext) return json({ error: "Only images (JPG, PNG, WebP, GIF) and PDFs can be uploaded." }, 415);
+      if (!ext) return json({ error: "Only images (JPG, PNG, WebP, GIF), PDFs and videos (mp4, webm, mov) can be uploaded." }, 415);
       const body = await request.arrayBuffer();
       if (!body.byteLength) return json({ error: "That file is empty." }, 400);
       if (body.byteLength > MAX_UPLOAD) return json({ error: "That file is too big (12 MB limit)." }, 413);

@@ -280,7 +280,7 @@
             <div class="video-box" data-video>
               <img src="${D.video.poster}" alt="">
               <button type="button" class="video-play" data-play><span class="play">${ico('i-play')}</span>${esc(D.video.title)}</button>
-              ${!(D.video.youtube || D.video.instagram || D.video.mp4) ? `<span class="tag-pill sm video-note">${esc(T.videoNote)}</span>` : ''}
+              ${!(D.video.link || D.video.youtube || D.video.instagram || D.video.mp4) ? `<span class="tag-pill sm video-note">${esc(T.videoNote)}</span>` : ''}
             </div>
           </div>
         </div>
@@ -376,7 +376,7 @@
         <div class="grid g3">${D.aboutCards.map((c, i) => `<div class="card reveal d${i % 3}"><span class="chip navy">${esc(c.chip)}</span><h3 class="h-sm" style="margin-top:8px">${esc(c.title)}</h3><p style="margin:0${c.url ? ' 0 10px' : ''}">${esc(c.text)}</p>${c.url ? ext(c.url, esc(c.btn || U().visit), 'btn btn-ghost btn-sm') : ''}</div>`).join('')}</div>
       </div>
     </section>
-    <section class="section s-navy deep">
+    ${D.showTimeline === false || !D.timeline.length ? '' : `<section class="section s-navy deep">
       <div class="wrap split">
         <div class="reveal">
           <p class="eyebrow">${esc(T.historyEyebrow)}</p>
@@ -387,7 +387,7 @@
           <div class="frame"><img src="${srcOf(D.aboutPhoto) || 'assets/img/photos/about-speaker.webp'}" alt="${esc(T.historyAlt)}"></div>
         </div>
       </div>
-    </section>`;
+    </section>`}`;
   };
 
   pages.events = () => {
@@ -867,14 +867,29 @@
     if (!bars.length) return;
     setTimeout(() => bars.forEach(b => b.style.setProperty('--w', b.dataset.w)), reduce ? 0 : 120);
   }
+  // Any pasted link: YouTube, Vimeo and Google Drive play on the page; a file plays in a <video>; anything else (Instagram, TikTok) opens in a new tab.
+  const videoTarget = v => {
+    const url = String(v.link || '').trim(); let m;
+    if (url) {
+      if ((m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{6,})/))) return { iframe: `https://www.youtube.com/embed/${m[1]}?autoplay=1&rel=0` };
+      if ((m = url.match(/vimeo\.com\/(?:video\/)?(\d+)/))) return { iframe: `https://player.vimeo.com/video/${m[1]}?autoplay=1` };
+      if ((m = url.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=)([\w-]+)/))) return { iframe: `https://drive.google.com/file/d/${m[1]}/preview` };
+      if (/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(url)) return { file: url };
+      return { open: url };
+    }
+    if (v.youtube) return { iframe: `https://www.youtube.com/embed/${v.youtube}?autoplay=1&rel=0` };
+    if (v.mp4) return { file: v.mp4 };
+    if (v.instagram) return { open: v.instagram };
+    return null;
+  };
   function initVideo() {
     const box = $('[data-video]'); if (!box) return;
     $('[data-play]', box).addEventListener('click', () => {
-      const v = D.video;
-      if (v.youtube) box.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.youtube}?autoplay=1&rel=0" title="${esc(v.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-      else if (v.mp4) box.innerHTML = `<video src="${v.mp4}" controls autoplay playsinline poster="${v.poster}"></video>`;
-      else if (v.instagram) window.open(v.instagram, '_blank', 'noopener');
-      else toast(U().toastVideo);
+      const v = D.video, t = videoTarget(v);
+      if (!t) toast(U().toastVideo);
+      else if (t.iframe) box.innerHTML = `<iframe src="${t.iframe}" title="${esc(v.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+      else if (t.file) box.innerHTML = `<video src="${t.file}" controls autoplay playsinline poster="${v.poster}"></video>`;
+      else window.open(t.open, '_blank', 'noopener');
     });
   }
   function initCalendar() {

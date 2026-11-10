@@ -84,9 +84,11 @@ window.AMA = {
     ]
   },
 
-  /* Recruitment video on the home page. Fill ONE of these: a YouTube id, an
-     Instagram reel URL, or an mp4 path. Leave all empty to show the poster. */
+  /* Recruitment video on the home page. `link` takes any address: YouTube, Vimeo and Google
+     Drive play on the page, Instagram or TikTok open in a new tab. `mp4` is an uploaded file.
+     The older youtube-id / instagram fields still work. Leave all empty to show the poster. */
   video: {
+    link: "",
     youtube: "",
     instagram: "",
     mp4: "",
@@ -626,6 +628,9 @@ window.AMA = {
     { chip: "In Richmond", title: "AMA Richmond", text: "The professional chapter: mixers, speakers and a local job board where members meet the people hiring in this city.", url: "https://amarichmond.org", btn: "amarichmond.org" },
     { chip: "Nationwide", title: "AMA national", text: "Chapter dues include AMA national membership: the Career Center, webinars, certifications and the International Collegiate Conference.", url: "https://www.ama.org", btn: "ama.org" }
   ],
+  /* The board took the timeline down (Nov 2026). The switch under About page > Timeline in the
+     editor brings it back; the moments below stay as the starting point. */
+  showTimeline: false,
   timeline: [
     { when: "1983", text: "VCU's AMA chapter is founded." },
     { when: "2008", text: "The chapter is reinstated and has run every year since." },
