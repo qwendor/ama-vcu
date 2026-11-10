@@ -292,6 +292,15 @@ window.AMA_CMS = (() => {
     if ('videoLink' in S) D.video.link = str(S.videoLink);
     if (S.videoFile !== undefined) D.video.mp4 = fix(srcOf(S.videoFile) || '');
     if ('heroVideo' in S) D.hero.video = fix(str(S.heroVideo));
+    if (c.impact && typeof c.impact === 'object') {   // social impact video block (home)
+      const I = c.impact, V = D.impact;
+      if (typeof I.show === 'boolean') V.show = I.show;
+      setStr(V, 'eyebrow', I.eyebrow); setStr(V, 'title', I.title); setStr(V, 'button', I.button);
+      if ('text' in I) V.text = str(I.text); if ('caption' in I) V.caption = str(I.caption);   // these two may be emptied
+      if ('link' in I) V.link = str(I.link);
+      if (I.file !== undefined) V.mp4 = srcOf(I.file) || '';
+      if (I.poster !== undefined) V.poster = srcOf(I.poster) || '';
+    }
     if (typeof S.showLocations === 'boolean') C.showLocations = S.showLocations;
     setStr(D.icc, 'short', S.iccShort); setStr(D.icc, 'city', S.iccCity); setStr(D.icc, 'dates', S.iccDates); setStr(D.icc, 'about', S.iccAbout);
     if (toISO(S.iccStart)) D.icc.start = toISO(S.iccStart) + 'T09:00:00-05:00';

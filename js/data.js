@@ -96,6 +96,21 @@ window.AMA = {
     title: "Why AMA? Watch the recruitment video"
   },
 
+  /* Social impact video block on the home page (the board asked for it, Nov 2026): a heading and
+     the video under it. `link` follows the same rules as `video.link` above; `mp4` is an uploaded
+     file. The block shows on the site once a video is set; `show: false` hides it either way. */
+  impact: {
+    show: true,
+    eyebrow: "Social impact",
+    title: "Our partnership with the *Richmond SPCA*",
+    text: "Our social impact project this year: the chapter put its marketing to work for the Richmond SPCA. Press play to see it.",
+    link: "",
+    mp4: "",
+    poster: "",
+    button: "Watch the video",
+    caption: ""
+  },
+
   /* Forms. With `integrations.formEndpoint` set, the on-page forms post straight
      to the board's Google Sheet. Otherwise paste a Google Form "embed" URL to show
      the real form inline, or leave empty and the site opens a pre-filled email. */

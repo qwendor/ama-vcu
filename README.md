@@ -27,6 +27,7 @@ Everything the site shows lives in `js/data.js`. Open it in any text editor.
 | Home background: campus photos with credits, or an mp4 in `hero.video` | `hero` |
 | Recruitment video (any link: YouTube, Vimeo, Drive play on the page; Instagram/TikTok open in a tab; or an uploaded mp4) | `video` |
 | About page timeline on/off | `showTimeline` |
+| Social impact video block on the home page (heading, text, link or upload, poster, caption, on/off) | `impact` |
 | Idea box and feedback form embeds, survey list | `forms` |
 | Dues, points, join steps | `membership` |
 | The three pillars (name, icon, one line) | `pillars` |

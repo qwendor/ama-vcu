@@ -277,10 +277,10 @@
             <div class="btn-row" style="margin-top:20px">${route('#/about', esc(T.introBtn1), 'btn btn-navy')}${route('#/involved#join', esc(T.introBtn2), 'btn btn-ghost')}</div>
           </div>
           <div class="reveal d2">
-            <div class="video-box" data-video>
+            <div class="video-box" data-video="main">
               <img src="${D.video.poster}" alt="">
               <button type="button" class="video-play" data-play><span class="play">${ico('i-play')}</span>${esc(D.video.title)}</button>
-              ${!(D.video.link || D.video.youtube || D.video.instagram || D.video.mp4) ? `<span class="tag-pill sm video-note">${esc(T.videoNote)}</span>` : ''}
+              ${!videoTarget(D.video) ? `<span class="tag-pill sm video-note">${esc(T.videoNote)}</span>` : ''}
             </div>
           </div>
         </div>
@@ -290,6 +290,8 @@
         </div>
       </div>
     </section>
+
+    ${impactBlock(T)}
 
     <section class="section s-cream" id="upnext">
       <div class="wrap">
@@ -882,14 +884,45 @@
     if (v.instagram) return { open: v.instagram };
     return null;
   };
+  // A YouTube link brings its own still; otherwise the uploaded picture; otherwise a navy placeholder with the mark.
+  const youtubeStill = v => { const m = String(v.link || '').match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{6,})/); return m ? m[1] : (v.youtube || ''); };
+  const videoStill = v => {
+    if (v.poster) return `<img src="${esc(v.poster)}" alt="">`;
+    const id = youtubeStill(v);
+    if (id) return `<img src="https://i.ytimg.com/vi/${id}/maxresdefault.jpg" alt="" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${id}/hqdefault.jpg'">`;
+    return `<div class="video-ph">${markSvg()}</div>`;
+  };
+  // Social impact block on the home page: heading, a line, the video under it. Public visitors see it
+  // once a video is set; the editor preview always shows it so the board can write the words first.
+  function impactBlock(T) {
+    const v = D.impact; if (!v || v.show === false) return '';
+    if (!videoTarget(v) && !(CMS && CMS.preview)) return '';
+    return `
+    <section class="section s-navy deep impact" id="impact">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div><p class="eyebrow">${esc(v.eyebrow)}</p><h2 class="h-lg">${title(v.title)}</h2></div>
+          ${v.text ? `<p class="lede">${esc(v.text)}</p>` : ''}
+        </div>
+        <div class="video-box impact-video reveal d1" data-video="impact">
+          ${videoStill(v)}
+          <button type="button" class="video-play" data-play><span class="play">${ico('i-play')}</span>${esc(v.button || 'Watch the video')}</button>
+          ${!videoTarget(v) ? `<span class="tag-pill sm video-note">${esc(T.videoNote)}</span>` : ''}
+        </div>
+        ${v.caption ? `<p class="impact-cap small reveal d2">${esc(v.caption)}</p>` : ''}
+      </div>
+    </section>`;
+  }
   function initVideo() {
-    const box = $('[data-video]'); if (!box) return;
-    $('[data-play]', box).addEventListener('click', () => {
-      const v = D.video, t = videoTarget(v);
-      if (!t) toast(U().toastVideo);
-      else if (t.iframe) box.innerHTML = `<iframe src="${t.iframe}" title="${esc(v.title)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-      else if (t.file) box.innerHTML = `<video src="${t.file}" controls autoplay playsinline poster="${v.poster}"></video>`;
-      else window.open(t.open, '_blank', 'noopener');
+    $$('[data-video]').forEach(box => {
+      const v = box.dataset.video === 'impact' ? D.impact : D.video;
+      $('[data-play]', box).addEventListener('click', () => {
+        const t = videoTarget(v), label = v.title || v.button || '';
+        if (!t) toast(U().toastVideo);
+        else if (t.iframe) box.innerHTML = `<iframe src="${t.iframe}" title="${esc(label)}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        else if (t.file) box.innerHTML = `<video src="${t.file}" controls autoplay playsinline${v.poster ? ` poster="${esc(v.poster)}"` : ''}></video>`;
+        else window.open(t.open, '_blank', 'noopener');
+      });
     });
   }
   function initCalendar() {
